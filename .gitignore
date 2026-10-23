@@ -1,0 +1,21 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+
+# app data (sqlite db, uploaded audio)
+backend/data/
+
+# node
+node_modules/
+frontend/dist/
+
+# editors / os
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,21 @@
+[project]
+name = "visitcoach-backend"
+version = "0.1.0"
+description = "VisitCoach API — AI copilot for CRP school visits"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=2.1.0",
+    "fastapi>=0.161.0",
+    "httpx>=0.28.1",
+    "python-dotenv>=1.2.4",
+    "python-multipart>=0.0.32",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
