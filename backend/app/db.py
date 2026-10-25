@@ -29,8 +29,10 @@ CREATE TABLE IF NOT EXISTS visits (
     subject TEXT,                      -- 'literacy' | 'numeracy'
     language TEXT NOT NULL,
     rubric_json TEXT,                  -- {item_id: 'yes' | 'partly' | 'no'}
+    typed_note TEXT,
     observed_at TEXT,
     status TEXT NOT NULL DEFAULT 'queued',  -- queued | transcribing | generating | ready | approved | failed
+    error TEXT,                        -- why the last run failed (shown to the CRP)
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -38,6 +40,7 @@ CREATE TABLE IF NOT EXISTS voice_notes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     visit_id INTEGER NOT NULL REFERENCES visits(id),
     audio_path TEXT,
+    mime TEXT,
     transcript TEXT
 );
 
@@ -70,9 +73,22 @@ def get_conn():
     return conn
 
 
+# Columns added after the first release. CREATE TABLE IF NOT EXISTS skips existing
+# tables, so add these to older databases by hand.
+ADDED_COLUMNS = [
+    ("visits", "typed_note", "TEXT"),
+    ("visits", "error", "TEXT"),
+    ("voice_notes", "mime", "TEXT"),
+]
+
+
 def init_db():
     with get_conn() as conn:
         conn.executescript(SCHEMA)
+        for table, column, kind in ADDED_COLUMNS:
+            existing = [row["name"] for row in conn.execute(f"PRAGMA table_info({table})")]
+            if column not in existing:
+                conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {kind}")
 
 
 def query(sql, params=()):

@@ -45,8 +45,8 @@ If time runs short, cut from the end of the CAN list first. Log anything cut in 
 - [x] FLN knowledge pack v1 (`backend/app/knowledge/`): rubric, 16 practices, NIPUN Lakshyas, 21 verified source excerpts
 - [x] `services/llm.py` + `services/packet.py`: Claude coaching packet from notes + taps, runnable from the CLI (verified live: ~25 s per packet, prompt cache hits on repeat calls)
 - [x] Observe page: rubric taps + 30 s recorder → IndexedDB (Dexie), offline indicator (rubric + schools cached for offline; drafts listed on Home)
-- [ ] Sync: `POST /api/visits/sync` → Sarvam ASR → packet (background task, status polling)
-- [ ] Packet review/edit/approve page
+- [x] Sync: `POST /api/visits/sync` → Sarvam ASR → packet (background task, status polling, retry). Verified live with typed notes; Sarvam path needs `SARVAM_API_KEY`
+- [x] Packet review/edit/approve page (edits kept on phone offline, sent on approve; share link `/t/:token`)
 - [ ] Teacher view via share link
 
 ### Sat 24

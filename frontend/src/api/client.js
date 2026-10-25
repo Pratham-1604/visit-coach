@@ -21,3 +21,18 @@ export async function apiPost(path, body) {
     }),
   )
 }
+
+export async function apiPut(path, body) {
+  return handle(
+    await fetch(path, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    }),
+  )
+}
+
+// For uploads (audio files): the browser sets the multipart Content-Type itself.
+export async function apiPostForm(path, formData) {
+  return handle(await fetch(path, { method: 'POST', body: formData }))
+}

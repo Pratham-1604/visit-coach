@@ -3,8 +3,10 @@ import tempfile
 
 import pytest
 
-# Point the app at a throwaway database before it is imported.
-os.environ["DB_PATH"] = os.path.join(tempfile.mkdtemp(), "test.db")
+# Point the app at a throwaway database and upload folder before it is imported.
+_tmp = tempfile.mkdtemp()
+os.environ["DB_PATH"] = os.path.join(_tmp, "test.db")
+os.environ["UPLOAD_DIR"] = os.path.join(_tmp, "uploads")
 
 from fastapi.testclient import TestClient  # noqa: E402
 

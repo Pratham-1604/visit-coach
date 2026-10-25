@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getRubric } from '../api/rubric.js'
 import { db } from '../lib/db.js'
+import { hasPacket, syncAll, visitStatus } from '../lib/sync.js'
 import { useFetch } from '../lib/useFetch.js'
 import { MAX_NOTE_SECONDS, useRecorder } from '../lib/useRecorder.js'
 import { addNote, deleteNote, endVisit, rateItem, reopenVisit, updateVisit } from '../lib/visits.js'
@@ -44,14 +45,26 @@ export default function Observe() {
       {ended && (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
           <p className="font-medium">Visit ended and saved on this phone.</p>
-          <p className="mt-1">It will be sent for a coaching packet when sync is ready.</p>
+          <p className="mt-1">
+            {visit.status === 'ready'
+              ? 'It will be sent for a coaching packet as soon as the phone is online.'
+              : `Sent to the server · ${visitStatus(visit).label}`}
+          </p>
           <div className="mt-3 flex gap-3">
-            <Link to="/" className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
-              Back to schools
-            </Link>
-            <button onClick={() => reopenVisit(visit.id)} className="rounded-lg px-3 py-2 text-emerald-800 underline">
-              Edit visit
-            </button>
+            {hasPacket(visit) ? (
+              <Link to={`/visits/${visit.id}/packet`} className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
+                Open packet
+              </Link>
+            ) : (
+              <Link to="/" className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
+                Back to schools
+              </Link>
+            )}
+            {visit.status === 'ready' && (
+              <button onClick={() => reopenVisit(visit.id)} className="rounded-lg px-3 py-2 text-emerald-800 underline">
+                Edit visit
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -75,7 +88,7 @@ export default function Observe() {
               {ratedCount}/{items.length} rated · {notes.length} {notes.length === 1 ? 'note' : 'notes'}
             </p>
             <button
-              onClick={() => endVisit(visit, items.map((item) => item.id))}
+              onClick={() => endVisit(visit, items.map((item) => item.id)).then(syncAll)}
               disabled={ratedCount === 0 && notes.length === 0 && !visit.typed_note.trim()}
               className="rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white disabled:opacity-50"
             >

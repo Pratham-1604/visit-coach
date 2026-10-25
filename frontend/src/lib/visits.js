@@ -1,3 +1,4 @@
+import { approveVisit, savePacket } from '../api/visits.js'
 import { db, newId, now } from './db.js'
 
 // All visit changes go through these functions, so every write is saved to IndexedDB at once.
@@ -62,4 +63,13 @@ export function endVisit(visit, visibleItemIds) {
 
 export function reopenVisit(visitId) {
   return updateVisit(visitId, { status: 'draft', ended_at: null })
+}
+
+// Send the CRP's packet edits (if any), approve, and remember the result on the phone.
+export async function approvePacket(visit, edits) {
+  if (edits) await savePacket(visit.server_id, edits)
+  const server = await approveVisit(visit.server_id)
+  await db.cache.put({ key: `/api/visits/${visit.server_id}`, value: server, saved_at: now() })
+  await updateVisit(visit.id, { server_status: server.status, packet_draft: null })
+  return server
 }
