@@ -1,0 +1,88 @@
+{
+  "_about": "NIPUN Bharat Lakshyas (targets) for Class I-III, from nipun_guidelines PDF pp.200-201 (printed pp.198-199). Wording lightly cleaned of extraction typos.",
+  "grades": {
+    "1": {
+      "source_id": "nipun-p200-class1-2",
+      "oral_language": [
+        "Converses with friends and class teacher about her needs, surroundings.",
+        "Talks about the print available in the classroom.",
+        "Recites rhymes/poems/songs with action."
+      ],
+      "reading": [
+        "Participates during read aloud/story telling session in an active way and answers questions during and after story session; acts out familiar story with props and puppets.",
+        "Uses sound symbol correspondence to write words with invented spellings.",
+        "Reads small sentences consisting of at least 4-5 simple words in an age appropriate unknown text."
+      ],
+      "writing": [
+        "Develops familiarity with matras in the words occurring in familiar contexts (story/poems/environment print etc.).",
+        "Writes, draws and/or makes things to convey meaning; draws pictures that are recognizable objects/people."
+      ],
+      "numeracy": [
+        "Counts objects up to 20.",
+        "Reads and writes numbers up to 99.",
+        "Uses addition and subtraction of numbers up to 9 in daily life situations.",
+        "Observes and describes physical properties of 3D shapes around him/her.",
+        "Estimates and verifies length using non-standard units like hand span, footstep; capacity using cup, spoon, mug.",
+        "Creates and recites short poems and stories using shapes and numbers."
+      ]
+    },
+    "2": {
+      "source_id": "nipun-p200-class1-2",
+      "oral_language": [
+        "Converses and talks about the print available in the classroom.",
+        "Engages in conversation to ask questions and listens to others.",
+        "Recites songs/poems.",
+        "Repeats familiar words occurring in stories/poems/print etc."
+      ],
+      "reading": [
+        "Reads and narrates/re-tells the stories from children's literature/textbook.",
+        "Makes new words from the letters of a given word.",
+        "Reads age appropriate unknown text of 8-10 sentences with simple words at approximately 45 to 60 words per minute correctly, with comprehension and clarity."
+      ],
+      "writing": [
+        "Writes short/simple sentences correctly to express herself.",
+        "Recognizes naming words, action words and punctuation marks."
+      ],
+      "numeracy": [
+        "Reads and writes numbers up to 999.",
+        "Uses addition and subtraction of numbers up to 99 (sum not exceeding 99) in daily life situations.",
+        "Performs multiplication as repeated addition and division as equal sharing; constructs tables of 2, 3 and 4.",
+        "Estimates and measures length/distance/capacity using non-standard uniform units and compares weight using a simple balance.",
+        "Identifies and describes 2-D shapes like rectangle, triangle, circle, oval.",
+        "Uses spatial vocabulary like far/near, in/out, above/below, left/right, front/behind, top/bottom.",
+        "Creates and solves simple riddles using numbers and shapes."
+      ]
+    },
+    "3": {
+      "source_id": "nipun-p201-class3",
+      "oral_language": [
+        "Converses with clarity using suitable vocabulary in home/school language.",
+        "Talks about the print available in the classroom.",
+        "Engages in conversation to ask questions, narrate experiences, listen to others and respond.",
+        "Recites poems individually and in group with intonation and modulation of voice."
+      ],
+      "reading": [
+        "Finds information in familiar books/textbooks.",
+        "Reads at least 60 words per minute correctly and with comprehension from an age appropriate unknown text.",
+        "Reads and follows instructions given in the text.",
+        "Can answer at least 3 out of 4 questions based on reading an age appropriate unknown story/paragraph of 8-10 sentences."
+      ],
+      "writing": [
+        "Writes short messages for different purposes.",
+        "Uses action words, naming words and punctuation marks for writing.",
+        "Writes grammatically correct sentences.",
+        "Writes short paragraphs and short stories on her/his own."
+      ],
+      "numeracy": [
+        "Reads and writes numbers up to 9999.",
+        "Solves daily life problems using addition and subtraction of numbers up to 999.",
+        "Constructs and uses multiplication tables of 2 to 10 and uses division facts.",
+        "Estimates and measures length, weight and capacity using standard units (m, km, g, kg, litres).",
+        "Identifies and relates basic 2D shapes with 3D shapes and describes their properties.",
+        "Reads a calendar date and day; reads time on a clock in hours and half-hours.",
+        "Identifies half, one-fourth, three-fourth of a whole and of a collection of objects.",
+        "Identifies, extends and communicates rules for simple patterns on numbers, events and shapes."
+      ]
+    }
+  }
+}

@@ -59,3 +59,12 @@ Format: **Decision**, then *Why*, *Alternatives* (not chosen), *Consequences*, a
 
 ### 12. Synthetic data only
 - **Why:** No child audio and no personal data. The schools, teachers, FLN levels and voice notes are all made up. Test voice samples come only from consenting adult volunteers.
+
+### 13. Ground the knowledge pack on the hackathon `sources/` library, with verified verbatim excerpts
+- **Why:** The workspace above this repo already holds the public FLN documents (KVS FLN monitoring booklet, NIPUN Bharat guidelines, NCF-FS 2022, with extracted text) plus `DATA_INVENTORY.md`. The rubric starts from the classroom-observable items on the KVS checklist, adds the two items it lacks (children read themselves, pair/group work), and the practice library adapts KVS's suggested activities and NCF-FS §4.5 strategies. Packets cite our own passage ids (`grounded_in`), and the server rejects unknown ids.
+- **Consequences:** `app/knowledge/grounding.json` holds short verbatim excerpts, so the app doesn't need the PDFs at runtime. `scripts/check_grounding.py ../../sources` checks every excerpt against its cited page. Page numbers are PDF pages, not printed pages. Hindi, Marathi and Tamil rubric labels are drafts that need a native-speaker check.
+- **Alternatives:** Native API citations (can't be combined with structured outputs), or vector RAG (see #7).
+
+### 14. The workspace's `APP_PLAN.md` is a reference, not the build plan
+- **Why:** `../APP_PLAN.md` describes a bigger system (Postgres, job worker, Dexie outbox with pull cursors, JWT auth, a separate evidence-extraction call). For this build we keep decisions #1–#12: SQLite, background tasks, no login, and one packet call. We reuse its content: the rubric/practice/citation design, the safety rules (one priority, no teacher scores, 5-minute practices, "insufficient evidence" over invention), and its k-anonymity rule for the block view.
+- **Revisit when:** A pilot needs multi-device sync or real users. That is when APP_PLAN's server design applies.

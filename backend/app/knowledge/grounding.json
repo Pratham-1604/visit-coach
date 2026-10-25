@@ -1,0 +1,157 @@
+{
+  "_about": "Verbatim excerpts from public FLN documents. Segments are joined with ' … '. 'page' is the PDF page (the '=== page N ===' marker in sources/<doc>/extracted), not the printed page number. Check with: uv run python scripts/check_grounding.py <path to sources/>",
+  "documents": {
+    "kv_fln": "KVS Reference Booklet for Monitoring FLN (Kendriya Vidyalaya Sangathan, 2026)",
+    "nipun_guidelines": "NIPUN Bharat: Guidelines for Implementation (MoE, 2021)",
+    "ncf_fs_2022": "National Curriculum Framework for Foundational Stage (NCERT, 2022)"
+  },
+  "passages": [
+    {
+      "id": "kvs-p5-observe",
+      "doc": "kv_fln",
+      "page": 5,
+      "topic": "What an observer must look at in a foundational classroom",
+      "text": "Evidence of diverse pedagogy (toy-based, activity-based, experiential). … Multilingual transactions observed. … Academic climate of the class (child-friendly, participatory). … Inclusivity: equal opportunity for CWSN, advanced and struggling learners. … Effective use of TLM, ICT, and locally available/recycled materials. … Feedback provided in an encouraging, child-friendly way. … Questions designed to assess competency and application (not only recall)."
+    },
+    {
+      "id": "kvs-p7-followup",
+      "doc": "kv_fln",
+      "page": 7,
+      "topic": "Feedback to teachers and follow-up on the next visit",
+      "text": "Give constructive feedback to teachers and encourage joyful, experiential methods. … Observe pedagogy, inclusivity, classroom climate, and resource use. … Provide feedback and suggest follow-up measures to HM/Principal. … Review improvement in the next inspection."
+    },
+    {
+      "id": "kvs-p17-oral-phonics",
+      "doc": "kv_fln",
+      "page": 17,
+      "topic": "Oral language and phonological awareness activities",
+      "text": "Picture Talk: Show a picture and let children describe what they see. … Sound Clap: Clap for each syllable in a word … Rhyme Time: Match words with similar sounds … Initial Sound Hunt: Find classroom objects beginning with a given sound. … Flash & Say: Flash a letter card; children say the sound and a word with it. … Word Wall: Create a wall of frequently used words in class."
+    },
+    {
+      "id": "kvs-p18-reading-writing",
+      "doc": "kv_fln",
+      "page": 18,
+      "topic": "Reading and writing activities",
+      "text": "Shared Reading: Teacher reads big books aloud; children follow with finger. … Paired Reading: Two children read together, supporting each other. … Story Sequencing: Arrange story pictures in correct order. … Picture Description: Children write 1–2 sentences about a picture. … Journal Writing: Maintain a daily/weekly notebook of simple sentences."
+    },
+    {
+      "id": "kvs-p19-manipulatives",
+      "doc": "kv_fln",
+      "page": 19,
+      "topic": "Concrete materials before symbols in numeracy",
+      "text": "Provide children with everyday objects like sticks, beads, stones, bottle caps, or counters to practice counting, addition, subtraction, and grouping. … Begin with concrete experiences before moving to abstract symbols and equations. … Example Activity: Distribute 10 beads among 2 children and ask how many each one gets."
+    },
+    {
+      "id": "kvs-p20-real-life",
+      "doc": "kv_fln",
+      "page": 20,
+      "topic": "Real-life maths and problem solving",
+      "text": "Link mathematical concepts with everyday life situations. … Pose real-life problems that encourage children to apply mathematical thinking. … Encourage multiple approaches and peer discussions. … Example Activity: If there are 15 pencils and 5 students, ask how many pencils each will get"
+    },
+    {
+      "id": "kvs-p21-remediation",
+      "doc": "kv_fln",
+      "page": 21,
+      "topic": "Support for children who are behind",
+      "text": "Observe children during activities rather than formal testing only. … For children struggling in literacy – provide extra reading time, phonics support, and peer reading. … For children struggling in numeracy – use concrete objects, repeat practice, and give visual aids."
+    },
+    {
+      "id": "nipun-p20-literacy",
+      "doc": "nipun_guidelines",
+      "page": 20,
+      "topic": "Components of foundational literacy",
+      "text": "Phonological Awareness: This domain includes the competencies of word awareness, rhyme awareness, and awareness of sounds within words … Decoding: This domain includes competencies of print awareness, akshara knowledge and decoding, and word recognition … Reading Fluency: Refers to the ability to read a text with accuracy, speed (automaticity), expression (prosody), and comprehension"
+    },
+    {
+      "id": "nipun-p190-crc",
+      "doc": "nipun_guidelines",
+      "page": 190,
+      "topic": "Role of the CRC: visits and on-site support",
+      "text": "Regular academic inspection visits to schools, … Providing training and on-site support to schools and teachers, … Ensuring introduction and sustenance of innovative pedagogies in schools"
+    },
+    {
+      "id": "nipun-p191-crc",
+      "doc": "nipun_guidelines",
+      "page": 191,
+      "topic": "Role of the CRC: TLM, slow learners, app-based reporting",
+      "text": "Ensuring effective use of all TLM provided to schools … Ensuring individualized support for CWSN and slow learners, … The reporting by CRC/BRC should preferably be App based, hence States/UTs may prepare Apps for reporting in the local language."
+    },
+    {
+      "id": "nipun-p200-class1-2",
+      "doc": "nipun_guidelines",
+      "page": 200,
+      "topic": "NIPUN Lakshyas for Class I and Class II",
+      "text": "Reads small sentences consisting of at least 4-5 simple words in an age appropriate unknown text. … Reads age appropriate unknown text of 8-10 sentences with simple words with appropriate speed (approximately 45to 60 words per minute correctly) comprehension, and clarity."
+    },
+    {
+      "id": "nipun-p201-class3",
+      "doc": "nipun_guidelines",
+      "page": 201,
+      "topic": "NIPUN Lakshyas for Class III",
+      "text": "Reads atleast60 words per minute correctly and with comprehension … Solves daily life problems using addition and subtraction of numbers up to 999, sum not exceeding 999"
+    },
+    {
+      "id": "ncf-p112-current-practice",
+      "doc": "ncf_fs_2022",
+      "page": 112,
+      "topic": "What early language classrooms usually look like",
+      "text": "At present, early language classrooms are focussed mainly on teaching the varnamala and ma- tras, choral repetition of a text being read by the Teacher or children and copying or handwriting practice. There is little emphasis on meaning-oriented work, and few opportunities are provided for children to develop as readers and writers."
+    },
+    {
+      "id": "ncf-p113-print-rich",
+      "doc": "ncf_fs_2022",
+      "page": 113,
+      "topic": "Print-rich classroom and reading corner",
+      "text": "Creating a print-rich environment in the classroom through use of print resources (e.g., big books, picture books, story posters, poem posters, children’s magazines) displayed or kept in the classroom within children’s reach. … Setting up a ‘reading corner’ and ‘writing corner’ in the classroom."
+    },
+    {
+      "id": "ncf-p115-decoding",
+      "doc": "ncf_fs_2022",
+      "page": 115,
+      "topic": "Decoding: sounds, aksharas, blending",
+      "text": "Decoding instruction should follow activities of phonological awareness, where attention needs to be directed to sounds in words (beginning, middle, ending sounds). … Explicit instruction needs to be given for word decoding and spelling with segmenting and blending words and aksharas."
+    },
+    {
+      "id": "ncf-p115-reading",
+      "doc": "ncf_fs_2022",
+      "page": 115,
+      "topic": "Read-aloud, guided and independent reading",
+      "text": "The intent is not for the children to repeat after the Teacher but to develop their language capacities and vocabulary. … In guided reading, the responsibility for reading shifts from the Teacher to the children. … Children must be given opportunities to read independently or with a partner."
+    },
+    {
+      "id": "ncf-p115-writing",
+      "doc": "ncf_fs_2022",
+      "page": 115,
+      "topic": "Modelled and shared writing instead of copying",
+      "text": "copywriting is not a very meaningful activity for children, even if it helps in developing writing fluency. … For example, they can start a sentence “I ate ___ for breakfast” on the board and ask a child to come and complete it."
+    },
+    {
+      "id": "ncf-p117-home-language",
+      "doc": "ncf_fs_2022",
+      "page": 117,
+      "topic": "Using children's home language",
+      "text": "The language used by the Teacher should be simple and supported by gestures, pictures, actions, and use of words from the children’s home languages. … Create a stress-free and safe environment."
+    },
+    {
+      "id": "ncf-p118-reasoning",
+      "doc": "ncf_fs_2022",
+      "page": 118,
+      "topic": "Reasoning and communication in maths",
+      "text": "reasoning i.e., justifying and reasoning about solutions and processes; connec- tion-making i.e., connections between one concept and another; representation i.e., using con- crete, visual diagrams to represent mathematical concepts and ideas; communication i.e., ex- plaining and communicating mathematical ideas"
+    },
+    {
+      "id": "ncf-p119-elps",
+      "doc": "ncf_fs_2022",
+      "page": 119,
+      "topic": "Concrete → language → pictures → symbols (ELPS)",
+      "text": "E – Experience: Learning the mathematical concept of concrete objects, e.g., counting … L – Spoken Language: Describing the experience in language … P – Pictures: Representing mathematical concepts in a pictorial form … S – Written Symbols:"
+    },
+    {
+      "id": "ncf-p119-real-life",
+      "doc": "ncf_fs_2022",
+      "page": 119,
+      "topic": "Connecting maths to children's lives",
+      "text": "Learning mathematics must relate to children’s real life and their prior knowledge. … Teachers should use real life examples to build conceptual and problem-solving abilities."
+    }
+  ]
+}

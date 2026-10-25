@@ -41,10 +41,10 @@ If time runs short, cut from the end of the CAN list first. Log anything cut in 
 - [x] Repo setup: uv backend, Vite + React + Tailwind frontend, git, docs
 - [x] Backend layering example (schools: route → controller → service → db) + tests
 - [x] Home (school list + focus) and School pages
-- [ ] Rubric (~12 FLN items, each tagged with a need area)
-- [ ] FLN knowledge pack v1 (`backend/app/knowledge/`)
-- [ ] `services/llm.py` + `services/packet.py`: Claude coaching packet from notes + taps, runnable from the CLI
-- [ ] Observe page: rubric taps + 30 s recorder → IndexedDB (Dexie), offline indicator
+- [x] Rubric (15 FLN items, each tagged with a need area; `GET /api/rubric`)
+- [x] FLN knowledge pack v1 (`backend/app/knowledge/`): rubric, 16 practices, NIPUN Lakshyas, 21 verified source excerpts
+- [x] `services/llm.py` + `services/packet.py`: Claude coaching packet from notes + taps, runnable from the CLI (verified live: ~25 s per packet, prompt cache hits on repeat calls)
+- [x] Observe page: rubric taps + 30 s recorder → IndexedDB (Dexie), offline indicator (rubric + schools cached for offline; drafts listed on Home)
 - [ ] Sync: `POST /api/visits/sync` → Sarvam ASR → packet (background task, status polling)
 - [ ] Packet review/edit/approve page
 - [ ] Teacher view via share link

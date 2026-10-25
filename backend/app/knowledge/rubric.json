@@ -1,0 +1,226 @@
+{
+  "_about": "CRP lesson-observation rubric v1. Seeded from the classroom-observable items of the KVS General Checklist (kv_fln PDF p.8 / printed p.6), plus two VisitCoach items the KVS list lacks: children reading themselves and pair/group work. Ratings: yes | partly | no (or skipped). Hindi, Marathi and Tamil labels are drafts and still need a native-speaker check.",
+  "version": 1,
+  "need_areas": [
+    {"id": "active_learning", "label": "Learning by doing, with materials"},
+    {"id": "inclusion", "label": "Every child takes part"},
+    {"id": "oral_language", "label": "Talk, stories and print"},
+    {"id": "early_reading", "label": "Children reading for themselves"},
+    {"id": "writing", "label": "Children's own writing"},
+    {"id": "concrete_maths", "label": "Concrete-to-symbol maths"},
+    {"id": "maths_reasoning", "label": "Everyday maths and explaining"},
+    {"id": "feedback", "label": "Feedback and questioning"}
+  ],
+  "items": [
+    {
+      "id": "play_based",
+      "subject": "both",
+      "need_area": "active_learning",
+      "origin": "KVS checklist #1",
+      "text": {
+        "en": "Children learn by doing: activity, play, toys or games",
+        "hi": "बच्चे करके सीखते हैं: गतिविधि, खेल या खिलौनों से",
+        "mr": "मुले कृतीतून शिकतात: उपक्रम, खेळ किंवा खेळण्यांतून",
+        "ta": "குழந்தைகள் செய்து கற்கிறார்கள்: செயல்பாடு, விளையாட்டு, பொம்மைகள்"
+      },
+      "look_for": "For most of the lesson children are handling, moving, playing or making something, not only listening and copying.",
+      "source_ids": ["kvs-p5-observe", "nipun-p190-crc"]
+    },
+    {
+      "id": "tlm_use",
+      "subject": "both",
+      "need_area": "active_learning",
+      "origin": "KVS checklist #13",
+      "text": {
+        "en": "TLM or local materials are in children's hands",
+        "hi": "शिक्षण सामग्री (TLM) या स्थानीय सामग्री बच्चों के हाथ में है",
+        "mr": "शैक्षणिक साहित्य (TLM) किंवा स्थानिक साहित्य मुलांच्या हातात आहे",
+        "ta": "கற்றல் உபகரணங்கள் (TLM) குழந்தைகளின் கைகளில் உள்ளன"
+      },
+      "look_for": "Cards, stones, sticks, beads or charts are used by children themselves, not only shown from the front.",
+      "source_ids": ["kvs-p5-observe", "nipun-p191-crc"]
+    },
+    {
+      "id": "home_language",
+      "subject": "both",
+      "need_area": "inclusion",
+      "origin": "KVS checklist #2",
+      "text": {
+        "en": "Teacher uses children's home language; children may answer in it",
+        "hi": "शिक्षक बच्चों की घर की भाषा का उपयोग करते हैं; बच्चे उसमें उत्तर दे सकते हैं",
+        "mr": "शिक्षक मुलांच्या घरच्या भाषेचा वापर करतात; मुले त्या भाषेत उत्तर देऊ शकतात",
+        "ta": "ஆசிரியர் குழந்தைகளின் வீட்டு மொழியைப் பயன்படுத்துகிறார்; குழந்தைகள் அதில் பதில் சொல்லலாம்"
+      },
+      "look_for": "Explanations use words children know from home; a child answering in their own dialect is accepted, not corrected harshly.",
+      "source_ids": ["kvs-p5-observe", "ncf-p117-home-language"]
+    },
+    {
+      "id": "every_child_turn",
+      "subject": "both",
+      "need_area": "inclusion",
+      "origin": "KVS checklist #5, #7",
+      "text": {
+        "en": "Most children, including back rows and slower learners, get a turn",
+        "hi": "पीछे बैठे और धीमे सीखने वाले बच्चों सहित अधिकांश बच्चों को मौका मिलता है",
+        "mr": "मागच्या रांगेतील व हळू शिकणाऱ्या मुलांसह बहुतेक मुलांना संधी मिळते",
+        "ta": "பின் வரிசை மற்றும் மெதுவாகக் கற்கும் குழந்தைகள் உட்பட பெரும்பாலானோருக்கு வாய்ப்பு கிடைக்கிறது"
+      },
+      "look_for": "Turns are not limited to the same few front-row children; quieter children are invited and supported.",
+      "source_ids": ["kvs-p5-observe", "nipun-p191-crc"]
+    },
+    {
+      "id": "pair_group_work",
+      "subject": "both",
+      "need_area": "inclusion",
+      "origin": "VisitCoach addition",
+      "text": {
+        "en": "Children work in pairs or small groups for part of the lesson",
+        "hi": "पाठ के कुछ हिस्से में बच्चे जोड़ियों या छोटे समूहों में काम करते हैं",
+        "mr": "तासिकेच्या काही भागात मुले जोडीने किंवा लहान गटांत काम करतात",
+        "ta": "பாடத்தின் ஒரு பகுதியில் குழந்தைகள் இணையாக அல்லது சிறு குழுக்களாக வேலை செய்கிறார்கள்"
+      },
+      "look_for": "At least a few minutes where children read, count or solve together and help each other.",
+      "source_ids": ["kvs-p18-reading-writing", "kvs-p21-remediation", "kvs-p20-real-life"]
+    },
+    {
+      "id": "print_rich",
+      "subject": "literacy",
+      "need_area": "oral_language",
+      "origin": "KVS checklist #9 (classroom part)",
+      "text": {
+        "en": "Charts, word wall or children's work displayed at children's height",
+        "hi": "चार्ट, शब्द-दीवार या बच्चों का काम बच्चों की ऊँचाई पर लगा है",
+        "mr": "तक्ते, शब्दभिंत किंवा मुलांचे काम मुलांच्या उंचीवर लावलेले आहे",
+        "ta": "விளக்கப்படங்கள், சொல் சுவர் அல்லது குழந்தைகளின் படைப்புகள் அவர்கள் உயரத்தில் உள்ளன"
+      },
+      "look_for": "Print is within reach and used during the lesson (children point, read, add words), not just decoration.",
+      "source_ids": ["ncf-p113-print-rich", "kvs-p17-oral-phonics"]
+    },
+    {
+      "id": "read_aloud_talk",
+      "subject": "literacy",
+      "need_area": "oral_language",
+      "origin": "VisitCoach (NCF-FS read-aloud)",
+      "text": {
+        "en": "Teacher reads a story aloud and talks about it with children",
+        "hi": "शिक्षक कहानी पढ़कर सुनाते हैं और बच्चों से उस पर बात करते हैं",
+        "mr": "शिक्षक गोष्ट वाचून दाखवतात आणि मुलांशी त्यावर गप्पा मारतात",
+        "ta": "ஆசிரியர் கதையை உரக்க வாசித்து குழந்தைகளுடன் அதைப் பற்றிப் பேசுகிறார்"
+      },
+      "look_for": "Children predict, answer 'why' questions or retell — not only repeat lines after the teacher.",
+      "source_ids": ["ncf-p115-reading", "kvs-p18-reading-writing"]
+    },
+    {
+      "id": "sounds_aksharas",
+      "subject": "literacy",
+      "need_area": "early_reading",
+      "origin": "VisitCoach (NCF-FS decoding)",
+      "text": {
+        "en": "Children break words into sounds and blend sounds/aksharas into words",
+        "hi": "बच्चे शब्दों को ध्वनियों में तोड़ते हैं और ध्वनियों/अक्षरों को जोड़कर शब्द बनाते हैं",
+        "mr": "मुले शब्दांचे ध्वनी वेगळे करतात आणि ध्वनी/अक्षरे जोडून शब्द बनवतात",
+        "ta": "குழந்தைகள் சொற்களை ஒலிகளாகப் பிரித்து, ஒலிகளை/எழுத்துகளை இணைத்துச் சொற்களை உருவாக்குகிறார்கள்"
+      },
+      "look_for": "Sound work with meaning (clap syllables, first sound, make a word), not only reciting the varnamala in chorus.",
+      "source_ids": ["ncf-p115-decoding", "ncf-p112-current-practice", "kvs-p17-oral-phonics", "nipun-p20-literacy"]
+    },
+    {
+      "id": "children_read",
+      "subject": "literacy",
+      "need_area": "early_reading",
+      "origin": "VisitCoach addition",
+      "text": {
+        "en": "Children read text themselves, alone or with a partner",
+        "hi": "बच्चे स्वयं पाठ पढ़ते हैं, अकेले या साथी के साथ",
+        "mr": "मुले स्वतः मजकूर वाचतात, एकट्याने किंवा जोडीदारासोबत",
+        "ta": "குழந்தைகள் தாங்களே வாசிக்கிறார்கள், தனியாக அல்லது இணையுடன்"
+      },
+      "look_for": "Children's eyes are on the text and their own voices are reading, not repeating after the teacher.",
+      "source_ids": ["ncf-p115-reading", "ncf-p112-current-practice", "nipun-p200-class1-2", "nipun-p201-class3"]
+    },
+    {
+      "id": "own_writing",
+      "subject": "literacy",
+      "need_area": "writing",
+      "origin": "KVS checklist #14 + NCF-FS writing",
+      "text": {
+        "en": "Children write or draw their own words, not only copy from the board",
+        "hi": "बच्चे अपने शब्द लिखते या चित्र बनाते हैं, केवल बोर्ड से नकल नहीं करते",
+        "mr": "मुले स्वतःचे शब्द लिहितात किंवा चित्र काढतात, फक्त फळ्यावरून उतरवत नाहीत",
+        "ta": "குழந்தைகள் கரும்பலகையில் இருந்து நகலெடுப்பது மட்டுமின்றி தங்கள் சொந்தச் சொற்களை எழுதுகிறார்கள் அல்லது வரைகிறார்கள்"
+      },
+      "look_for": "Notebooks show children's own sentences, labels or drawings with words (invented spelling is fine).",
+      "source_ids": ["ncf-p115-writing", "kvs-p18-reading-writing"]
+    },
+    {
+      "id": "concrete_first",
+      "subject": "numeracy",
+      "need_area": "concrete_maths",
+      "origin": "VisitCoach (NCF-FS ELPS)",
+      "text": {
+        "en": "Children handle objects before pictures and written numbers",
+        "hi": "बच्चे चित्र और लिखित संख्याओं से पहले वस्तुओं से काम करते हैं",
+        "mr": "मुले चित्रे व लिखित संख्यांआधी वस्तू हाताळतात",
+        "ta": "படங்கள், எழுத்து எண்களுக்கு முன் குழந்தைகள் பொருட்களைக் கையாளுகிறார்கள்"
+      },
+      "look_for": "Each child (or pair) counts, groups or shares real objects, then says it, then draws or writes it.",
+      "source_ids": ["ncf-p119-elps", "kvs-p19-manipulatives"]
+    },
+    {
+      "id": "daily_life_maths",
+      "subject": "numeracy",
+      "need_area": "maths_reasoning",
+      "origin": "VisitCoach (NCF-FS, KVS strategies)",
+      "text": {
+        "en": "Maths problems come from daily life: sharing, shop, calendar, classroom",
+        "hi": "गणित के प्रश्न रोज़मर्रा से आते हैं: बाँटना, दुकान, कैलेंडर, कक्षा",
+        "mr": "गणिताचे प्रश्न रोजच्या जीवनातून येतात: वाटणी, दुकान, दिनदर्शिका, वर्ग",
+        "ta": "கணக்குகள் அன்றாட வாழ்விலிருந்து வருகின்றன: பகிர்தல், கடை, நாட்காட்டி, வகுப்பறை"
+      },
+      "look_for": "Children solve a problem about things they know (rotis, pencils, money), not only abstract sums on the board.",
+      "source_ids": ["ncf-p119-real-life", "kvs-p20-real-life", "nipun-p201-class3"]
+    },
+    {
+      "id": "explain_thinking",
+      "subject": "numeracy",
+      "need_area": "maths_reasoning",
+      "origin": "VisitCoach (NCF-FS maths processes)",
+      "text": {
+        "en": "Children explain how they got an answer; more than one way is accepted",
+        "hi": "बच्चे बताते हैं कि उत्तर कैसे निकाला; एक से अधिक तरीके स्वीकार हैं",
+        "mr": "मुले उत्तर कसे काढले ते सांगतात; एकापेक्षा जास्त पद्धती स्वीकारल्या जातात",
+        "ta": "குழந்தைகள் விடையை எப்படிக் கண்டார்கள் என விளக்குகிறார்கள்; பல வழிகள் ஏற்கப்படுகின்றன"
+      },
+      "look_for": "Teacher asks 'how did you find it?' and lets two children show different ways.",
+      "source_ids": ["ncf-p118-reasoning", "kvs-p20-real-life"]
+    },
+    {
+      "id": "encouraging_feedback",
+      "subject": "both",
+      "need_area": "feedback",
+      "origin": "KVS checklist #18",
+      "text": {
+        "en": "Feedback to children is encouraging and specific; mistakes handled kindly",
+        "hi": "बच्चों को प्रोत्साहक और स्पष्ट प्रतिक्रिया मिलती है; गलतियों को प्यार से संभाला जाता है",
+        "mr": "मुलांना प्रोत्साहन देणारा व नेमका अभिप्राय मिळतो; चुका प्रेमाने हाताळल्या जातात",
+        "ta": "குழந்தைகளுக்கு ஊக்கமளிக்கும், தெளிவான பின்னூட்டம்; தவறுகள் அன்புடன் கையாளப்படுகின்றன"
+      },
+      "look_for": "Praise names what the child did ('you blended the sounds'); errors lead to a hint, not scolding.",
+      "source_ids": ["kvs-p5-observe", "ncf-p117-home-language"]
+    },
+    {
+      "id": "understanding_questions",
+      "subject": "both",
+      "need_area": "feedback",
+      "origin": "KVS checklist #19",
+      "text": {
+        "en": "Questions check understanding and use, not only recall or chorus answers",
+        "hi": "प्रश्न समझ और उपयोग जाँचते हैं, केवल रटे हुए या सामूहिक उत्तर नहीं",
+        "mr": "प्रश्न समज व उपयोग तपासतात, फक्त पाठांतर किंवा सामूहिक उत्तरे नाहीत",
+        "ta": "கேள்விகள் புரிதலையும் பயன்பாட்டையும் சோதிக்கின்றன, மனப்பாடம் அல்லது கூட்டுப் பதில் மட்டுமல்ல"
+      },
+      "look_for": "Individual children answer 'why / how / what next' questions; the teacher can tell who has understood.",
+      "source_ids": ["kvs-p5-observe", "kvs-p21-remediation"]
+    }
+  ]
+}

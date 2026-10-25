@@ -10,7 +10,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
 from app import config, db
-from app.routes import schools
+from app.routes import rubric, schools
 from app.seed import seed_if_empty
 
 
@@ -24,6 +24,7 @@ async def lifespan(app):
 app = FastAPI(title="VisitCoach API", lifespan=lifespan)
 
 app.include_router(schools.router)
+app.include_router(rubric.router)
 
 
 @app.get("/api/health")

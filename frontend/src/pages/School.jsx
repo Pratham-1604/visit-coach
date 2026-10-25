@@ -1,12 +1,34 @@
-import { Link, useParams } from 'react-router-dom'
+import { useLiveQuery } from 'dexie-react-hooks'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { getRubric } from '../api/rubric.js'
 import { getSchool } from '../api/schools.js'
 import FocusBadge from '../components/FocusBadge.jsx'
+import { db } from '../lib/db.js'
 import { useFetch } from '../lib/useFetch.js'
+import { startVisit } from '../lib/visits.js'
 
 // One school: suggested focus + the teachers the CRP can observe.
 export default function School() {
   const { schoolId } = useParams()
   const { data: school, error, loading } = useFetch(() => getSchool(schoolId), [schoolId])
+  // Loading the rubric here also saves it on the phone before the CRP walks into class.
+  const { data: rubric } = useFetch(() => getRubric(), [])
+  const drafts = useLiveQuery(
+    () =>
+      db.visits
+        .where('school_id')
+        .equals(Number(schoolId))
+        .filter((visit) => visit.status === 'draft')
+        .toArray(),
+    [schoolId],
+  )
+  const navigate = useNavigate()
+
+  async function openVisit(teacher) {
+    const draft = drafts?.find((visit) => visit.teacher_id === teacher.id)
+    const visitId = draft ? draft.id : await startVisit(school, teacher, rubric.version)
+    navigate(`/visits/${visitId}`)
+  }
 
   if (loading) return <p className="text-slate-500">Loading…</p>
   if (error) return <p className="text-red-600">Could not load school: {error}</p>
@@ -38,12 +60,12 @@ export default function School() {
               <p className="font-medium">{teacher.name}</p>
               <p className="text-sm text-slate-500">Grade {teacher.grade}</p>
             </div>
-            {/* Next step: this button opens the Observe screen */}
             <button
-              disabled
+              onClick={() => openVisit(teacher)}
+              disabled={!rubric || !drafts}
               className="rounded-lg bg-emerald-600 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
             >
-              Start visit
+              {drafts?.some((visit) => visit.teacher_id === teacher.id) ? 'Continue visit' : 'Start visit'}
             </button>
           </div>
         ))}

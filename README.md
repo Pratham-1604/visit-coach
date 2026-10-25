@@ -35,6 +35,14 @@ cd backend && uv run pytest
 cd frontend && npm run lint && npm run build
 ```
 
+## Coaching packet from the CLI
+
+```bash
+cd backend
+uv run python -m app.services.packet            # synthetic Grade 2 Marathi visit -> packet JSON
+uv run python -m app.services.packet --twice    # usage on stderr; 2nd call should show cache_read_input_tokens > 0
+```
+
 ## Production-style run
 
 `npm run build` writes `frontend/dist`. FastAPI serves it, so one server handles the app and the API:
@@ -52,10 +60,12 @@ backend/app/
   config.py        settings from .env
   db.py            sqlite3 helpers: query(), query_one(), execute()
   seed.py          synthetic demo schools and teachers
+  knowledge/       FLN knowledge pack (JSON): rubric, practices, Lakshyas, source excerpts
   routes/          HTTP endpoints, thin — they call a controller
   controllers/     the logic for each feature: db reads/writes + services
   services/        external APIs (Claude, Sarvam) and pure helpers
 backend/tests/     pytest, uses a throwaway db
+backend/scripts/   one-off checks, e.g. check_grounding.py (excerpts vs source PDFs)
 
 frontend/src/
   router.jsx       every page/URL is listed here
