@@ -3,10 +3,11 @@
 An AI copilot that turns every CRP school visit into one actionable coaching intervention for Grade 1–3 FLN teachers.
 Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
-- What we're building and when: [PLAN.md](PLAN.md)
-- Why we chose what we chose: [Decisions.md](Decisions.md)
-- How it works end to end: [flow.md](flow.md)
+- What we're building and when (and what's pending): [PLAN.md](PLAN.md)
+- Why we chose what we chose: [DECISIONS.md](DECISIONS.md)
+- How it works end to end: [FLOW.md](FLOW.md) (plain-words walkthrough)
 - What's left for later: [improvements/futurescope.md](improvements/futurescope.md)
+- Research and source documents (NIPUN Bharat, NCF-FS, KVS FLN tools): Dhruv's workspace `../edu-hackathon-fln/` (outside this repo). The app only needs the verified excerpts in `backend/app/knowledge/grounding.json`.
 
 ## Run it locally
 
@@ -33,7 +34,12 @@ Open http://localhost:5173. Use Chrome DevTools' device mode to see the phone la
 ```bash
 cd backend && uv run pytest
 cd frontend && npm run lint && npm run build
+
+# every grounding excerpt must appear on its cited page (needs Dhruv's sources folder)
+cd backend && uv run python scripts/check_grounding.py ../../edu-hackathon-fln/sources
 ```
+
+`.env` needs `ANTHROPIC_API_KEY` for packets and `SARVAM_API_KEY` for voice notes. Without the Sarvam key, visits that only have a typed note still work.
 
 ## Coaching packet from the CLI
 
@@ -41,6 +47,18 @@ cd frontend && npm run lint && npm run build
 cd backend
 uv run python -m app.services.packet            # synthetic Grade 2 Marathi visit -> packet JSON
 uv run python -m app.services.packet --twice    # usage on stderr; 2nd call should show cache_read_input_tokens > 0
+```
+
+## Demo data
+
+On first start the server creates 22 made-up schools with a few weeks of visit history, so the block view (`/block`) and the next-visit check have something to show. To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
+
+## Quality check (costs credits)
+
+```bash
+cd backend
+uv run python -m evals.run_eval --limit 3   # try 3 cases first (about $0.10-0.15 each)
+uv run python -m evals.run_eval             # all cases; writes evals/results.json + prints a summary
 ```
 
 ## Production-style run
@@ -52,6 +70,15 @@ cd frontend && npm run build
 cd ../backend && uv run uvicorn app.main:app --port 8000   # open http://localhost:8000
 ```
 
+The app only keeps working offline in the **built** version (`npm run build` / the deployed site), not in `npm run dev`.
+
+## Docker
+
+```bash
+docker build -t visitcoach .
+docker run -p 8000:8000 -e ANTHROPIC_API_KEY=... -e SARVAM_API_KEY=... visitcoach   # open http://localhost:8000
+```
+
 ## Code layout
 
 ```
@@ -59,13 +86,14 @@ backend/app/
   main.py          app setup, routers, serves frontend/dist
   config.py        settings from .env
   db.py            sqlite3 helpers: query(), query_one(), execute()
-  seed.py          synthetic demo schools and teachers
+  seed.py          made-up demo data: 22 schools + visit history
   knowledge/       FLN knowledge pack (JSON): rubric, practices, Lakshyas, source excerpts
   routes/          HTTP endpoints, thin — they call a controller
   controllers/     the logic for each feature: db reads/writes + services
   services/        external APIs (Claude, Sarvam) and pure helpers
 backend/tests/     pytest, uses a throwaway db
 backend/scripts/   one-off checks, e.g. check_grounding.py (excerpts vs source PDFs)
+backend/evals/     quality check: synthetic visits + AI grader (costs credits)
 
 frontend/src/
   router.jsx       every page/URL is listed here

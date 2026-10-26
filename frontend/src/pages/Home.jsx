@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { getSchools } from '../api/schools.js'
 import FocusBadge from '../components/FocusBadge.jsx'
 import { db } from '../lib/db.js'
+import { formatDate } from '../lib/format.js'
 import { useOnline } from '../lib/offline.js'
 import { hasPacket, retry, syncAll, TONES, visitStatus } from '../lib/sync.js'
 import { useFetch } from '../lib/useFetch.js'
@@ -38,6 +39,10 @@ export default function Home() {
           <p className="mt-2 text-sm text-slate-600">{school.focus.reason}</p>
         </Link>
       ))}
+
+      <Link to="/block" className="block py-2 text-center text-sm text-emerald-700 underline">
+        Block officer view (counts only)
+      </Link>
     </div>
   )
 }
@@ -88,7 +93,7 @@ function PhoneVisit({ visit }) {
         <div>
           <p className="font-medium">{visit.teacher_name}</p>
           <p className="text-sm text-slate-500">
-            {visit.school_name} · {new Date(visit.started_at).toLocaleDateString()}
+            {visit.school_name} · {formatDate(visit.started_at)}
           </p>
         </div>
         <span className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${TONES[tone]}`}>

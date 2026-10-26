@@ -1,6 +1,6 @@
-"""Speech-to-text for CRP voice notes, via Sarvam AI (Decisions.md #5).
+"""Speech-to-text for CRP voice notes, via Sarvam AI (DECISIONS.md #5).
 
-Each note is at most 30 s, which fits Sarvam's REST endpoint (Decisions.md #8).
+Each note is at most 30 s, which fits Sarvam's REST endpoint (DECISIONS.md #8).
 Docs: https://docs.sarvam.ai/api-reference-docs/speech-to-text/transcribe
 """
 

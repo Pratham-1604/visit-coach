@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-export const MAX_NOTE_SECONDS = 30 // Sarvam's REST limit (Decisions.md #8)
+export const MAX_NOTE_SECONDS = 30 // Sarvam's REST limit (DECISIONS.md #8)
 
 // Record one short voice note with MediaRecorder.
 // Usage: const rec = useRecorder((blob, mime, seconds) => save(...))

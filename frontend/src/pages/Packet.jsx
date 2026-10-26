@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getRubric } from '../api/rubric.js'
 import { getVisitCached } from '../api/visits.js'
 import { db } from '../lib/db.js'
+import { formatDate, hasCrpNote } from '../lib/format.js'
 import { useOnline } from '../lib/offline.js'
 import { useFetch } from '../lib/useFetch.js'
 import { approvePacket, updateVisit } from '../lib/visits.js'
@@ -52,7 +53,7 @@ function PacketReview({ visit }) {
       <div>
         <h1 className="text-xl font-semibold">Coaching packet · {server.teacher_name}</h1>
         <p className="text-sm text-slate-500">
-          Grade {server.grade} · {server.school_name} · {new Date(visit.started_at).toLocaleDateString()}
+          Grade {server.grade} · {server.school_name} · {formatDate(visit.started_at)}
         </p>
       </div>
 
@@ -79,7 +80,18 @@ function PacketReview({ visit }) {
             <PacketForm visit={visit} packet={packet} language={server.language} onApproved={setApproved} />
           )}
 
+          <Link
+            to={`/visits/${visit.id}/rehearse`}
+            className="block rounded-xl border border-slate-200 bg-white p-4 text-sm active:bg-slate-50"
+          >
+            <span className="font-medium text-emerald-700">Practise the conversation →</span>
+            <span className="mt-0.5 block text-slate-600">
+              Claude plays {server.teacher_name.split(' ')[0]} so you can rehearse the debrief (needs internet).
+            </span>
+          </Link>
+
           <Evidence packet={packet} />
+          <Transcripts server={server} />
         </>
       )}
     </div>
@@ -94,6 +106,8 @@ function PacketForm({ visit, packet, language, onApproved }) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
   const edited = FIELDS.some(({ key }) => form[key] !== original[key])
+  // Notes meant for the CRP, like "[CRP: add an example]", must be removed before the teacher sees the packet.
+  const notesLeft = FIELDS.filter(({ key }) => hasCrpNote(form[key]))
 
   function change(key, value) {
     const next = { ...form, [key]: value }
@@ -132,8 +146,15 @@ function PacketForm({ visit, packet, language, onApproved }) {
             lang={language}
             value={form[key]}
             onChange={(event) => change(key, event.target.value)}
-            className="field-sizing-content min-h-16 w-full rounded-xl border border-slate-200 bg-white p-3 text-sm"
+            className={`field-sizing-content min-h-16 w-full rounded-xl border bg-white p-3 text-sm ${
+              hasCrpNote(form[key]) ? 'border-rose-400 ring-2 ring-rose-100' : 'border-slate-200'
+            }`}
           />
+          {hasCrpNote(form[key]) && (
+            <span className="block text-xs text-rose-700">
+              This has a note for you in [brackets]. Replace it with what you saw, or delete it: the teacher will read this.
+            </span>
+          )}
         </label>
       ))}
 
@@ -146,13 +167,18 @@ function PacketForm({ visit, packet, language, onApproved }) {
       <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto max-w-md space-y-1 px-4 py-3">
           {error && <p className="text-sm text-red-600">Could not approve: {error}</p>}
+          {notesLeft.length > 0 && (
+            <p className="text-sm text-rose-700">
+              Remove the note for you in: {notesLeft.map(({ label }) => label).join(', ')}
+            </p>
+          )}
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm text-slate-600">
               {!online ? 'Offline · edits saved on phone' : edited ? 'Edited · saved on phone' : 'No edits'}
             </p>
             <button
               onClick={approve}
-              disabled={!online || saving}
+              disabled={!online || saving || notesLeft.length > 0}
               className="rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white disabled:opacity-50"
             >
               {saving ? 'Approving…' : 'Approve and share'}
@@ -244,6 +270,37 @@ function Evidence({ packet }) {
         </ul>
       </details>
     </section>
+  )
+}
+
+// What the CRP said and typed, as the server understood it. Checking this catches speech-to-text mistakes.
+function Transcripts({ server }) {
+  const notes = server.notes ?? []
+  if (notes.length === 0 && !server.typed_note) return null
+
+  return (
+    <details className="rounded-xl border border-slate-200 bg-white p-4 text-sm">
+      <summary className="cursor-pointer font-medium text-emerald-700">
+        Your notes, as the app heard them ({notes.length + (server.typed_note ? 1 : 0)})
+      </summary>
+      <ol className="mt-2 space-y-2">
+        {notes.map((note, index) => (
+          <li key={note.id} lang={server.language} className="rounded-lg bg-slate-50 p-2">
+            <span className="mr-1 text-xs font-medium text-slate-500">Voice note {index + 1}:</span>
+            {note.transcript || <span className="italic text-slate-500">(nothing heard)</span>}
+          </li>
+        ))}
+        {server.typed_note && (
+          <li lang={server.language} className="rounded-lg bg-slate-50 p-2">
+            <span className="mr-1 text-xs font-medium text-slate-500">Typed note:</span>
+            {server.typed_note}
+          </li>
+        )}
+      </ol>
+      <p className="mt-2 text-xs text-slate-500">
+        If a voice note was heard wrongly, fix the packet text above before approving.
+      </p>
+    </details>
   )
 }
 

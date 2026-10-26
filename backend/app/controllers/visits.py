@@ -18,7 +18,8 @@ from pydantic import BaseModel
 
 from app import config, db
 from app.services import asr, llm
-from app.services.packet import generate_packet
+from app.controllers.followups import previous_action
+from app.services.packet import crp_notes_in, generate_packet
 
 log = logging.getLogger(__name__)
 
@@ -134,6 +135,7 @@ def process_visit(visit_id):
                 "subject": visit["subject"],
                 "rubric": json.loads(visit["rubric_json"] or "{}"),
                 "notes": texts,
+                "previous_action": previous_action(visit["teacher_id"], visit_id),
             }
         )
         log.info("Packet for visit %s: %s", visit_id, usages)
@@ -165,7 +167,13 @@ def save_packet_edits(visit_id, edits):
 
 def approve_visit(visit_id):
     """Lock the packet and create the token for the teacher's link."""
-    editable_packet(visit_id)
+    packet = editable_packet(visit_id)
+    leftover = crp_notes_in(current_packet(packet))
+    if leftover:
+        raise HTTPException(
+            status_code=409,
+            detail=f"Remove the note for the CRP before sharing (in: {', '.join(leftover)})",
+        )
     db.execute(
         "UPDATE packets SET share_token = ?, approved_at = CURRENT_TIMESTAMP WHERE visit_id = ?",
         (secrets.token_urlsafe(9), visit_id),

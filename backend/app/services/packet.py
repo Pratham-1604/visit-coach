@@ -10,6 +10,7 @@ Try it from the CLI (from backend/, needs ANTHROPIC_API_KEY in .env):
 """
 
 import json
+import re
 import sys
 
 from pydantic import BaseModel, Field
@@ -29,9 +30,24 @@ class CoachingPacket(BaseModel):
     demo_script: str = Field(description="What the CRP says and does in a 2-minute demo during the debrief. Teacher's language.")
     follow_up: str = Field(description="The one action the teacher agrees to try before the next visit. Teacher's language.")
     follow_up_check: str = Field(description="How the CRP will check it on the next visit. Teacher's language.")
-    evidence: list[str] = Field(description="Observations or short quotes from the notes that support the priority")
-    english_gloss: str = Field(description="2-3 sentence English summary of the packet for the CRP")
-    grounded_in: list[str] = Field(description="Grounding passage ids from the knowledge pack that support the advice")
+    evidence: list[str] = Field(
+        description="For the CRP, in plain English: observations or short quotes from the notes (quotes may stay "
+        "in their original language) that support the priority. Name rubric items by their wording, not ids."
+    )
+    english_gloss: str = Field(
+        description="For the CRP, in plain English: 2-3 sentence summary of the packet. Name rubric items by their "
+        "wording, not ids. If the notes were thin, say what is missing."
+    )
+    grounded_in: list[str] = Field(
+        description="The 2-4 grounding passage ids from the knowledge pack that most directly support the advice"
+    )
+
+
+# The parts of a packet the teacher reads. Everything else is for the CRP only.
+TEACHER_FIELDS = ("strength", "priority", "practice_steps", "materials", "demo_script", "follow_up", "follow_up_check")
+
+# A note addressed to the CRP, e.g. "[CRP: add an example here]". Must never reach the teacher.
+CRP_NOTE = re.compile(r"\[\s*CRP\b|\bCRP\s*:", re.IGNORECASE)
 
 
 INSTRUCTIONS = """You are VisitCoach, a coaching assistant for Cluster Resource Persons (CRPs) in Indian government \
@@ -49,11 +65,19 @@ Prefer a practice from the library and adapt it to the lesson the CRP saw; use "
 - The follow-up is one small, checkable action, with a simple way for the CRP to check it next visit.
 - If a previous action is given, mention progress on it where the notes allow.
 - Rubric taps and notes can disagree. Trust the specific detail in the notes, and mention the mismatch in evidence.
-- If the notes are too thin to support a point, say so in evidence instead of inventing observations.
-- Write strength, priority, practice_steps, materials, demo_script, follow_up and follow_up_check in the teacher's \
-language, in simple everyday words a teacher would use. Keep rubric ids and practice ids exactly as given.
-- english_gloss is always in English.
-- grounded_in lists only passage ids from the "Grounding passages" section below that actually support your advice."""
+- If the notes are too thin to support a point, never invent observations: keep the teacher's text general and say \
+what is missing in english_gloss.
+- strength, priority, practice_steps, materials, demo_script, follow_up and follow_up_check are shared with the \
+teacher. Write them in the teacher's language, in simple everyday words a teacher would use. Never put notes, \
+questions or placeholders meant for the CRP in them (nothing like "[CRP: add an example]").
+- Use wording that does not depend on the gender of the CRP or the teacher (plural, polite or passive forms). Never \
+write alternatives such as "करूँगा/करूँगी".
+- Never use children's names, not even made-up ones. Say "one child", "the first child", "a child in the back row".
+- evidence and english_gloss are for the CRP: write them in plain English. Name rubric items by their wording, \
+never by their ids.
+- Keep priority_rubric_item and practice_id exactly as the ids given.
+- grounded_in lists the 2-4 passage ids from the "Grounding passages" section below that most directly support \
+your advice."""
 
 
 def system_prompt():
@@ -98,7 +122,27 @@ def check_packet(packet):
         problems.append(f"grounded_in has unknown passage ids: {', '.join(unknown)}")
     if not packet.grounded_in:
         problems.append("grounded_in is empty")
+    for field in crp_notes_in(packet.model_dump()):
+        problems.append(f"{field} is shared with the teacher but contains a note for the CRP; move it to english_gloss")
     return problems
+
+
+def crp_notes_in(packet):
+    """Teacher-facing fields that still contain a note meant for the CRP."""
+    found = []
+    for field in TEACHER_FIELDS:
+        value = packet.get(field) or ""
+        text = " ".join(value) if isinstance(value, list) else value
+        if CRP_NOTE.search(text):
+            found.append(field)
+    return found
+
+
+def readable_ids(text):
+    """Swap rubric ids (e.g. children_read) for their wording, in text meant for the CRP."""
+    for item_id, item in knowledge.rubric_items().items():
+        text = re.sub(rf"\b{item_id}\b", f'"{item["text"]["en"]}"', text)
+    return text
 
 
 def generate_packet(visit):
@@ -124,6 +168,8 @@ def with_details(packet):
     """Add what the app needs that Claude shouldn't decide: need area and source labels."""
     item = knowledge.rubric_items()[packet.priority_rubric_item]
     data = packet.model_dump()
+    data["english_gloss"] = readable_ids(data["english_gloss"])
+    data["evidence"] = [readable_ids(line) for line in data["evidence"]]
     data["need_area"] = item["need_area"]
     data["sources"] = [knowledge.source_label(pid) for pid in packet.grounded_in]
     return data

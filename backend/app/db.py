@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS packets (
     original_json TEXT NOT NULL,       -- what Claude produced
     edited_json TEXT,                  -- what the CRP approved (to measure edit rate)
     share_token TEXT UNIQUE,
-    teacher_rating INTEGER,            -- 1 = useful, 0 = not useful
+    teacher_rating INTEGER,            -- unused: the rating is asked at the next visit (followups)
     approved_at TEXT,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS followups (
     visit_id INTEGER NOT NULL UNIQUE REFERENCES visits(id),
     status TEXT NOT NULL,              -- done | partly | not_done
     note TEXT,
+    teacher_rating INTEGER,            -- 1-5: how useful the teacher found the last packet
     checked_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 """
@@ -79,6 +80,7 @@ ADDED_COLUMNS = [
     ("visits", "typed_note", "TEXT"),
     ("visits", "error", "TEXT"),
     ("voice_notes", "mime", "TEXT"),
+    ("followups", "teacher_rating", "INTEGER"),
 ]
 
 

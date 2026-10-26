@@ -4,6 +4,7 @@ Dev:  uv run uvicorn app.main:app --reload   (from backend/)
 Prod: the same app also serves the built React app from frontend/dist.
 """
 
+import mimetypes
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
@@ -11,7 +12,7 @@ from fastapi.responses import FileResponse
 
 from app import config, db
 from app.controllers.visits import fail_interrupted
-from app.routes import rubric, schools, visits
+from app.routes import block, followups, offline, rehearsal, rubric, schools, teacher, visits
 from app.seed import seed_if_empty
 
 
@@ -23,11 +24,19 @@ async def lifespan(app):
     yield
 
 
+# The PWA manifest (frontend/dist/manifest.webmanifest) must be served with its own content type.
+mimetypes.add_type("application/manifest+json", ".webmanifest")
+
 app = FastAPI(title="VisitCoach API", lifespan=lifespan)
 
 app.include_router(schools.router)
 app.include_router(rubric.router)
 app.include_router(visits.router)
+app.include_router(teacher.router)
+app.include_router(followups.router)
+app.include_router(offline.router)
+app.include_router(block.router)
+app.include_router(rehearsal.router)
 
 
 @app.get("/api/health")
