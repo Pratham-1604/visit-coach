@@ -7,6 +7,7 @@ Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 - Why we chose what we chose: [DECISIONS.md](DECISIONS.md)
 - How it works end to end: [FLOW.md](FLOW.md) (plain-words walkthrough)
 - What's left for later: [improvements/futurescope.md](improvements/futurescope.md)
+- Mentor call feedback (28 Oct) and what we're changing because of it: [MENTOR.md](MENTOR.md)
 - Research and source documents (NIPUN Bharat, NCF-FS, KVS FLN tools): Dhruv's workspace `../edu-hackathon-fln/` (outside this repo). The app only needs the verified excerpts in `backend/app/knowledge/grounding.json`.
 
 ## Run it locally
