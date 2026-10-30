@@ -3,7 +3,10 @@
   "documents": {
     "kv_fln": "KVS Reference Booklet for Monitoring FLN (Kendriya Vidyalaya Sangathan, 2026)",
     "nipun_guidelines": "NIPUN Bharat: Guidelines for Implementation (MoE, 2021)",
-    "ncf_fs_2022": "National Curriculum Framework for Foundational Stage (NCERT, 2022)"
+    "ncf_fs_2022": "National Curriculum Framework for Foundational Stage (NCERT, 2022)",
+    "mh_pragat_shaikshanik": "Pragat Shaikshanik Maharashtra: Teachers Training on Demand (Govt of Maharashtra, via MoE repository)",
+    "mh_kpalp_observation": "Maharashtra KPALP: Classroom Observation Template and KP Academic Skill Matrix (CETE, TISS, 2023)",
+    "mh_nipun_evidence": "NIPUN Maharashtra Evidence Document, Dec 2025 to Mar 2026 (VOPA, technology partner to SCERT Maharashtra, 2026)"
   },
   "passages": [
     {
@@ -152,6 +155,76 @@
       "page": 119,
       "topic": "Connecting maths to children's lives",
       "text": "Learning mathematics must relate to children’s real life and their prior knowledge. … Teachers should use real life examples to build conceptual and problem-solving abilities."
+    },
+    {
+      "id": "mh-psm-p1-support",
+      "doc": "mh_pragat_shaikshanik",
+      "page": 1,
+      "topic": "Maharashtra policy: support and mentoring, not inspection",
+      "text": "There will be no inspection, supervision, monitoring, and guidance which are not very conducive to improving the quality, instead support, counselling, facilitation and mentoring is expected from supervisory machinery."
+    },
+    {
+      "id": "mh-psm-p1-kp-role",
+      "doc": "mh_pragat_shaikshanik",
+      "page": 1,
+      "topic": "Role of the Kendra Pramukh: no child left behind",
+      "text": "Kendra Pramukh (KP) (Cluster Head) is expected to help teachers to plan a teaching programme that ensures that not a single child is left behind."
+    },
+    {
+      "id": "mh-psm-p1-facilitate",
+      "doc": "mh_pragat_shaikshanik",
+      "page": 1,
+      "topic": "Teacher as facilitator; every child at their own pace",
+      "text": "PSM has introduced several methods to enable teachers to change the nature of classroom interactions, to make them child-friendly and to promote self-learning. … The teacher is not expected to teach, but to facilitate learning and enable every child to learn at her/his pace."
+    },
+    {
+      "id": "mh-psm-p1-training-demand",
+      "doc": "mh_pragat_shaikshanik",
+      "page": 1,
+      "topic": "Training on teachers' demand, planned at cluster level",
+      "text": "Training plan that is supportive for teachers will be developed at cluster level. … In any given cluster, training will be provided on those aspects that teachers request."
+    },
+    {
+      "id": "mh-psm-p2-multigrade",
+      "doc": "mh_pragat_shaikshanik",
+      "page": 2,
+      "topic": "Teachers' training demand includes multi-grade teaching",
+      "text": "1.82 lakh teachers registered their demand of training through online process, mainly for constructivist, multi grade, maths and language."
+    },
+    {
+      "id": "mh-kpalp-p2-engagement",
+      "doc": "mh_kpalp_observation",
+      "page": 2,
+      "topic": "KPALP observation: student engagement",
+      "text": "All learners are … actively engaged in … meaning making … through reading, … thinking, writing, … problem-solving, … discussing, … collaborative work, … asking questions or … hands-on activity."
+    },
+    {
+      "id": "mh-kpalp-p3-tlm",
+      "doc": "mh_kpalp_observation",
+      "page": 3,
+      "topic": "KPALP observation: variety of methods and TLM for all children",
+      "text": "Teacher understands … learners and uses a … variety of methods … and TLM to create … opportunities to … address the learning … needs of all children."
+    },
+    {
+      "id": "mh-kpalp-p5-feedback",
+      "doc": "mh_kpalp_observation",
+      "page": 5,
+      "topic": "KP Academic Skill Matrix: effective feedback (expert level)",
+      "text": "KP gives … comprehensive, … evidence-based … Gives clear and … actionable feedback"
+    },
+    {
+      "id": "mh-kpalp-p6-followup",
+      "doc": "mh_kpalp_observation",
+      "page": 6,
+      "topic": "KP Academic Skill Matrix: follow-up and tracking teacher progress",
+      "text": "Regularly records … and tracks the … progress of all … teachers based on … inputs given … Follow-up is regular … and timely"
+    },
+    {
+      "id": "mh-nipun-p8-level",
+      "doc": "mh_nipun_evidence",
+      "page": 8,
+      "topic": "NIPUN Maharashtra: teaching to the child's level; quick mentoring visits",
+      "text": "Teachers begin teaching to the child's level, not the textbook's level. … Underperforming schools receive mentoring visits within days, not months."
     }
   ]
 }

@@ -20,7 +20,10 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 > The supervision system should give **"support, counselling, facilitation and mentoring"**, not inspection.
 > (*Pragat Shaikshanik Maharashtra*)
 
-- **NIPUN Maharashtra** assessments are running in districts, and cluster heads are asked to plan support for weaker schools.
+> The Kendra Pramukh **"is expected to help teachers to plan a teaching programme that ensures that not a single child is left behind."** (*Pragat Shaikshanik Maharashtra*, p.1)
+
+- The state's own **KP Academic Skill Matrix** (KPALP, CETE TISS 2023) describes the expert Kendra Pramukh as one who **"gives clear and actionable feedback"** and **"regularly records and tracks the progress of all teachers"**, with **"follow-up … regular and timely"**. VisitCoach is a tool for reaching exactly that level.
+- **NIPUN Maharashtra** now measures about 34 lakh children every month, and *"underperforming schools receive mentoring visits within days, not months"* (VOPA evidence document, 2026). The measurement exists. **What happens in the mentoring visit is what's still missing.**
 - The state already has the people (Kendra Pramukhs) and a checklist (KPALP classroom observation).
 - **What's missing is the follow-through between visits.** That's what VisitCoach adds.
 
@@ -39,8 +42,9 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 | What the state has | How VisitCoach fits |
 |---|---|
 | Kendra Pramukhs visit and observe | Same visit, same talk with the teacher; just no write-up afterwards |
-| KPALP observation checklist | Our checklist is a **reading and maths add-on**, not a replacement. It's a data file, so the state can swap in its own |
-| NIPUN Bharat / NIPUN goals (Lakshyas) | Every piece of advice cites the official page it comes from |
+| KPALP observation checklist | Our checklist is a **reading and maths add-on**, not a replacement: every item shows the KPALP indicator it adds detail to (e.g. *"Children read text themselves" → KPALP 2.1 Student engagement*). It's a data file, so the state can swap in its own |
+| Teachers asked for training in **multi-grade** teaching (Pragat Shaikshanik: 1.82 lakh training requests, "mainly for constructivist, multi grade, maths and language") | The mentor records which grades sit together, and the practice is built to work across them |
+| NIPUN Bharat / NIPUN goals (Lakshyas), Pragat Shaikshanik, KPALP | Every piece of advice cites the page it comes from: 31 checked excerpts, 10 of them from Maharashtra documents |
 | Teachers on WhatsApp: **73%** use it; **98%** use EdTech, **83%** have a device in school (BSET 2025, Maharashtra) | The teacher gets the advice **in WhatsApp**. No app, no login |
 | **67%** of teachers report internet problems (BSET 2025) | The mentor's app works fully offline and syncs later |
 | Mentors change | The coaching history travels with the teacher, not the mentor |

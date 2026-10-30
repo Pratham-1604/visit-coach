@@ -77,6 +77,7 @@ write alternatives such as "करूँगा/करूँगी".
 - evidence and english_gloss are for the mentor: write them in plain English. Name rubric items by their wording, \
 never by their ids.
 - Keep priority_rubric_item and practice_id exactly as the ids given.
+- The teachers are in Maharashtra. If a Maharashtra passage (ids starting with "mh-") supports the advice, include it in grounded_in, next to the national NIPUN Bharat / NCF passages.
 - grounded_in lists the 2-4 passage ids from the "Grounding passages" section below that most directly support \
 your advice."""
 

@@ -189,13 +189,19 @@ function RubricSections({ rubric, items, visit, disabled }) {
     <section key={area.id} className="space-y-2">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">{area.label}</h2>
       {items.map((item) => (
-        <RubricItem key={item.id} item={item} visit={visit} disabled={disabled} />
+        <RubricItem
+          key={item.id}
+          item={item}
+          visit={visit}
+          disabled={disabled}
+          indicator={rubric.state_checklist?.indicators[item.kpalp]}
+        />
       ))}
     </section>
   ))
 }
 
-function RubricItem({ item, visit, disabled }) {
+function RubricItem({ item, visit, disabled, indicator }) {
   const rating = visit.rubric[item.id]
   const local = item.text[visit.language]
 
@@ -203,6 +209,11 @@ function RubricItem({ item, visit, disabled }) {
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       <p className="font-medium">{local ?? item.text.en}</p>
       {local && <p className="mt-0.5 text-sm text-slate-500">{item.text.en}</p>}
+      {indicator && (
+        <p className="mt-1 text-xs text-slate-500" title={indicator}>
+          Adds detail to KPALP {item.kpalp} · {indicator.split(':')[0]}
+        </p>
+      )}
       <details className="mt-1 text-sm text-slate-500">
         <summary className="cursor-pointer text-emerald-700">What good looks like</summary>
         <p className="mt-1">{item.look_for}</p>

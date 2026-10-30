@@ -64,7 +64,7 @@ Uploading twice by accident is harmless, because the server recognises a visit i
 This takes about half a minute. Sachin watches the status change on the phone:
 
 1. **"Transcribing notes…"**: each voice note goes to Sarvam and comes back as text.
-2. **"Writing packet…"**: Claude gets the checklist answers, the note texts, the class and the language, plus Sunita's **last 3 agreed actions, which mentor agreed them, and whether they happened** (from Step 7), the **number of children** and **which grades sit together**. It also gets our **knowledge pack**: the checklist, 16 tried-and-tested 5-minute classroom practices, the government's Grade 1–3 learning goals (NIPUN Lakshyas) and 21 short quotes from official documents.
+2. **"Writing packet…"**: Claude gets the checklist answers, the note texts, the class and the language, plus Sunita's **last 3 agreed actions, which mentor agreed them, and whether they happened** (from Step 7), the **number of children** and **which grades sit together**. It also gets our **knowledge pack**: the checklist, 16 tried-and-tested 5-minute classroom practices, the government's Grade 1–3 learning goals (NIPUN Lakshyas) and 31 short quotes from official documents, 10 of them from Maharashtra (Pragat Shaikshanik Maharashtra, the KPALP observation template and KP skill matrix, and the NIPUN Maharashtra evidence report). Each checklist item also shows which KPALP indicator it adds detail to.
 3. Claude writes the packet **in Sunita's language** and says which official document pages back its advice.
 4. **Safety check:** the server confirms that Claude only used real checklist items, real practices and real document quotes. If not, Claude gets one more try.
 5. **"Review packet"**: ready.

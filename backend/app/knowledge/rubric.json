@@ -1,6 +1,20 @@
 {
   "_about": "CRP lesson-observation rubric v1. Seeded from the classroom-observable items of the KVS General Checklist (kv_fln PDF p.8 / printed p.6), plus two VisitCoach items the KVS list lacks: children reading themselves and pair/group work. Ratings: yes | partly | no (or skipped). Hindi, Marathi and Tamil labels are drafts and still need a native-speaker check.",
   "version": 1,
+  "state_checklist": {
+    "name": "KPALP classroom observation (Maharashtra)",
+    "source_doc": "mh_kpalp_observation",
+    "about": "Maharashtra's Kendra Pramukh observation template, adapted from Shala Siddhi, scores each indicator 1/2/3. This rubric is a reading-and-maths add-on: each item names the KPALP indicator it adds detail to.",
+    "indicators": {
+      "2.1": "Student engagement: all learners actively engaged in meaning making",
+      "2.3": "Student engagement: learners connect their background and experiences with lesson content",
+      "3.2": "Pedagogy: a variety of methods and TLM for the learning needs of all children",
+      "3.3": "Pedagogy: questions to deepen understanding and uncover misconceptions",
+      "4.2": "Classroom environment: learners' work displayed; joyful environment",
+      "4.3": "Classroom environment: positive relationships; equity and inclusiveness",
+      "5.1": "Student assessment: a variety of strategies to check understanding"
+    }
+  },
   "need_areas": [
     {"id": "active_learning", "label": "Learning by doing, with materials"},
     {"id": "inclusion", "label": "Every child takes part"},
@@ -17,6 +31,7 @@
       "subject": "both",
       "need_area": "active_learning",
       "origin": "KVS checklist #1",
+      "kpalp": "2.1",
       "text": {
         "en": "Children learn by doing: activity, play, toys or games",
         "hi": "बच्चे करके सीखते हैं: गतिविधि, खेल या खिलौनों से",
@@ -31,6 +46,7 @@
       "subject": "both",
       "need_area": "active_learning",
       "origin": "KVS checklist #13",
+      "kpalp": "3.2",
       "text": {
         "en": "TLM or local materials are in children's hands",
         "hi": "शिक्षण सामग्री (TLM) या स्थानीय सामग्री बच्चों के हाथ में है",
@@ -38,13 +54,14 @@
         "ta": "கற்றல் உபகரணங்கள் (TLM) குழந்தைகளின் கைகளில் உள்ளன"
       },
       "look_for": "Cards, stones, sticks, beads or charts are used by children themselves, not only shown from the front.",
-      "source_ids": ["kvs-p5-observe", "nipun-p191-crc"]
+      "source_ids": ["kvs-p5-observe", "nipun-p191-crc", "mh-kpalp-p3-tlm"]
     },
     {
       "id": "home_language",
       "subject": "both",
       "need_area": "inclusion",
       "origin": "KVS checklist #2",
+      "kpalp": "2.3",
       "text": {
         "en": "Teacher uses children's home language; children may answer in it",
         "hi": "शिक्षक बच्चों की घर की भाषा का उपयोग करते हैं; बच्चे उसमें उत्तर दे सकते हैं",
@@ -59,6 +76,7 @@
       "subject": "both",
       "need_area": "inclusion",
       "origin": "KVS checklist #5, #7",
+      "kpalp": "4.3",
       "text": {
         "en": "Most children, including back rows and slower learners, get a turn",
         "hi": "पीछे बैठे और धीमे सीखने वाले बच्चों सहित अधिकांश बच्चों को मौका मिलता है",
@@ -73,6 +91,7 @@
       "subject": "both",
       "need_area": "inclusion",
       "origin": "VisitCoach addition",
+      "kpalp": "2.1",
       "text": {
         "en": "Children work in pairs or small groups for part of the lesson",
         "hi": "पाठ के कुछ हिस्से में बच्चे जोड़ियों या छोटे समूहों में काम करते हैं",
@@ -80,13 +99,14 @@
         "ta": "பாடத்தின் ஒரு பகுதியில் குழந்தைகள் இணையாக அல்லது சிறு குழுக்களாக வேலை செய்கிறார்கள்"
       },
       "look_for": "At least a few minutes where children read, count or solve together and help each other.",
-      "source_ids": ["kvs-p18-reading-writing", "kvs-p21-remediation", "kvs-p20-real-life"]
+      "source_ids": ["kvs-p18-reading-writing", "kvs-p21-remediation", "kvs-p20-real-life", "mh-kpalp-p2-engagement"]
     },
     {
       "id": "print_rich",
       "subject": "literacy",
       "need_area": "oral_language",
       "origin": "KVS checklist #9 (classroom part)",
+      "kpalp": "4.2",
       "text": {
         "en": "Charts, word wall or children's work displayed at children's height",
         "hi": "चार्ट, शब्द-दीवार या बच्चों का काम बच्चों की ऊँचाई पर लगा है",
@@ -101,6 +121,7 @@
       "subject": "literacy",
       "need_area": "oral_language",
       "origin": "VisitCoach (NCF-FS read-aloud)",
+      "kpalp": "2.1",
       "text": {
         "en": "Teacher reads a story aloud and talks about it with children",
         "hi": "शिक्षक कहानी पढ़कर सुनाते हैं और बच्चों से उस पर बात करते हैं",
@@ -115,6 +136,7 @@
       "subject": "literacy",
       "need_area": "early_reading",
       "origin": "VisitCoach (NCF-FS decoding)",
+      "kpalp": "3.2",
       "text": {
         "en": "Children break words into sounds and blend sounds/aksharas into words",
         "hi": "बच्चे शब्दों को ध्वनियों में तोड़ते हैं और ध्वनियों/अक्षरों को जोड़कर शब्द बनाते हैं",
@@ -129,6 +151,7 @@
       "subject": "literacy",
       "need_area": "early_reading",
       "origin": "VisitCoach addition",
+      "kpalp": "2.1",
       "text": {
         "en": "Children read text themselves, alone or with a partner",
         "hi": "बच्चे स्वयं पाठ पढ़ते हैं, अकेले या साथी के साथ",
@@ -136,13 +159,14 @@
         "ta": "குழந்தைகள் தாங்களே வாசிக்கிறார்கள், தனியாக அல்லது இணையுடன்"
       },
       "look_for": "Children's eyes are on the text and their own voices are reading, not repeating after the teacher.",
-      "source_ids": ["ncf-p115-reading", "ncf-p112-current-practice", "nipun-p200-class1-2", "nipun-p201-class3"]
+      "source_ids": ["ncf-p115-reading", "ncf-p112-current-practice", "nipun-p200-class1-2", "nipun-p201-class3", "mh-kpalp-p2-engagement"]
     },
     {
       "id": "own_writing",
       "subject": "literacy",
       "need_area": "writing",
       "origin": "KVS checklist #14 + NCF-FS writing",
+      "kpalp": "2.1",
       "text": {
         "en": "Children write or draw their own words, not only copy from the board",
         "hi": "बच्चे अपने शब्द लिखते या चित्र बनाते हैं, केवल बोर्ड से नकल नहीं करते",
@@ -157,6 +181,7 @@
       "subject": "numeracy",
       "need_area": "concrete_maths",
       "origin": "VisitCoach (NCF-FS ELPS)",
+      "kpalp": "3.2",
       "text": {
         "en": "Children handle objects before pictures and written numbers",
         "hi": "बच्चे चित्र और लिखित संख्याओं से पहले वस्तुओं से काम करते हैं",
@@ -164,13 +189,14 @@
         "ta": "படங்கள், எழுத்து எண்களுக்கு முன் குழந்தைகள் பொருட்களைக் கையாளுகிறார்கள்"
       },
       "look_for": "Each child (or pair) counts, groups or shares real objects, then says it, then draws or writes it.",
-      "source_ids": ["ncf-p119-elps", "kvs-p19-manipulatives"]
+      "source_ids": ["ncf-p119-elps", "kvs-p19-manipulatives", "mh-kpalp-p3-tlm"]
     },
     {
       "id": "daily_life_maths",
       "subject": "numeracy",
       "need_area": "maths_reasoning",
       "origin": "VisitCoach (NCF-FS, KVS strategies)",
+      "kpalp": "2.3",
       "text": {
         "en": "Maths problems come from daily life: sharing, shop, calendar, classroom",
         "hi": "गणित के प्रश्न रोज़मर्रा से आते हैं: बाँटना, दुकान, कैलेंडर, कक्षा",
@@ -185,6 +211,7 @@
       "subject": "numeracy",
       "need_area": "maths_reasoning",
       "origin": "VisitCoach (NCF-FS maths processes)",
+      "kpalp": "3.3",
       "text": {
         "en": "Children explain how they got an answer; more than one way is accepted",
         "hi": "बच्चे बताते हैं कि उत्तर कैसे निकाला; एक से अधिक तरीके स्वीकार हैं",
@@ -199,6 +226,7 @@
       "subject": "both",
       "need_area": "feedback",
       "origin": "KVS checklist #18",
+      "kpalp": "4.3",
       "text": {
         "en": "Feedback to children is encouraging and specific; mistakes handled kindly",
         "hi": "बच्चों को प्रोत्साहक और स्पष्ट प्रतिक्रिया मिलती है; गलतियों को प्यार से संभाला जाता है",
@@ -213,6 +241,7 @@
       "subject": "both",
       "need_area": "feedback",
       "origin": "KVS checklist #19",
+      "kpalp": "5.1",
       "text": {
         "en": "Questions check understanding and use, not only recall or chorus answers",
         "hi": "प्रश्न समझ और उपयोग जाँचते हैं, केवल रटे हुए या सामूहिक उत्तर नहीं",

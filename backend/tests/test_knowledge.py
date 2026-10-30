@@ -46,6 +46,22 @@ def test_rubric_endpoint(client):
     rubric = client.get("/api/rubric").json()
     assert len(rubric["items"]) == len(knowledge.rubric_items())
     assert "source_ids" not in rubric["items"][0]
+    assert rubric["state_checklist"]["name"].startswith("KPALP")
+
+
+def test_every_item_maps_to_a_kpalp_indicator():
+    """The rubric is an add-on to Maharashtra's own checklist, not a replacement (MENTOR.md #4)."""
+    indicators = knowledge.rubric()["state_checklist"]["indicators"]
+    for item in knowledge.rubric_items().values():
+        assert item["kpalp"] in indicators, item["id"]
+
+
+def test_maharashtra_sources_are_in_the_pack():
+    passages = knowledge.passages()
+    state = [pid for pid in passages if pid.startswith("mh-")]
+    assert len(state) >= 5
+    documents = knowledge._load("grounding")["documents"]
+    assert all(passages[pid]["doc"] in documents for pid in state)
 
 
 def make_packet(**changes):

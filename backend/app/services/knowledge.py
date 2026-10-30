@@ -68,10 +68,12 @@ def pack_text():
     areas = need_areas()
     lines = ["# FLN knowledge pack", ""]
 
-    lines += ["## Observation rubric (ratings: yes / partly / no)", ""]
+    state = rubric()["state_checklist"]
+    lines += ["## Observation rubric (ratings: yes / partly / no)", "", state["about"], ""]
     for item in rubric()["items"]:
         lines.append(
-            f"- {item['id']} [{item['subject']}; need area: {areas[item['need_area']]['label']}]: "
+            f"- {item['id']} [{item['subject']}; need area: {areas[item['need_area']]['label']}; "
+            f"{state['name']} {item['kpalp']}: {state['indicators'][item['kpalp']]}]: "
             f"{item['text']['en']}. Good looks like: {item['look_for']} "
             f"(sources: {', '.join(item['source_ids'])})"
         )
