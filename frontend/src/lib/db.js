@@ -4,6 +4,7 @@ import Dexie from 'dexie'
 //   visits: one row per classroom visit, created on the phone
 //           { id, school_id, teacher_id, school_name, teacher_name, grade, language,
 //             subject, rubric: {item_id: 'yes'|'partly'|'no'}, typed_note,
+//             mentor_name, children_present, grades_together: [1, 2],
 //             rubric_version, status: 'draft'|'ready'|'synced', started_at, ended_at, updated_at,
 //             after sync: server_id, server_status (see backend visits.status), server_error, sync_error,
 //             packet_draft: the CRP's unsent packet edits }

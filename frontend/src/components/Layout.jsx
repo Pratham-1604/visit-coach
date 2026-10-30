@@ -1,10 +1,12 @@
 import { Link, Outlet } from 'react-router-dom'
+import { askMentorName, useMentorName } from '../lib/mentor.js'
 import { useOnline } from '../lib/offline.js'
 import { useAutoSync } from '../lib/sync.js'
 
 // Shared page frame: top bar + a phone-width content column.
 export default function Layout() {
   const online = useOnline()
+  const mentorName = useMentorName()
   useAutoSync()
 
   return (
@@ -22,7 +24,9 @@ export default function Layout() {
             >
               {online ? 'Online' : 'Offline · saving on phone'}
             </span>
-            <span>CRP: Demo</span>
+            <button onClick={askMentorName} className="underline decoration-emerald-400 underline-offset-2">
+              {mentorName ? `Mentor: ${mentorName.split(' ')[0]}` : 'Set your name'}
+            </button>
           </div>
         </div>
       </header>

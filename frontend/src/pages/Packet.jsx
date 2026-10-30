@@ -6,6 +6,7 @@ import { getVisitCached } from '../api/visits.js'
 import { db } from '../lib/db.js'
 import { formatDate, hasCrpNote } from '../lib/format.js'
 import { useOnline } from '../lib/offline.js'
+import { whatsappMessage, whatsappUrl } from '../lib/share.js'
 import { useFetch } from '../lib/useFetch.js'
 import { approvePacket, updateVisit } from '../lib/visits.js'
 
@@ -209,36 +210,45 @@ function ApprovedPacket({ packet, language }) {
   ))
 }
 
-// The teacher's link, to send over WhatsApp after the debrief.
+// After approval: the WhatsApp message for the teacher, with the advice in their language and the link for details.
 function ShareLink({ server }) {
   const [copied, setCopied] = useState(false)
   const url = `${window.location.origin}/t/${server.share_token}`
-  const text = `Notes from today's class visit, for ${server.teacher_name}`
+  const message = whatsappMessage(server, url)
+  const firstName = server.teacher_name.split(' ')[0]
 
-  async function share() {
-    if (navigator.share) {
-      await navigator.share({ title: 'VisitCoach', text, url }).catch(() => {})
-    } else {
-      window.open(`https://wa.me/?text=${encodeURIComponent(`${text}: ${url}`)}`, '_blank')
-    }
+  async function shareOther() {
+    await navigator.share({ title: 'VisitCoach', text: message }).catch(() => {})
   }
 
   async function copy() {
-    await navigator.clipboard.writeText(url)
+    await navigator.clipboard.writeText(message)
     setCopied(true)
   }
 
   return (
-    <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-      <p className="font-medium">Approved. Share this link with {server.teacher_name}.</p>
-      <p className="mt-2 break-all rounded-lg bg-white p-2 font-mono text-xs">{url}</p>
-      <div className="mt-3 flex gap-3">
-        <button onClick={share} className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
-          Share
-        </button>
+    <section className="space-y-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+      <p className="font-medium">Approved. Send {firstName} this message on WhatsApp.</p>
+      <p lang={server.language} className="whitespace-pre-wrap rounded-lg bg-white p-3 text-slate-800 shadow-sm">
+        {message}
+      </p>
+      <div className="flex flex-wrap gap-3">
+        <a
+          href={whatsappUrl(message)}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white"
+        >
+          Send on WhatsApp
+        </a>
+        {navigator.share && (
+          <button onClick={shareOther} className="rounded-lg px-3 py-2 text-emerald-800 underline">
+            Other apps
+          </button>
+        )}
         {navigator.clipboard && (
           <button onClick={copy} className="rounded-lg px-3 py-2 text-emerald-800 underline">
-            {copied ? 'Copied' : 'Copy link'}
+            {copied ? 'Copied' : 'Copy message'}
           </button>
         )}
       </div>

@@ -1,65 +1,22 @@
 import { useParams } from 'react-router-dom'
 import { getSharedPacket } from '../api/teacher.js'
 import { formatDate } from '../lib/format.js'
+import { teacherLabels } from '../lib/labels.js'
 import { useFetch } from '../lib/useFetch.js'
-
-// Headings in the teacher's language. Drafts: to be checked by native speakers (DECISIONS.md #13).
-const LABELS = {
-  en: {
-    title: 'Notes from your class visit',
-    strength: 'What went well',
-    priority: 'One thing to work on',
-    practice_steps: '5-minute practice for tomorrow',
-    materials: 'Materials',
-    follow_up: 'What we agreed before the next visit',
-    follow_up_check: 'How we will look at it next time',
-    error: 'This link does not work. Please ask your CRP to share it again.',
-  },
-  hi: {
-    title: 'आपकी कक्षा की मुलाक़ात के नोट्स',
-    strength: 'क्या अच्छा रहा',
-    priority: 'एक चीज़ जिस पर काम करें',
-    practice_steps: 'कल के लिए 5 मिनट का अभ्यास',
-    materials: 'सामग्री',
-    follow_up: 'अगली मुलाक़ात तक हमने क्या तय किया',
-    follow_up_check: 'अगली बार हम इसे कैसे देखेंगे',
-    error: 'यह लिंक काम नहीं कर रहा। कृपया अपने CRP से इसे दोबारा भेजने को कहें।',
-  },
-  mr: {
-    title: 'तुमच्या वर्ग भेटीच्या नोंदी',
-    strength: 'काय छान झाले',
-    priority: 'लक्ष देण्यासारखी एक गोष्ट',
-    practice_steps: 'उद्यासाठी ५ मिनिटांचा सराव',
-    materials: 'साहित्य',
-    follow_up: 'पुढच्या भेटीपर्यंत आपण काय ठरवले',
-    follow_up_check: 'पुढच्या वेळी आपण हे कसे पाहू',
-    error: 'ही लिंक चालत नाही. कृपया तुमच्या CRP ना ती पुन्हा पाठवायला सांगा.',
-  },
-  ta: {
-    title: 'உங்கள் வகுப்பு வருகைக் குறிப்புகள்',
-    strength: 'நன்றாக நடந்தது',
-    priority: 'கவனம் செலுத்த வேண்டிய ஒன்று',
-    practice_steps: 'நாளைக்கான 5 நிமிடப் பயிற்சி',
-    materials: 'தேவையான பொருட்கள்',
-    follow_up: 'அடுத்த வருகை வரை நாம் ஒப்புக்கொண்டது',
-    follow_up_check: 'அடுத்த முறை இதை எப்படிப் பார்ப்போம்',
-    error: 'இந்த இணைப்பு வேலை செய்யவில்லை. உங்கள் CRP-யிடம் மீண்டும் அனுப்பச் சொல்லுங்கள்.',
-  },
-}
 
 const TEXT_FIELDS = ['strength', 'priority']
 const LIST_FIELDS = ['practice_steps', 'materials']
 const ACTION_FIELDS = ['follow_up', 'follow_up_check']
 
-// What the teacher sees from the CRP's shared link. No app, no login, no CRP-only details.
+// What the teacher sees from the mentor's shared link. No app, no login, no mentor-only details.
 export default function TeacherView() {
   const { token } = useParams()
   const { data, error, loading } = useFetch(() => getSharedPacket(token), [token])
 
   if (loading) return <Page>…</Page>
-  if (error) return <Page>{LABELS.en.error}</Page>
+  if (error) return <Page>{teacherLabels('en').error}</Page>
 
-  const labels = LABELS[data.language] ?? LABELS.en
+  const labels = teacherLabels(data.language)
   const { packet } = data
 
   return (
@@ -69,6 +26,11 @@ export default function TeacherView() {
         <p className="text-sm text-slate-500">
           {data.teacher_first_name} · {data.school_name} · {formatDate(data.approved_at)}
         </p>
+        {data.mentor_name && (
+          <p className="text-sm text-slate-500">
+            {labels.mentor}: {data.mentor_name}
+          </p>
+        )}
       </header>
 
       {TEXT_FIELDS.map((key) => (
@@ -95,7 +57,46 @@ export default function TeacherView() {
           </div>
         ))}
       </div>
+
+      <History history={data.history ?? []} labels={labels} />
     </Page>
+  )
+}
+
+const RESULT_STYLES = {
+  done: 'bg-emerald-100 text-emerald-800',
+  partly: 'bg-amber-100 text-amber-800',
+  not_done: 'bg-rose-100 text-rose-800',
+  open: 'bg-slate-100 text-slate-600',
+}
+
+// The teacher's earlier visits, across mentors, so the coaching reads as one story (MENTOR.md #6).
+function History({ history, labels }) {
+  return (
+    <Section title={labels.history}>
+      {history.length === 0 ? (
+        <p className="text-slate-600">{labels.history_empty}</p>
+      ) : (
+        <ol className="space-y-3">
+          {history.map((entry, index) => {
+            const result = entry.result ?? 'open'
+            return (
+              <li key={index} className="border-l-2 border-emerald-200 pl-3">
+                <p className="text-xs text-slate-500">
+                  {formatDate(entry.date)}
+                  {entry.mentor_name && ` · ${labels.mentor}: ${entry.mentor_name}`}
+                </p>
+                {entry.focus && <p className="font-medium">{entry.focus}</p>}
+                {entry.follow_up && <p className="text-slate-700">{entry.follow_up}</p>}
+                <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${RESULT_STYLES[result]}`}>
+                  {labels.results[result]}
+                </span>
+              </li>
+            )
+          })}
+        </ol>
+      )}
+    </Section>
   )
 }
 

@@ -65,25 +65,3 @@ def open_followups(school_id):
             "approved_at": row["approved_at"],
         }
     return list(latest.values())
-
-
-def previous_action(teacher_id, before_visit_id):
-    """The action agreed at this teacher's last approved visit, and what the CRP found, for the next packet."""
-    row = db.query_one(
-        "SELECT p.edited_json, p.original_json, f.status, f.note"
-        " FROM visits v JOIN packets p ON p.visit_id = v.id"
-        " LEFT JOIN followups f ON f.visit_id = v.id"
-        " WHERE v.teacher_id = ? AND v.id < ? AND v.status = 'approved'"
-        " ORDER BY v.id DESC LIMIT 1",
-        (teacher_id, before_visit_id),
-    )
-    if not row:
-        return None
-
-    action = json.loads(row["edited_json"] or row["original_json"]).get("follow_up")
-    if not action:
-        return None
-    if not row["status"]:
-        return f"{action} (not checked yet)"
-    checked = {"done": "done", "partly": "partly done", "not_done": "not done"}[row["status"]]
-    return f"{action} (checked at this visit: {checked}{'; ' + row['note'] if row['note'] else ''})"

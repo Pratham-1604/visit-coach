@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom'
 import { getBlockSummary } from '../api/block.js'
 import { useFetch } from '../lib/useFetch.js'
 
-// The block officer's view: where schools need support, and whether coaching is happening.
+// Support planning for the block officer: which training the cluster needs, and whether mentoring helps teachers.
+// It plans support, it doesn't monitor anyone (MENTOR.md #1).
 // Only counts. No school, teacher or coaching text ever reaches this page (DECISIONS.md #10).
 export default function Block() {
   const { data, error, loading } = useFetch(() => getBlockSummary(), [])
@@ -19,14 +20,15 @@ export default function Block() {
       </Link>
 
       <div>
-        <h1 className="text-xl font-semibold">Block view</h1>
+        <h1 className="text-xl font-semibold">Support planning</h1>
+        <p className="text-slate-700">What training does this cluster need?</p>
         <p className="text-sm text-slate-500">
           {data.schools_total} schools · based on each school's latest approved coaching packet
         </p>
       </div>
 
       <section className="space-y-3">
-        <h2 className="font-medium">Where schools need support</h2>
+        <h2 className="font-medium">What teachers are working on</h2>
         <ul className="space-y-3">
           {data.needs.map((need) => (
             <NeedBar key={need.need_area} label={need.label} schools={need.schools} total={data.schools_total} />
@@ -42,21 +44,24 @@ export default function Block() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="font-medium">Is coaching happening?</h2>
+        <h2 className="font-medium">Is mentoring helping teachers?</h2>
         <div className="grid grid-cols-2 gap-3">
-          <Stat value={minutes(metrics.minutes_to_feedback)} label="from observation to approved feedback (median)" />
-          <Stat value={pct(metrics.pct_with_action)} label="of visits ended with a concrete agreed action" />
           <Stat
             value={pct(metrics.pct_done)}
-            label={`of checked actions were done by the next visit${
+            label={`of agreed actions were done by the next visit${
               metrics.pct_partly != null ? ` (${metrics.pct_partly}% partly)` : ''
             }`}
           />
-          <Stat value={pct(metrics.pct_edited)} label="of packets were edited by the CRP before sharing" />
           <Stat
             value={metrics.avg_usefulness != null ? `${metrics.avg_usefulness} / 5` : '–'}
             label="how useful teachers found the advice (average)"
           />
+          <Stat value={pct(metrics.pct_with_action)} label="of visits ended with one clear action for the teacher" />
+          <Stat
+            value={minutes(metrics.minutes_to_feedback)}
+            label="from observation to feedback on WhatsApp (median), with no report to write"
+          />
+          <Stat value={pct(metrics.pct_edited)} label="of packets were edited by the mentor before sharing" />
           <Stat value={metrics.visits} label={`visits synced · ${metrics.followups_checked} actions checked`} />
         </div>
       </section>

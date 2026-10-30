@@ -56,9 +56,9 @@ def test_next_packet_gets_the_previous_action_and_result(client, fake_ai):
     client.post(f"/api/followups/{first}", json={"status": "partly", "note": "front rows only"})
 
     sync(client, school, teacher)
-    previous = fake_ai["packet"][-1]["previous_action"]
-    assert EDITS["follow_up"] in previous
-    assert "partly done" in previous and "front rows only" in previous
+    latest = fake_ai["packet"][-1]["previous_actions"][0]
+    assert EDITS["follow_up"] in latest
+    assert "partly done" in latest and "front rows only" in latest
 
 
 def test_offline_pack_has_everything_for_a_school_visit(client):

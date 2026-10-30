@@ -6,8 +6,8 @@ export function formatDate(value) {
   return new Date(text).toLocaleDateString('en-IN')
 }
 
-// Same rule as the server (backend/app/services/packet.py CRP_NOTE): a note meant for the CRP.
-const CRP_NOTE = /\[\s*CRP\b|\bCRP\s*:/i
+// Same rule as the server (backend/app/services/packet.py CRP_NOTE): a note meant for the mentor.
+const CRP_NOTE = /\[\s*(CRP|mentor)\b|\b(CRP|mentor)\s*:/i
 
 export function hasCrpNote(text) {
   return CRP_NOTE.test(text ?? '')

@@ -1,5 +1,6 @@
 import { approveVisit, savePacket } from '../api/visits.js'
 import { db, newId, now } from './db.js'
+import { getMentorName } from './mentor.js'
 
 // All visit changes go through these functions, so every write is saved to IndexedDB at once.
 
@@ -16,6 +17,9 @@ export async function startVisit(school, teacher, rubricVersion) {
     subject: school.focus.area === 'numeracy' ? 'numeracy' : 'literacy',
     rubric: {},
     typed_note: '',
+    mentor_name: getMentorName(),
+    children_present: null,
+    grades_together: [teacher.grade],
     rubric_version: rubricVersion,
     status: 'draft',
     started_at: now(),
@@ -65,7 +69,7 @@ export function reopenVisit(visitId) {
   return updateVisit(visitId, { status: 'draft', ended_at: null })
 }
 
-// Send the CRP's packet edits (if any), approve, and remember the result on the phone.
+// Send the mentor's packet edits (if any), approve, and remember the result on the phone.
 export async function approvePacket(visit, edits) {
   if (edits) await savePacket(visit.server_id, edits)
   const server = await approveVisit(visit.server_id)

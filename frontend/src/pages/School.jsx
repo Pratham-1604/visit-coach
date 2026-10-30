@@ -10,7 +10,7 @@ import { recordFollowUp } from '../lib/followups.js'
 import { useFetch } from '../lib/useFetch.js'
 import { startVisit } from '../lib/visits.js'
 
-// One school: suggested focus, last visit's agreed actions to check, and the teachers the CRP can observe.
+// One school: suggested focus, each teacher's coaching history and last agreed action, and who the mentor can observe.
 export default function School() {
   const { schoolId } = useParams()
   const { data: school, error, loading } = useFetch(() => getSchool(schoolId), [schoolId])
@@ -75,6 +75,7 @@ export default function School() {
                   {drafts?.some((visit) => visit.teacher_id === teacher.id) ? 'Continue visit' : 'Start visit'}
                 </button>
               </div>
+              <CoachingHistory history={teacher.history ?? []} language={school.language} />
               {/* Wait for the phone's saved answers, so an answered follow-up doesn't flash as unanswered. */}
               {followUp && answered && (
                 <FollowUp
@@ -89,6 +90,52 @@ export default function School() {
         })}
       </section>
     </div>
+  )
+}
+
+const HISTORY_RESULTS = {
+  done: { label: 'Done', style: 'bg-emerald-100 text-emerald-800' },
+  partly: { label: 'Partly', style: 'bg-amber-100 text-amber-800' },
+  not_done: { label: 'Not done', style: 'bg-rose-100 text-rose-800' },
+}
+
+// Every earlier visit, whoever the mentor was, so a new mentor picks up where the last one left off (MENTOR.md #6).
+function CoachingHistory({ history, language }) {
+  if (history.length === 0) return null
+  const mentors = new Set(history.map((entry) => entry.mentor_name).filter(Boolean))
+
+  return (
+    <details className="border-t border-slate-100 px-4 py-3 text-sm">
+      <summary className="cursor-pointer font-medium text-emerald-700">
+        Coaching history · {history.length} {history.length === 1 ? 'visit' : 'visits'}
+        {mentors.size > 0 && `, ${mentors.size} ${mentors.size === 1 ? 'mentor' : 'mentors'}`}
+      </summary>
+      <ol className="mt-3 space-y-3">
+        {history.map((entry) => {
+          const result = HISTORY_RESULTS[entry.result]
+          return (
+            <li key={entry.visit_id} className="border-l-2 border-emerald-200 pl-3">
+              <p className="text-xs text-slate-500">
+                {formatDate(entry.date)} · {entry.mentor_name || 'Mentor not recorded'}
+              </p>
+              {entry.focus_en && <p className="font-medium">{entry.focus_en}</p>}
+              {entry.follow_up && (
+                <p lang={language} className="text-slate-700">
+                  {entry.follow_up}
+                </p>
+              )}
+              <span
+                className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                  result?.style ?? 'bg-slate-100 text-slate-600'
+                }`}
+              >
+                {result?.label ?? 'Not checked yet'}
+              </span>
+            </li>
+          )
+        })}
+      </ol>
+    </details>
   )
 }
 

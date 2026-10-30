@@ -1,4 +1,4 @@
-"""Synthetic demo data: one block of 22 schools with a few weeks of visit history.
+"""Synthetic demo data: one block of 22 Maharashtra schools (Haveli, Pune) with a few weeks of visit history.
 
 No real teachers or children. School numbers are made up (DECISIONS.md #12).
 Seeding runs only on an empty database; delete backend/data/visitcoach.db to reseed.
@@ -6,6 +6,9 @@ Seeding runs only on an empty database; delete backend/data/visitcoach.db to res
 History per school (first teacher only):
 - an older visit (about a month ago): approved, and its action checked at the newer visit
 - a newer visit (last week or two): approved, its action still open, so the next visit can check it
+Sunita Pawar (Wagholi, the demo teacher) also has a visit two months ago. Her three visits are by two
+different mentors, so the demo shows the coaching history carrying over when the mentor changes.
+Hindi and Tamil stay supported in the code (rubric, packets, teacher page) as the next states.
 
 The newer visits' need areas are skewed on purpose, so the block view shows
 "14 of 22 schools need support: Children reading for themselves".
@@ -23,8 +26,8 @@ SCHOOLS = [
     ("ZP Primary School Wagholi", "Wagholi", "mr", 46, 28),
     ("ZP Primary School Lonikand", "Lonikand", "mr", 31, 39),
     ("ZP Primary School Kesnand", "Kesnand", "mr", 22, 18),
-    ("Govt Primary School Rampur", "Rampur", "hi", 52, 35),
-    ("Panchayat Union Primary School Melur", "Melur", "ta", 38, 41),
+    ("ZP Primary School Lohegaon", "Lohegaon", "mr", 52, 35),
+    ("ZP Primary School Avhalwadi", "Avhalwadi", "mr", 38, 41),
     ("ZP Primary School Perne", "Perne", "mr", 41, 33),
     ("ZP Primary School Bakori", "Bakori", "mr", 37, 25),
     ("ZP Primary School Wade Bolhai", "Wade Bolhai", "mr", 49, 30),
@@ -40,8 +43,8 @@ SCHOOLS = [
     ("ZP Primary School Manjari Khurd", "Manjari Khurd", "mr", 30, 34),
     ("ZP Primary School Nhavi Sandas", "Nhavi Sandas", "mr", 50, 26),
     ("ZP Primary School Shindewadi", "Shindewadi", "mr", 36, 42),
-    ("Govt Primary School Sitapur", "Sitapur", "hi", 48, 37),
-    ("Panchayat Union Primary School Valayapatti", "Valayapatti", "ta", 34, 45),
+    ("ZP Primary School Phulgaon", "Phulgaon", "mr", 48, 37),
+    ("ZP Primary School Tulapur", "Tulapur", "mr", 34, 45),
 ]
 
 TEACHERS = [
@@ -50,8 +53,8 @@ TEACHERS = [
     (0, "Rahul Jadhav", 2),
     (1, "Meena Shinde", 2),
     (2, "Anil Kale", 3),
-    (3, "Kavita Verma", 2),
-    (4, "Lakshmi Murugan", 2),
+    (3, "Kavita Sonawane", 2),
+    (4, "Lata Bhise", 2),
     (5, "Asha Kulkarni", 1),
     (6, "Vijay More", 2),
     (7, "Rekha Gaikwad", 3),
@@ -67,9 +70,13 @@ TEACHERS = [
     (17, "Jyoti Ghule", 2),
     (18, "Rohini Waghmare", 3),
     (19, "Dattatray Chavan", 2),
-    (20, "Ramesh Yadav", 2),
-    (21, "Selvi Ramasamy", 2),
+    (20, "Ramesh Thorat", 2),
+    (21, "Savita Kadam", 2),
 ]
+
+# Kendra Pramukhs (cluster mentors) who made the past visits. The demo mentor is someone new.
+MENTORS = ["Vandana Joshi", "Kiran Bhagat"]
+DEMO_MENTOR = "Sachin Gore"
 
 # need area -> (rubric item, practice) used for seeded packets.
 NEEDS = {
@@ -84,8 +91,8 @@ LATEST_NEEDS = [
     "early_reading",   # Wagholi
     "early_reading",   # Lonikand
     "early_reading",   # Kesnand
-    "early_reading",   # Rampur
-    "concrete_maths",  # Melur
+    "early_reading",   # Lohegaon
+    "concrete_maths",  # Avhalwadi
     "early_reading",   # Perne
     "inclusion",       # Bakori
     "early_reading",   # Wade Bolhai
@@ -101,8 +108,8 @@ LATEST_NEEDS = [
     "concrete_maths",  # Manjari Khurd
     "early_reading",   # Nhavi Sandas
     "inclusion",       # Shindewadi
-    "early_reading",   # Sitapur
-    "early_reading",   # Valayapatti
+    "early_reading",   # Phulgaon
+    "early_reading",   # Tulapur
 ]
 
 # The agreed action and how to check it, in the teacher's language (what the next-visit card shows).
@@ -175,26 +182,38 @@ def seed_history(school_ids, first_teacher):
         teacher_id = first_teacher[index]
         older_seen = today - timedelta(days=rng.randint(28, 40), hours=-rng.randint(4, 7))
         newer_seen = today - timedelta(days=rng.randint(4, 12), hours=-rng.randint(4, 7))
+        # Mentors change between visits at some schools, as they do in real clusters.
+        older_mentor, newer_mentor = rng.choice(MENTORS), rng.choice(MENTORS)
 
-        older = add_visit(rng, school_id, teacher_id, language, rng.choice(list(NEEDS)), older_seen)
-        add_visit(rng, school_id, teacher_id, language, LATEST_NEEDS[index], newer_seen)
+        if index == 0:  # the demo teacher: one more visit, two months ago
+            oldest_seen = today - timedelta(days=62, hours=-5)
+            oldest = add_visit(rng, school_id, teacher_id, language, "inclusion", oldest_seen, "Kiran Bhagat")
+            check_action(rng, oldest, older_seen, "done")
+            older_mentor, newer_mentor = "Kiran Bhagat", "Vandana Joshi"
+
+        older = add_visit(rng, school_id, teacher_id, language, rng.choice(list(NEEDS)), older_seen, older_mentor)
+        add_visit(rng, school_id, teacher_id, language, LATEST_NEEDS[index], newer_seen, newer_mentor)
 
         # The older visit's action was checked at the newer visit.
-        status = rng.choices(["done", "partly", "not_done"], weights=[55, 30, 15])[0]
-        db.execute(
-            "INSERT INTO followups (visit_id, status, note, teacher_rating, checked_at) VALUES (?, ?, ?, ?, ?)",
-            (older, status, "", rng.choices([3, 4, 5], weights=[2, 5, 3])[0], sql_time(newer_seen)),
-        )
+        check_action(rng, older, newer_seen, "partly" if index == 0 else None)
 
 
-def add_visit(rng, school_id, teacher_id, language, need_area, observed):
+def check_action(rng, visit_id, checked, status=None):
+    status = status or rng.choices(["done", "partly", "not_done"], weights=[55, 30, 15])[0]
+    db.execute(
+        "INSERT INTO followups (visit_id, status, note, teacher_rating, checked_at) VALUES (?, ?, ?, ?, ?)",
+        (visit_id, status, "", rng.choices([3, 4, 5], weights=[2, 5, 3])[0], sql_time(checked)),
+    )
+
+
+def add_visit(rng, school_id, teacher_id, language, need_area, observed, mentor):
     rubric_item, practice_id = NEEDS[need_area]
     subject = "numeracy" if need_area == "concrete_maths" else "literacy"
     approved = observed + timedelta(minutes=rng.randint(25, 240))
 
     visit_id = db.execute(
         "INSERT INTO visits (client_id, school_id, teacher_id, subject, language, rubric_json, typed_note,"
-        " observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, '', ?, 'approved', ?)",
+        " mentor_name, observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, 'approved', ?)",
         (
             f"seed-{school_id}-{observed:%Y%m%d}",
             school_id,
@@ -202,6 +221,7 @@ def add_visit(rng, school_id, teacher_id, language, need_area, observed):
             subject,
             language,
             json.dumps({rubric_item: "no", "encouraging_feedback": "yes"}),
+            mentor,
             observed.strftime("%Y-%m-%dT%H:%M:%SZ"),
             sql_time(observed),
         ),
@@ -209,8 +229,8 @@ def add_visit(rng, school_id, teacher_id, language, need_area, observed):
 
     packet = seed_packet(rubric_item, practice_id, language, need_area)
     edited = None
-    if rng.random() < 0.35:  # about a third of CRPs changed something before approving
-        edited = json.dumps({**packet, "strength": packet["strength"] + " (edited by the CRP)"}, ensure_ascii=False)
+    if rng.random() < 0.35:  # about a third of mentors changed something before approving
+        edited = json.dumps({**packet, "strength": packet["strength"] + " (edited by the mentor)"}, ensure_ascii=False)
     db.execute(
         "INSERT INTO packets (visit_id, original_json, edited_json, share_token, approved_at, created_at)"
         " VALUES (?, ?, ?, ?, ?, ?)",

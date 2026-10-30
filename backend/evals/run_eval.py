@@ -48,15 +48,20 @@ government primary schools, after a CRP observed a Grade 1-3 lesson. Grade stric
 would show it to an expert teacher educator without changes. Judge only what is in front of you."""
 
 
+# Optional per case: class context and coaching history (multi-grade cases, MENTOR.md #6 and #8).
+CONTEXT_KEYS = ("children_present", "grades_together", "previous_actions")
+
+
 def judge(case, packet):
     teacher_parts = {key: packet.get(key) for key in (
         "strength", "priority", "practice_steps", "materials", "demo_script", "follow_up", "follow_up_check")}
     sources = [f"{s['document']}, p.{s['page']}: {s['text']}" for s in packet.get("sources", [])]
+    recorded = {"rubric": case["rubric"], "notes": case["notes"], **{k: case[k] for k in CONTEXT_KEYS if k in case}}
     user = "\n\n".join([
         f"Teacher's language: {LANGUAGES[case['language']]}. Class {case['grade']}, {case['subject']}.",
-        "What the CRP recorded:\n" + json.dumps({"rubric": case["rubric"], "notes": case["notes"]}, ensure_ascii=False),
+        "What the mentor recorded:\n" + json.dumps(recorded, ensure_ascii=False),
         "Packet parts the teacher reads:\n" + json.dumps(teacher_parts, ensure_ascii=False, indent=1),
-        "Evidence and summary for the CRP:\n" + json.dumps(
+        "Evidence and summary for the mentor:\n" + json.dumps(
             {"evidence": packet.get("evidence"), "english_gloss": packet.get("english_gloss")}, ensure_ascii=False),
         "Cited sources:\n" + "\n".join(sources),
         "Grade the packet.",
@@ -73,7 +78,7 @@ def cost(usages):
 
 
 def run_case(case):
-    visit = {key: case[key] for key in ("language", "grade", "subject", "rubric", "notes")}
+    visit = {key: case[key] for key in ("language", "grade", "subject", "rubric", "notes", *CONTEXT_KEYS) if key in case}
     started = time.monotonic()
     try:
         packet, usages = generate_packet(visit)

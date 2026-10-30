@@ -14,6 +14,9 @@ export function syncVisit(visit, notes) {
       rubric: visit.rubric,
       typed_note: visit.typed_note,
       observed_at: visit.started_at,
+      mentor_name: visit.mentor_name ?? '',
+      children_present: visit.children_present ?? null,
+      grades_together: visit.grades_together ?? [],
     }),
   )
   for (const note of notes) form.append('notes', note.audio, `${note.id}.${note.mime.includes('mp4') ? 'm4a' : 'webm'}`)

@@ -5,20 +5,32 @@ import { getSchools } from '../api/schools.js'
 import FocusBadge from '../components/FocusBadge.jsx'
 import { db } from '../lib/db.js'
 import { formatDate } from '../lib/format.js'
+import { askMentorName, useMentorName } from '../lib/mentor.js'
 import { useOnline } from '../lib/offline.js'
 import { hasPacket, retry, syncAll, TONES, visitStatus } from '../lib/sync.js'
 import { useFetch } from '../lib/useFetch.js'
 
-// This week's visits: the CRP picks a school to visit.
+// This week's visits: the mentor picks a school to visit.
 export default function Home() {
   const { data: schools, error, loading } = useFetch(() => getSchools(), [])
   const visits = useLiveQuery(() => db.visits.orderBy('started_at').reverse().toArray(), [])
+  const mentorName = useMentorName()
 
   if (loading) return <p className="text-slate-500">Loading schools…</p>
   if (error) return <p className="text-red-600">Could not load schools: {error}</p>
 
   return (
     <div className="space-y-3">
+      {!mentorName && (
+        <button
+          onClick={askMentorName}
+          className="w-full rounded-xl border border-amber-200 bg-amber-50 p-4 text-left text-sm text-amber-900"
+        >
+          <span className="font-medium">Add your name first.</span> Teachers see who gave each piece of feedback, and
+          the next mentor can see who visited before. Tap to add it.
+        </button>
+      )}
+
       {visits?.length > 0 && <PhoneVisits visits={visits} />}
 
       <h1 className="text-xl font-semibold">This week's visits</h1>
@@ -41,7 +53,7 @@ export default function Home() {
       ))}
 
       <Link to="/block" className="block py-2 text-center text-sm text-emerald-700 underline">
-        Block officer view (counts only)
+        Support planning for the block (counts only)
       </Link>
     </div>
   )

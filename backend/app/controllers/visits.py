@@ -2,9 +2,9 @@
 
 Pipeline (runs as a background task after the sync request returns):
     queued → transcribing (Sarvam, one call per voice note) → generating (Claude) → ready
-Any error sets status = failed with a message; the CRP can retry.
+Any error sets status = failed with a message; the mentor can retry.
 
-Then the CRP reviews the packet: edits are saved next to Claude's original (to measure the
+Then the mentor reviews the packet: edits are saved next to Claude's original (to measure the
 edit rate), and approving it locks the packet and creates the teacher's share token.
 """
 
@@ -14,11 +14,11 @@ import secrets
 from typing import Literal
 
 from fastapi import HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app import config, db
 from app.services import asr, llm
-from app.controllers.followups import previous_action
+from app.controllers.history import previous_actions
 from app.services.packet import crp_notes_in, generate_packet
 
 log = logging.getLogger(__name__)
@@ -38,10 +38,13 @@ class VisitIn(BaseModel):
     rubric: dict[str, Literal["yes", "partly", "no"]] = {}
     typed_note: str = ""
     observed_at: str | None = None
+    mentor_name: str = Field(default="", max_length=80)
+    children_present: int | None = Field(default=None, ge=0, le=200)
+    grades_together: list[int] = Field(default=[], max_length=8)
 
 
 class PacketEdits(BaseModel):
-    """The parts of a packet the CRP may change. Evidence, sources and ids stay as Claude wrote them."""
+    """The parts of a packet the mentor may change. Evidence, sources and ids stay as Claude wrote them."""
 
     strength: str
     priority: str
@@ -71,7 +74,8 @@ def sync_visit(visit_in, notes):
 
     visit_id = db.execute(
         "INSERT INTO visits (client_id, school_id, teacher_id, subject, language, rubric_json,"
-        " typed_note, observed_at, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'queued')",
+        " typed_note, mentor_name, children_present, grades_together, observed_at, status)"
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'queued')",
         (
             visit_in.client_id,
             visit_in.school_id,
@@ -80,6 +84,9 @@ def sync_visit(visit_in, notes):
             teacher["language"],
             json.dumps(visit_in.rubric),
             visit_in.typed_note.strip(),
+            visit_in.mentor_name.strip() or None,
+            visit_in.children_present,
+            json.dumps(sorted(set(visit_in.grades_together))),
             visit_in.observed_at,
         ),
     )
@@ -135,7 +142,9 @@ def process_visit(visit_id):
                 "subject": visit["subject"],
                 "rubric": json.loads(visit["rubric_json"] or "{}"),
                 "notes": texts,
-                "previous_action": previous_action(visit["teacher_id"], visit_id),
+                "children_present": visit["children_present"],
+                "grades_together": json.loads(visit["grades_together"] or "[]"),
+                "previous_actions": previous_actions(visit["teacher_id"], visit_id),
             }
         )
         log.info("Packet for visit %s: %s", visit_id, usages)
@@ -172,7 +181,7 @@ def approve_visit(visit_id):
     if leftover:
         raise HTTPException(
             status_code=409,
-            detail=f"Remove the note for the CRP before sharing (in: {', '.join(leftover)})",
+            detail=f"Remove the note for the mentor before sharing (in: {', '.join(leftover)})",
         )
     db.execute(
         "UPDATE packets SET share_token = ?, approved_at = CURRENT_TIMESTAMP WHERE visit_id = ?",
@@ -193,7 +202,7 @@ def editable_packet(visit_id):
 
 
 def current_packet(packet):
-    """What the CRP last saw: their edits if any, else Claude's original."""
+    """What the mentor last saw: their edits if any, else Claude's original."""
     return json.loads(packet["edited_json"] or packet["original_json"])
 
 
@@ -209,7 +218,8 @@ def fail_interrupted():
 def get_visit(visit_id):
     visit = db.query_one(
         "SELECT v.id, v.client_id, v.school_id, v.teacher_id, v.subject, v.language, v.rubric_json,"
-        " v.typed_note, v.observed_at, v.status, v.error, v.created_at,"
+        " v.typed_note, v.mentor_name, v.children_present, v.grades_together, v.observed_at,"
+        " v.status, v.error, v.created_at,"
         " t.name AS teacher_name, t.grade, s.name AS school_name"
         " FROM visits v JOIN teachers t ON t.id = v.teacher_id JOIN schools s ON s.id = v.school_id"
         " WHERE v.id = ?",
@@ -218,6 +228,7 @@ def get_visit(visit_id):
     if not visit:
         raise HTTPException(status_code=404, detail="Visit not found")
     visit["rubric"] = json.loads(visit.pop("rubric_json") or "{}")
+    visit["grades_together"] = json.loads(visit["grades_together"] or "[]")
     visit["notes"] = db.query(
         "SELECT id, transcript FROM voice_notes WHERE visit_id = ? ORDER BY id", (visit_id,)
     )

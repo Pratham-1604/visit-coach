@@ -71,6 +71,12 @@ export default function Observe() {
 
       <SubjectPicker visit={visit} disabled={ended} />
 
+      <ClassContext visit={visit} disabled={ended} />
+
+      <p className="text-xs text-slate-500">
+        A reading and maths add-on to your state's classroom observation (KPALP). Use both as usual.
+      </p>
+
       <p className="rounded-lg bg-slate-100 p-3 text-xs text-slate-600">
         Record your notes after class or away from children. Do not say children's names.
       </p>
@@ -117,6 +123,59 @@ function SubjectPicker({ visit, disabled }) {
         </button>
       ))}
     </div>
+  )
+}
+
+// Class size and multi-grade, so Claude picks a practice that fits the class (MENTOR.md #7, #8).
+function ClassContext({ visit, disabled }) {
+  const grades = visit.grades_together ?? [visit.grade]
+
+  function toggleGrade(grade) {
+    const next = grades.includes(grade) ? grades.filter((g) => g !== grade) : [...grades, grade].sort()
+    updateVisit(visit.id, { grades_together: next })
+  }
+
+  return (
+    <section className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+      <label className="flex items-center justify-between gap-3 text-sm">
+        <span className="font-medium">Children present</span>
+        <input
+          type="number"
+          inputMode="numeric"
+          min="0"
+          max="200"
+          disabled={disabled}
+          value={visit.children_present ?? ''}
+          onChange={(event) =>
+            updateVisit(visit.id, {
+              children_present: event.target.value === '' ? null : Math.min(200, Math.max(0, Number(event.target.value))),
+            })
+          }
+          className="w-24 rounded-lg border border-slate-200 p-2 text-right disabled:bg-slate-50"
+        />
+      </label>
+      <div className="text-sm">
+        <p className="font-medium">Grades sitting together</p>
+        <div className="mt-2 grid grid-cols-5 gap-2">
+          {[1, 2, 3, 4, 5].map((grade) => (
+            <button
+              key={grade}
+              disabled={disabled}
+              onClick={() => toggleGrade(grade)}
+              aria-pressed={grades.includes(grade)}
+              className={`min-h-11 rounded-lg border font-medium ${
+                grades.includes(grade) ? 'border-emerald-700 bg-emerald-700 text-white' : 'border-slate-200 bg-white'
+              } disabled:opacity-60`}
+            >
+              {grade}
+            </button>
+          ))}
+        </div>
+        {grades.length > 1 && (
+          <p className="mt-2 text-xs text-slate-500">Multi-grade class: the practice will work across these grades.</p>
+        )}
+      </div>
+    </section>
   )
 }
 

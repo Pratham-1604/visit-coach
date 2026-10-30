@@ -84,7 +84,7 @@ def pack_text():
         )
         lines.append(f"Materials: {'; '.join(practice['materials'])}")
         lines += [f"{n}. {step}" for n, step in enumerate(practice["steps"], 1)]
-        lines.append(f"CRP demo: {practice['demo_tip']}")
+        lines.append(f"Mentor demo: {practice['demo_tip']}")
         lines.append(f"Next-visit check: {practice['check']}")
         lines.append(f"Sources: {', '.join(practice['source_ids'])}")
         lines.append("")

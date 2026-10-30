@@ -5,8 +5,10 @@
 - **On-device or offline speech recognition**, so notes are transcribed even without internet.
 - **Bhashini integration** to align with the government's language platform.
 - **Real retrieval (RAG)** over full state FLN handbooks, lesson plans and TLM guides, once the knowledge pack grows too large to fit in the prompt.
-- **Login and roles:** CRP, teacher and block officer, plus state SSO.
-- **WhatsApp delivery** of approved packets to teachers.
+- **Login and roles:** mentor, teacher and block officer, plus state SSO. The mentor's name would then come from the account instead of being typed on the phone.
+- **WhatsApp bot (phase 2, MENTOR.md #12):** mentors send voice notes and tap follow-up buttons in WhatsApp, with no app. Meta's WhatsApp Cloud API calls a webhook on our server (`routes/whatsapp.py`), which reuses Sarvam, the packet, follow-ups and history. Needs a Meta business account and a phone number (ideally owned by the state), approved message templates for sending to teachers first, a per-message budget, and phone numbers for mentors and teachers. WhatsApp also holds voice notes until there's signal, which covers offline use.
+- **Teacher "I tried it"** on the shared link, so the next mentor sees the teacher's own answer next to the follow-up check.
+- **The state's own checklist** (e.g. KPALP) loaded as a swappable rubric file.
 - **Integration with state visit apps** (e.g. Jharkhand e-Vidya Vahini, Gujarat BRC/CRC forms), so we add coaching on top of their existing data capture.
 - **Practitioner-rated evaluation set** to replace or calibrate the LLM judge.
 - **More languages** beyond Tamil, Hindi and Marathi.
@@ -43,7 +45,7 @@ Dhruv's `APP_PLAN.md` (in the `edu-hackathon-fln` workspace) already designs the
 - Claude-written summary on the block view (the counts and metrics are there).
 - CRP screens in Hindi, Marathi and Tamil (the teacher's page and packets already are).
 - Noto Devanagari/Tamil fonts bundled with the app.
-- The eval has 12 cases; the target is 50.
+- The eval has 14 cases (2 multi-grade); the target is 50.
 - Demo packets are library text marked "Demo data" in English; only their agreed actions are in the school's language.
 
 ## Cut during the build

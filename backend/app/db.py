@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS visits (
     language TEXT NOT NULL,
     rubric_json TEXT,                  -- {item_id: 'yes' | 'partly' | 'no'}
     typed_note TEXT,
+    mentor_name TEXT,                  -- who visited, typed once on the phone (no login yet)
+    children_present INTEGER,          -- children in class that day
+    grades_together TEXT,              -- JSON list of grades sitting together, e.g. [1, 2]
     observed_at TEXT,
     status TEXT NOT NULL DEFAULT 'queued',  -- queued | transcribing | generating | ready | approved | failed
     error TEXT,                        -- why the last run failed (shown to the CRP)
@@ -81,6 +84,9 @@ ADDED_COLUMNS = [
     ("visits", "error", "TEXT"),
     ("voice_notes", "mime", "TEXT"),
     ("followups", "teacher_rating", "INTEGER"),
+    ("visits", "mentor_name", "TEXT"),
+    ("visits", "children_present", "INTEGER"),
+    ("visits", "grades_together", "TEXT"),
 ]
 
 

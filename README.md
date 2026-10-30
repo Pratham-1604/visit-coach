@@ -1,13 +1,14 @@
 # VisitCoach
 
-An AI copilot that turns every CRP school visit into one actionable coaching intervention for Grade 1–3 FLN teachers.
+VisitCoach gives Maharashtra's mentors (Kendra Pramukhs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off.
 Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
-- What we're building and when (and what's pending): [PLAN.md](PLAN.md)
+- What we're building now, after the mentor review: [PLAN_V2.md](PLAN_V2.md) (v1 record: [PLAN.md](PLAN.md))
+- The pitch for the state: [PITCH.md](PITCH.md)
 - Why we chose what we chose: [DECISIONS.md](DECISIONS.md)
 - How it works end to end: [FLOW.md](FLOW.md) (plain-words walkthrough)
 - What's left for later: [improvements/futurescope.md](improvements/futurescope.md)
-- Mentor call feedback (28 Oct) and what we're changing because of it: [MENTOR.md](MENTOR.md)
+- Mentor call feedback (27 Oct) and what we changed because of it: [MENTOR.md](MENTOR.md)
 - Research and source documents (NIPUN Bharat, NCF-FS, KVS FLN tools): Dhruv's workspace `../edu-hackathon-fln/` (outside this repo). The app only needs the verified excerpts in `backend/app/knowledge/grounding.json`.
 
 ## Run it locally
@@ -52,7 +53,7 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 22 made-up schools with a few weeks of visit history, so the block view (`/block`) and the next-visit check have something to show. To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
+On first start the server creates 22 made-up Maharashtra schools with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, set your mentor name to **Sachin Gore** (tap "Set your name" in the top bar). To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
 
 ## Quality check (costs credits)
 
