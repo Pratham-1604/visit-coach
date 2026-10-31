@@ -77,6 +77,15 @@ CREATE TABLE IF NOT EXISTS users (
     state TEXT NOT NULL DEFAULT 'MH'   -- which state's checklist the user works with
 );
 
+-- The visit report Claude writes for the mentor to check and send (services/report.py).
+CREATE TABLE IF NOT EXISTS reports (
+    visit_id INTEGER PRIMARY KEY REFERENCES visits(id),
+    language TEXT NOT NULL,            -- the language it was written in
+    report_json TEXT NOT NULL,         -- {summary, observations, flags, support_needed}
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    sent_at TEXT                       -- when the mentor sent or saved it (WhatsApp / PDF)
+);
+
 -- Each state's observation checklist, versioned. The newest version of a state is the one in use;
 -- every visit remembers the version it was observed with (visits.checklist_id).
 CREATE TABLE IF NOT EXISTS checklists (

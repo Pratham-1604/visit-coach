@@ -46,7 +46,7 @@ function TopBar({ user, width }) {
 
   return (
     // In dark mode colour names are flipped (index.css): emerald-200 is dark green there, slate-950 near white.
-    <header className="sticky top-0 z-20 bg-emerald-700 text-white dark:bg-emerald-200 dark:text-slate-950">
+    <header className="sticky top-0 z-20 bg-emerald-700 text-white dark:bg-emerald-200 dark:text-slate-950 print:hidden">
       <div className={`relative mx-auto flex items-center justify-between gap-3 px-4 py-3 ${width}`}>
         <Link to="/" className="text-lg font-semibold">
           VisitCoach

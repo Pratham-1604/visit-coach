@@ -14,7 +14,7 @@ from app import config, db
 from app.controllers.auth import current_user, require_mentor
 from app.controllers.checklists import seed_checklists_if_empty
 from app.controllers.visits import fail_interrupted
-from app.routes import auth, block, checklists, followups, offline, rehearsal, rubric, schools, teacher, visits
+from app.routes import auth, block, checklists, followups, offline, rehearsal, reports, rubric, schools, teacher, visits
 from app.seed import seed_if_empty, seed_users
 
 
@@ -44,6 +44,7 @@ app.include_router(visits.router, dependencies=mentors_only)
 app.include_router(followups.router, dependencies=mentors_only)
 app.include_router(offline.router, dependencies=mentors_only)
 app.include_router(rehearsal.router, dependencies=mentors_only)
+app.include_router(reports.router, dependencies=mentors_only)
 app.include_router(block.router, dependencies=[Depends(current_user)])
 app.include_router(checklists.router)
 app.include_router(teacher.router)

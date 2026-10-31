@@ -100,6 +100,14 @@ function PacketReview({ visit }) {
             </span>
           </Link>
 
+          <Link
+            to={`/visits/${visit.id}/report`}
+            className="block rounded-xl border border-slate-200 bg-white p-4 text-sm active:bg-slate-50"
+          >
+            <span className="font-medium text-emerald-700">{t('report.link')}</span>
+            <span className="mt-0.5 block text-slate-600">{t('report.link_hint')}</span>
+          </Link>
+
           <Evidence packet={packet} />
           <Transcripts server={server} />
         </>

@@ -37,6 +37,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 | 27 | Dark mode by flipping the colour palette, not by restyling every page |
 | 28 | Each state's checklist is data the state uploads, with versions |
 | 29 | Notes beside the checklist, and a "Did I miss anything?" check before ending a visit |
+| 30 | Claude writes the visit report; the mentor checks it and sends it themselves |
 
 ---
 
@@ -257,3 +258,13 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - Only ids on the visit's own checklist are kept.
   - Voice notes aren't checked here, because they are transcribed after upload. The visit report covers them.
 - **Change it when:** voice notes are transcribed on the phone, so they can be checked too.
+
+### 30. Claude writes the visit report; the mentor checks it and sends it themselves
+- **We chose:** after a visit is processed, the mentor opens **Visit report**. Claude writes the parts that need judgement: a summary, key observations, points to check and support needed. It works from the ticks, all the notes (voice notes as transcribed, plus typed ones), the class details, the agreed action and the earlier actions. The facts come straight from the data, so Claude can't get them wrong: school, teacher, date, mentor, every checklist rating and the agreed action. The mentor sends it on **WhatsApp** or **saves it as a PDF**, and it is marked as sent.
+- **Why:** after every visit, mentors write a report by hand. That's time taken away from mentoring (MENTOR.md #1). We don't yet know where Maharashtra wants it submitted (MENTOR.md section 4), so we write it and the mentor sends it wherever the process says.
+- **Not sent to the block officer's page automatically:** a teacher-level report on an officer dashboard would turn the app into monitoring. Support planning still shows only counts (#10).
+- **How:**
+  - The report is written on demand (`POST /api/visits/{id}/report`) at effort `low`, in the mentor's screen language.
+  - Writing it again, for example in another language, replaces it and clears "sent".
+  - It is cached on the phone to open offline.
+- **Change it when:** the state names its submission channel (a portal, an email address or a form). Then "send" can go there directly.

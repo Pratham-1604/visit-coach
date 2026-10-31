@@ -94,6 +94,11 @@ export default function Observe() {
                   {t('observe.back')}
                 </Link>
               )}
+              {hasPacket(visit) && (
+                <Link to={`/visits/${visit.id}/report`} className="rounded-lg px-3 py-2 text-emerald-800 underline">
+                  {t('report.title')}
+                </Link>
+              )}
               {visit.status === 'ready' && (
                 <button onClick={() => reopenVisit(visit.id)} className="rounded-lg px-3 py-2 text-emerald-800 underline">
                   {t('observe.edit')}
