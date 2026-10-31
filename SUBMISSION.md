@@ -33,7 +33,8 @@ Do this once locally and once on the deployed site (section 4). Note anything br
   - [ ] Children present: `32`. Grades sitting together: tick **1** and **2**.
   - [ ] Tap 5–6 checklist items. Each shows its **KPALP** indicator.
   - [ ] Record one voice note in Marathi, or type a note, e.g. *"Paired reading started but only front rows read. Back-row Grade 1 children only watched."*
-  - [ ] **End visit**.
+  - [ ] Write a note in the **Notes** panel (📝 on an item starts a line about it), e.g. "only front rows answered" while "every child gets a turn" is ticked **Yes**.
+  - [ ] **End visit**: the check lists unrated items and flags the contradiction. Fix it or end anyway.
 - [ ] Status changes from Waiting to sync → Transcribing → Writing packet → **Review packet** within about a minute.
 
 **The packet**
@@ -45,6 +46,7 @@ Do this once locally and once on the deployed site (section 4). Note anything br
 - [ ] The **WhatsApp message** preview shows the advice in Marathi plus a link.
 - [ ] **Send on WhatsApp** opens WhatsApp with the message ready.
 - [ ] **Practise the conversation:** do 3–4 turns, then get the score card.
+- [ ] **Visit report** → Write the report: summary, checklist results, points to check, support needed. Send it on WhatsApp or save it as PDF; it shows "Sent".
 
 **Teacher side**
 - [ ] Open the link from the message (`/t/…`). The headings are in Marathi, the page shows the advice and **"Your coaching so far"**, and there are no scores or mentor notes.
@@ -55,6 +57,11 @@ Do this once locally and once on the deployed site (section 4). Note anything br
   - [ ] It shows no teacher names.
 - [ ] Menu → **Log out**, then log in as `officer` / `officer123`: only support planning opens, with no schools or visits.
 - [ ] Open the teacher link while logged out: it still works without a login.
+- [ ] Log out, then log in as `admin` / `admin123` (state admin): only the **State checklist** page opens.
+  - [ ] **What the visits say** shows "almost always met" (e.g. print-rich classroom) and "often left unrated" (children explain their thinking).
+  - [ ] **Ask Claude for new items** suggests items like drinking water or attendance, with Marathi and Hindi wording. Download the suggested next version (CSV).
+  - [ ] Upload that CSV as a new version: it becomes "in use". Log back in as a mentor: a new visit shows the new items.
+  - [ ] A broken file (e.g. delete the `text_en` column) is rejected with every problem listed.
 
 **Offline (built version only, sections 3–4)**
 - [ ] Open the app once online, then turn on airplane mode (or DevTools → Network → Offline).

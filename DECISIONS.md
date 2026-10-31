@@ -38,6 +38,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 | 28 | Each state's checklist is data the state uploads, with versions |
 | 29 | Notes beside the checklist, and a "Did I miss anything?" check before ending a visit |
 | 30 | Claude writes the visit report; the mentor checks it and sends it themselves |
+| 31 | Suggestions for the next checklist version come from the visits themselves |
 
 ---
 
@@ -268,3 +269,17 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - Writing it again, for example in another language, replaces it and clears "sent".
   - It is cached on the phone to open offline.
 - **Change it when:** the state names its submission channel (a portal, an email address or a form). Then "send" can go there directly.
+
+### 31. Suggestions for the next checklist version come from the visits themselves
+- **We chose:** the state admin's page has a **"What the visits say"** section, based on every visit observed with the version in use. It has two parts.
+  - **Rules (no AI), once an item has been seen in at least 10 visits:**
+    - items rated "yes" in 90% or more of visits are **almost always met** (remove them, or raise the bar?)
+    - items left unrated in half the visits or more are **often skipped** (hard to see in one visit? reword or drop?)
+    - the 3 items most often rated "no" are **where teachers need most support** (keep them)
+  - **Claude (on request):** it reads the mentors' notes and suggests up to 5 **new items** for problems that keep coming up but aren't on the list. Examples: no drinking water, low attendance at harvest time, children from migrant families who don't follow the teaching language. Each suggestion has the item in English, Marathi and Hindi, the need area, what to look for, and how many notes mention it.
+- **What the state does with it:**
+  - **Print** the section for the government.
+  - Download a **suggested next version** as CSV (the version in use plus the new items), edit it, and upload it (#28).
+  - Nothing changes the checklist by itself.
+- **Privacy:** only totals and themes come out. Claude is told never to name a school, teacher or child.
+- **Demo data:** the made-up history has realistic ratings and recurring notes, so the section has something to show. Print-rich classrooms and home language come out as "almost always met", and "children explain their thinking" as "often skipped".

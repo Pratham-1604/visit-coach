@@ -127,3 +127,47 @@ def test_review_before_ending_a_visit(client, monkeypatch):
 
     monkeypatch.setattr(llm, "parse", lambda *a, **k: (_ for _ in ()).throw(llm.LLMError("down")))
     assert client.post("/api/visits/review", json={}).status_code == 502
+
+
+def test_item_stats_flag_met_and_skipped_items():
+    from app.services.checklist_review import item_stats
+
+    items = [
+        {"id": "a", "subject": "both"},
+        {"id": "b", "subject": "both"},
+        {"id": "c", "subject": "numeracy"},
+    ]
+    visits = [{"subject": "literacy", "rubric": {"a": "yes"}} for _ in range(12)]
+    rows = {row["id"]: row for row in item_stats(items, visits)}
+    assert rows["a"]["flag"] == "met" and rows["a"]["pct"]["yes"] == 100
+    assert rows["b"]["flag"] == "skipped" and rows["b"]["skipped"] == 12
+    assert rows["c"]["visits"] == 0 and rows["c"]["flag"] is None  # never relevant: no judgement
+
+
+def test_insights_from_demo_history_and_suggestions(admin, monkeypatch):
+    from app.services import llm
+
+    insights = admin.get("/api/checklists/insights").json()
+    assert insights["visits"] >= 40 and insights["suggestions"] is None
+    flags = {row["id"]: row["flag"] for row in insights["items"]}
+    assert flags["print_rich"] == "met" and flags["explain_thinking"] == "skipped"
+
+    seen = {}
+
+    def fake_parse(system, user, model, **kwargs):
+        seen["user"] = user
+        item = {
+            "id": "drinking_water", "subject": "both", "need_area": "inclusion", "text_en": "Drinking water",
+            "text_mr": "पिण्याचे पाणी", "text_hi": "पीने का पानी", "look_for": "A tap children use",
+            "reason": "r", "visits_mentioning": 6,
+        }
+        return model(summary="s", new_items=[item, {**item, "id": "print_rich"}, {**item, "id": "x", "need_area": "bad"}]), {}
+
+    monkeypatch.setattr(llm, "parse", fake_parse)
+    result = admin.post("/api/checklists/suggestions", json={"language": "hi"}).json()
+    assert [item["id"] for item in result["suggestions"]["new_items"]] == ["drinking_water"]  # existing/invalid dropped
+    assert "Write summary and reasons in: Hindi" in seen["user"] and "drinking water" in seen["user"].lower()
+    assert "print_rich: rated yes" in seen["user"]
+
+    csv_text = admin.get("/api/checklists/suggestions/csv").text
+    assert "drinking_water" in csv_text and "children_read" in csv_text

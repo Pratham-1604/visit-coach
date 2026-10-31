@@ -86,6 +86,15 @@ CREATE TABLE IF NOT EXISTS reports (
     sent_at TEXT                       -- when the mentor sent or saved it (WhatsApp / PDF)
 );
 
+-- The latest checklist suggestions Claude made for a state (services/checklist_review.py).
+CREATE TABLE IF NOT EXISTS checklist_suggestions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    checklist_id INTEGER NOT NULL REFERENCES checklists(id),
+    language TEXT NOT NULL,
+    suggestions_json TEXT NOT NULL,    -- {summary, new_items: [...]}
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Each state's observation checklist, versioned. The newest version of a state is the one in use;
 -- every visit remembers the version it was observed with (visits.checklist_id).
 CREATE TABLE IF NOT EXISTS checklists (

@@ -9,7 +9,7 @@ import json
 from fastapi import HTTPException
 
 from app import db
-from app.services import knowledge
+from app.services import checklist_review, knowledge, llm
 from app.services.checklist_file import ChecklistFileError, parse_checklist, to_csv
 
 STATES = {"MH": "Maharashtra"}
@@ -115,3 +115,70 @@ def shaped(row):
         "need_areas": knowledge.rubric()["need_areas"],
         "items": json.loads(row["items_json"]),
     }
+
+
+# Suggestions for the next version (the state admin's "what the visits say" section).
+
+
+def checklist_insights(state):
+    """Totals per item from the visits observed with the version in use, plus Claude's latest suggestions."""
+    checklist = active_checklist(state)
+    visits = visits_with(checklist)
+    stats = checklist_review.item_stats(checklist["items"], visits)
+    latest = db.query_one(
+        "SELECT * FROM checklist_suggestions WHERE checklist_id = ? ORDER BY id DESC LIMIT 1", (checklist["id"],)
+    )
+    return {
+        "checklist_id": checklist["id"],
+        "version": checklist["version"],
+        "visits": len(visits),
+        "min_visits": checklist_review.MIN_VISITS,
+        "items": stats,
+        "suggestions": json.loads(latest["suggestions_json"]) if latest else None,
+        "suggested_at": latest["created_at"] if latest else None,
+    }
+
+
+def suggest_items(state, language):
+    checklist = active_checklist(state)
+    visits = visits_with(checklist)
+    stats = checklist_review.item_stats(checklist["items"], visits)
+    notes = [visit["notes"] for visit in visits if visit["notes"].strip()]
+    try:
+        suggestions = checklist_review.suggest_new_items(
+            checklist["items"], stats, notes, set(knowledge.need_areas()), language
+        )
+    except llm.LLMError as err:
+        raise HTTPException(status_code=502, detail=str(err)) from err
+    db.execute(
+        "INSERT INTO checklist_suggestions (checklist_id, language, suggestions_json) VALUES (?, ?, ?)",
+        (checklist["id"], language, json.dumps(suggestions, ensure_ascii=False)),
+    )
+    return checklist_insights(state)
+
+
+def suggested_csv(state):
+    """The version in use plus the suggested new items: a starting point to edit and upload as the next version."""
+    insights = checklist_insights(state)
+    new_items = (insights["suggestions"] or {}).get("new_items", [])
+    items = active_checklist(state)["items"] + [checklist_review.as_checklist_item(item) for item in new_items]
+    return to_csv(items)
+
+
+def visits_with(checklist):
+    """Synced visits observed with this checklist version (demo history has no version: it counts as version 1)."""
+    rows = db.query(
+        "SELECT v.subject, v.rubric_json, v.typed_note,"
+        " (SELECT group_concat(n.transcript, ' ') FROM voice_notes n WHERE n.visit_id = v.id) AS transcripts"
+        " FROM visits v WHERE v.status IN ('ready', 'approved')"
+        " AND (v.checklist_id = ? OR (v.checklist_id IS NULL AND ? = 1))",
+        (checklist["id"], checklist["version"]),
+    )
+    return [
+        {
+            "subject": row["subject"],
+            "rubric": json.loads(row["rubric_json"] or "{}"),
+            "notes": " ".join(filter(None, [row["typed_note"], row["transcripts"]])),
+        }
+        for row in rows
+    ]

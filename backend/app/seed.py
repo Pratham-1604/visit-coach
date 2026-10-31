@@ -222,21 +222,70 @@ def check_action(rng, visit_id, checked, status=None):
     )
 
 
+# How often mentors rate each item yes / partly / no / not rated in the demo history (default for the rest),
+# so the state admin's checklist review has patterns to find: print-rich classrooms and home language are
+# met almost everywhere (retire the item or raise the bar?), and "children explain their thinking" is
+# often left unrated (hard to see in one visit?).
+TYPICAL_RATINGS = {
+    "print_rich": (93, 5, 2, 0),
+    "home_language": (91, 6, 2, 1),
+    "explain_thinking": (10, 15, 15, 60),
+    "daily_life_maths": (20, 25, 20, 35),
+}
+DEFAULT_RATINGS = (35, 30, 25, 10)
+
+# Problems mentors keep writing down that no checklist item covers: the checklist review asks Claude to
+# find them and suggest new items for the next version.
+RECURRING_NOTES = [
+    "No drinking water in the school since last week; several children went home at break and did not come back.",
+    "अनेक मुले ऊसतोडणीसाठी पालकांसोबत गेली आहेत, आज वर्गात फक्त अर्धी हजेरी होती.",
+    "Two children from a migrant family speak only Kannada at home and sat silent through the whole lesson.",
+    "Teacher was on BLO election duty two days this week, so Grade 1 and 2 were sitting together with no plan.",
+    "पाठ्यपुस्तके अजून आलेली नाहीत; मुले जुन्या फाटलेल्या पुस्तकांतून वाचत आहेत.",
+    "Reading corner books are locked in the cupboard; children are not allowed to take them.",
+    "Children who missed many days this month could not follow the lesson and nobody helped them catch up.",
+]
+
+
+def seed_ratings(rng, subject, priority_item):
+    """Ratings for every checklist item of the subject; the visit's priority item is always 'no'."""
+    ratings = {}
+    for item in knowledge.rubric()["items"]:
+        if item["subject"] not in ("both", subject):
+            continue
+        if item["id"] == priority_item:
+            ratings[item["id"]] = "no"
+            continue
+        weights = TYPICAL_RATINGS.get(item["id"], DEFAULT_RATINGS)
+        rating = rng.choices(["yes", "partly", "no", None], weights=weights)[0]
+        if rating:
+            ratings[item["id"]] = rating
+    return ratings
+
+
+def seed_note(rng):
+    """About half the visits have a typed note about one recurring problem."""
+    return rng.choice(RECURRING_NOTES) if rng.random() < 0.5 else ""
+
+
 def add_visit(rng, school_id, teacher_id, language, need_area, observed, mentor):
     rubric_item, practice_id = NEEDS[need_area]
     subject = "numeracy" if need_area == "concrete_maths" else "literacy"
     approved = observed + timedelta(minutes=rng.randint(25, 240))
 
+    # A separate random source, so adding ratings and notes doesn't change the rest of the demo history.
+    detail_rng = random.Random(f"{school_id}-{observed:%Y%m%d}")
     visit_id = db.execute(
         "INSERT INTO visits (client_id, school_id, teacher_id, subject, language, rubric_json, typed_note,"
-        " mentor_name, observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, '', ?, ?, 'approved', ?)",
+        " mentor_name, observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?)",
         (
             f"seed-{school_id}-{observed:%Y%m%d}",
             school_id,
             teacher_id,
             subject,
             language,
-            json.dumps({rubric_item: "no", "encouraging_feedback": "yes"}),
+            json.dumps(seed_ratings(detail_rng, subject, rubric_item)),
+            seed_note(detail_rng),
             mentor,
             observed.strftime("%Y-%m-%dT%H:%M:%SZ"),
             sql_time(observed),
