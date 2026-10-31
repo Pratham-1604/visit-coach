@@ -8,14 +8,17 @@ import { useAutoSync } from '../lib/sync.js'
 import Login from '../pages/Login.jsx'
 import Settings from './Settings.jsx'
 
+// The one page each non-mentor role uses. Mentors use the whole app.
+const ROLE_PAGES = { officer: '/block', admin: '/checklists' }
+
 // Shared page frame: top bar + a phone-width content column. Shows the login screen until someone logs in.
 export default function Layout() {
   const session = useSession()
   const location = useLocation()
 
   if (!session) return <Login />
-  // The block officer only uses support planning.
-  if (session.user.role === 'officer' && location.pathname !== '/block') return <Navigate to="/block" replace />
+  const rolePage = ROLE_PAGES[session.user.role]
+  if (rolePage && location.pathname !== rolePage) return <Navigate to={rolePage} replace />
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">

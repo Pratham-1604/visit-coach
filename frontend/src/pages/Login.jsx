@@ -10,6 +10,7 @@ const DEMO_USERS = [
   { username: 'sachin', password: 'sachin123', who: 'Sachin Gore', role: 'mentor' },
   { username: 'vandana', password: 'vandana123', who: 'Vandana Joshi', role: 'mentor' },
   { username: 'officer', password: 'officer123', role: 'officer' },
+  { username: 'admin', password: 'admin123', role: 'admin' },
 ]
 
 // Shown by Layout until someone logs in. After the first login the app keeps working offline.

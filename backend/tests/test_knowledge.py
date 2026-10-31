@@ -46,7 +46,8 @@ def test_rubric_endpoint(client):
     rubric = client.get("/api/rubric").json()
     assert len(rubric["items"]) == len(knowledge.rubric_items())
     assert "source_ids" not in rubric["items"][0]
-    assert rubric["state_checklist"]["name"].startswith("KPALP")
+    assert rubric["state"] == "MH" and "KPALP" in rubric["name"]
+    assert all(item["kpalp"] for item in rubric["items"])
 
 
 def test_every_item_maps_to_a_kpalp_indicator():

@@ -6,7 +6,7 @@ from tests.test_visits import EDITS, a_teacher, sync
 
 def test_login_returns_the_user_and_me_works(anonymous):
     user = log_in(anonymous, "Sachin ", "sachin123")  # username is not case- or space-sensitive
-    assert user == {"id": user["id"], "username": "sachin", "name": "Sachin Gore", "role": "mentor"}
+    assert user == {"id": user["id"], "username": "sachin", "name": "Sachin Gore", "role": "mentor", "state": "MH"}
     assert anonymous.get("/api/auth/me").json()["name"] == "Sachin Gore"
 
 

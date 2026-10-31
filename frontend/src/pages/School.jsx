@@ -33,7 +33,7 @@ export default function School() {
 
   async function openVisit(teacher) {
     const draft = drafts?.find((visit) => visit.teacher_id === teacher.id)
-    const visitId = draft ? draft.id : await startVisit(school, teacher, rubric.version)
+    const visitId = draft ? draft.id : await startVisit(school, teacher, rubric)
     navigate(`/visits/${visitId}`)
   }
 

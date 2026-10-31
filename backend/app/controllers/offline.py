@@ -8,10 +8,10 @@ from app.controllers import rubric as rubric_controller
 from app.controllers import schools as schools_controller
 
 
-def offline_pack():
+def offline_pack(user):
     schools = schools_controller.list_schools()
     return {
         "schools": schools,
         "school_details": {str(school["id"]): schools_controller.get_school(school["id"]) for school in schools},
-        "rubric": rubric_controller.get_rubric(),
+        "rubric": rubric_controller.get_rubric(user),
     }

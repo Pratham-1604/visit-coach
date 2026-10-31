@@ -84,6 +84,7 @@ DEMO_USERS = [
     ("sachin", "sachin123", DEMO_MENTOR, "mentor"),
     ("vandana", "vandana123", "Vandana Joshi", "mentor"),
     ("officer", "officer123", "Block Education Officer, Haveli", "officer"),
+    ("admin", "admin123", "SCERT Maharashtra (state admin)", "admin"),
 ]
 
 # need area -> (rubric item, practice) used for seeded packets.
@@ -157,12 +158,11 @@ FOLLOW_UPS = {
 }
 
 
-def seed_users_if_empty():
-    """Separate from the schools, so databases made before logins existed get the demo users too."""
-    if db.query_one("SELECT id FROM users LIMIT 1"):
-        return
+def seed_users():
+    """Add any missing demo user. Separate from the schools, so older databases get new demo users too."""
     for username, password, name, role in DEMO_USERS:
-        create_user(username, password, name, role)
+        if not db.query_one("SELECT id FROM users WHERE username = ?", (username,)):
+            create_user(username, password, name, role)
 
 
 def seed_if_empty():

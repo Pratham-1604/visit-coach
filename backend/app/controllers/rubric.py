@@ -1,16 +1,10 @@
-"""Rubric logic: the observation rubric the phone caches for offline visits."""
+"""Rubric logic: the observation checklist the phone caches for offline visits.
 
-from app.services import knowledge
+It is the newest version of the mentor's state checklist (controllers/checklists.py).
+"""
+
+from app.controllers.checklists import active_checklist
 
 
-def get_rubric():
-    rubric = knowledge.rubric()
-    return {
-        "version": rubric["version"],
-        "need_areas": rubric["need_areas"],
-        "state_checklist": {key: rubric["state_checklist"][key] for key in ("name", "indicators")},
-        "items": [
-            {key: item[key] for key in ("id", "subject", "need_area", "kpalp", "text", "look_for")}
-            for item in rubric["items"]
-        ],
-    }
+def get_rubric(user):
+    return active_checklist(user["state"])

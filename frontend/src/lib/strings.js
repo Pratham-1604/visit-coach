@@ -4,6 +4,28 @@
 // Text that Claude writes for the mentor (summary, evidence, rehearsal feedback) and source quotes stay in English.
 
 const en = {
+  // State checklist (state admin)
+  'role.admin': 'State admin (SCERT)',
+  'subject.both': 'Both',
+  'checklist.title': 'State checklist',
+  'checklist.version': '{state} · version {version} · {n} items',
+  'checklist.by': 'Uploaded by {who} on {date}',
+  'checklist.items': 'Items in use',
+  'checklist.download': 'Download as CSV',
+  'checklist.download_hint': 'Edit it in Excel or Google Sheets, then upload it as the next version.',
+  'checklist.upload_title': 'Upload a new version',
+  'checklist.upload_hint':
+    'A .csv or .json file with the columns: {columns}. Every mentor in the state gets it on their next sync; earlier visits keep their version.',
+  'checklist.file': 'File',
+  'checklist.name': 'Name (optional)',
+  'checklist.note': 'What changed?',
+  'checklist.upload': 'Upload',
+  'checklist.uploading': 'Uploading…',
+  'checklist.uploaded': 'Version {version} is now in use.',
+  'checklist.problems': 'Fix these and upload again:',
+  'checklist.history': 'All versions',
+  'checklist.history_row': 'Version {version} · {n} items · {date}',
+  'checklist.in_use': 'in use',
   // Top bar, menu, login
   'app.online': 'Online',
   'app.offline': 'Offline · saving on phone',
@@ -283,6 +305,27 @@ const en = {
 }
 
 const mr = {
+  'role.admin': 'राज्य प्रशासक (SCERT)',
+  'subject.both': 'दोन्ही',
+  'checklist.title': 'राज्याची तपासणी सूची',
+  'checklist.version': '{state} · आवृत्ती {version} · {n} मुद्दे',
+  'checklist.by': '{who} यांनी {date} रोजी अपलोड केली',
+  'checklist.items': 'वापरातील मुद्दे',
+  'checklist.download': 'CSV म्हणून डाउनलोड करा',
+  'checklist.download_hint': 'Excel किंवा Google Sheets मध्ये बदला आणि पुढची आवृत्ती म्हणून अपलोड करा.',
+  'checklist.upload_title': 'नवीन आवृत्ती अपलोड करा',
+  'checklist.upload_hint':
+    'हे कॉलम असलेली .csv किंवा .json फाइल: {columns}. राज्यातील प्रत्येक केंद्रप्रमुखाला पुढच्या सिंकवेळी ती मिळेल; आधीच्या भेटी त्यांचीच आवृत्ती ठेवतात.',
+  'checklist.file': 'फाइल',
+  'checklist.name': 'नाव (ऐच्छिक)',
+  'checklist.note': 'काय बदलले?',
+  'checklist.upload': 'अपलोड करा',
+  'checklist.uploading': 'अपलोड होत आहे…',
+  'checklist.uploaded': 'आवृत्ती {version} आता वापरात आहे.',
+  'checklist.problems': 'हे दुरुस्त करून पुन्हा अपलोड करा:',
+  'checklist.history': 'सर्व आवृत्त्या',
+  'checklist.history_row': 'आवृत्ती {version} · {n} मुद्दे · {date}',
+  'checklist.in_use': 'वापरात',
   'app.online': 'ऑनलाइन',
   'app.offline': 'ऑफलाइन · फोनवर जतन होत आहे',
   'menu.open': 'मेनू',
@@ -548,6 +591,27 @@ const mr = {
 }
 
 const hi = {
+  'role.admin': 'राज्य प्रशासक (SCERT)',
+  'subject.both': 'दोनों',
+  'checklist.title': 'राज्य की चेकलिस्ट',
+  'checklist.version': '{state} · संस्करण {version} · {n} बिंदु',
+  'checklist.by': '{who} ने {date} को अपलोड की',
+  'checklist.items': 'उपयोग में बिंदु',
+  'checklist.download': 'CSV के रूप में डाउनलोड करें',
+  'checklist.download_hint': 'Excel या Google Sheets में बदलें, फिर अगले संस्करण के रूप में अपलोड करें।',
+  'checklist.upload_title': 'नया संस्करण अपलोड करें',
+  'checklist.upload_hint':
+    'इन कॉलम वाली .csv या .json फ़ाइल: {columns}। राज्य के हर मार्गदर्शक को अगली सिंक पर यह मिल जाएगी; पिछले दौरे अपना संस्करण रखते हैं।',
+  'checklist.file': 'फ़ाइल',
+  'checklist.name': 'नाम (वैकल्पिक)',
+  'checklist.note': 'क्या बदला?',
+  'checklist.upload': 'अपलोड करें',
+  'checklist.uploading': 'अपलोड हो रहा है…',
+  'checklist.uploaded': 'संस्करण {version} अब उपयोग में है।',
+  'checklist.problems': 'इन्हें ठीक करके फिर अपलोड करें:',
+  'checklist.history': 'सभी संस्करण',
+  'checklist.history_row': 'संस्करण {version} · {n} बिंदु · {date}',
+  'checklist.in_use': 'उपयोग में',
   'app.online': 'ऑनलाइन',
   'app.offline': 'ऑफ़लाइन · फ़ोन में सहेजा जा रहा है',
   'menu.open': 'मेनू',

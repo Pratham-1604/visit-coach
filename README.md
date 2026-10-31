@@ -61,6 +61,7 @@ On first start the server creates 22 made-up Maharashtra schools with a few week
 | `sachin` | `sachin123` | Mentor (Kendra Pramukh), Sachin Gore |
 | `vandana` | `vandana123` | Mentor, Vandana Joshi |
 | `officer` | `officer123` | Block officer: sees support planning only |
+| `admin` | `admin123` | State admin (SCERT): manages the state checklist only |
 
 The login screen lists these too (prototype only, DECISIONS.md #25). The teacher's shared link needs no login. The menu (your name, top right) switches the screens between English, मराठी and हिंदी, and between light and dark.
 

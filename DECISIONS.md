@@ -35,6 +35,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 | 25 | Simple login with demo users; teachers still never log in |
 | 26 | The mentor's screens switch between English, Marathi and Hindi; packets stay in the teacher's language |
 | 27 | Dark mode by flipping the colour palette, not by restyling every page |
+| 28 | Each state's checklist is data the state uploads, with versions |
 
 ---
 
@@ -222,3 +223,22 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 - **We chose:** a light/dark switch in the menu. It starts from the phone's own setting. In dark mode, `index.css` swaps every colour shade with its mirror (lightest ↔ darkest), so every text and background pair keeps its contrast.
 - **Instead of:** adding a `dark:` class to every element on every page, which is hundreds of changes and easy to miss one.
 - **What it means for us:** new pages get dark mode for free if they use the usual Tailwind colours. Inside a `dark:` class the colour names are flipped too (used only for the green top bar).
+
+### 28. Each state's checklist is data the state uploads, with versions
+- **We chose:** the observation checklist lives in the database, one list per state, with a version number. The **state admin** (e.g. SCERT; demo login `admin` / `admin123`) can:
+  - see the version in use
+  - download it as CSV
+  - edit it in Excel or Google Sheets
+  - upload it again as the next version (CSV or JSON)
+
+  Mentors get the newest version on their next sync.
+- **Why:** the mentor told us each state already decides its checklist (MENTOR.md #4). A state should be able to change it without asking us to change code.
+- **How it stays safe:**
+  - A bad file is rejected with every problem listed at once, and nothing changes.
+  - Every visit remembers the version it was observed with, so old visits and their packets stay correct.
+  - Claude is told the visit's own checklist, and the packet's priority must be one of its items.
+- **Kept simple:**
+  - The state comes from the user's login, not the phone's location.
+  - Items must use our 8 need areas, so support planning can still count them.
+  - Maharashtra version 1 is our reading-and-maths list mapped to KPALP.
+- **Change it when:** a second state joins (add it to `STATES` in `controllers/checklists.py` and upload its list), or a state wants to review a version before it goes live (add a draft step).

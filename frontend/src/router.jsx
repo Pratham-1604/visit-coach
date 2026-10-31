@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import Block from './pages/Block.jsx'
+import Checklists from './pages/Checklists.jsx'
 import Home from './pages/Home.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Observe from './pages/Observe.jsx'
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { path: 'visits/:visitId/packet', element: <Packet /> },
       { path: 'visits/:visitId/rehearse', element: <Rehearse /> },
       { path: 'block', element: <Block /> },
+      { path: 'checklists', element: <Checklists /> },
     ],
   },
   // The teacher's link: outside Layout, so no CRP header and no auto-sync.
