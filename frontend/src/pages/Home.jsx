@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { getSchools } from '../api/schools.js'
 import FocusBadge from '../components/FocusBadge.jsx'
 import { db } from '../lib/db.js'
@@ -35,22 +35,7 @@ export default function Home() {
 
       <h1 className="text-xl font-semibold">This week's visits</h1>
 
-      {schools.map((school) => (
-        <Link
-          key={school.id}
-          to={`/schools/${school.id}`}
-          className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm active:bg-slate-50"
-        >
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="font-medium">{school.name}</p>
-              <p className="text-sm text-slate-500">{school.village}</p>
-            </div>
-            <FocusBadge area={school.focus.area} />
-          </div>
-          <p className="mt-2 text-sm text-slate-600">{school.focus.reason}</p>
-        </Link>
-      ))}
+      <SchoolList schools={schools} />
 
       <Link to="/block" className="block py-2 text-center text-sm text-emerald-700 underline">
         Support planning for the block (counts only)
@@ -59,11 +44,132 @@ export default function Home() {
   )
 }
 
-// Visits recorded on this phone, newest first. Drafts can be continued.
+const FILTERS = [
+  { id: 'all', label: 'All', test: () => true },
+  { id: 'actions', label: 'Action to check', test: (school) => school.open_actions > 0 },
+  { id: 'literacy', label: 'Reading focus', test: (school) => school.focus.area === 'literacy' },
+  { id: 'numeracy', label: 'Maths focus', test: (school) => school.focus.area === 'numeracy' },
+]
+
+// Search by school, village or teacher, plus quick filters. Kept in the URL, so "back" keeps them.
+function SchoolList({ schools }) {
+  const [params, setParams] = useSearchParams()
+  const query = params.get('q') ?? ''
+  const filter = FILTERS.find((f) => f.id === params.get('filter')) ?? FILTERS[0]
+
+  function update(changes) {
+    const next = new URLSearchParams(params)
+    for (const [key, value] of Object.entries(changes)) {
+      if (value && value !== 'all') next.set(key, value)
+      else next.delete(key)
+    }
+    setParams(next, { replace: true })
+  }
+
+  const words = query.trim().toLowerCase()
+  const matching = schools.filter((school) => {
+    const text = [school.name, school.village, ...(school.teacher_names ?? [])].join(' ').toLowerCase()
+    return text.includes(words)
+  })
+  const shown = matching.filter(filter.test)
+
+  return (
+    <section className="space-y-3">
+      <div className="relative">
+        <input
+          type="search"
+          value={query}
+          onChange={(event) => update({ q: event.target.value })}
+          placeholder="Search school, village or teacher"
+          aria-label="Search schools"
+          className="w-full rounded-xl border border-slate-200 bg-white p-3 pr-10 text-sm shadow-sm"
+        />
+        {query && (
+          <button
+            onClick={() => update({ q: '' })}
+            aria-label="Clear search"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full px-2 text-lg text-slate-400"
+          >
+            ×
+          </button>
+        )}
+      </div>
+
+      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1">
+        {FILTERS.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => update({ filter: f.id })}
+            aria-pressed={f.id === filter.id}
+            className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-sm font-medium ${
+              f.id === filter.id ? 'border-emerald-700 bg-emerald-700 text-white' : 'border-slate-200 bg-white text-slate-700'
+            }`}
+          >
+            {f.label} ({matching.filter(f.test).length})
+          </button>
+        ))}
+      </div>
+
+      {shown.length === 0 && (
+        <p className="rounded-xl border border-dashed border-slate-300 p-4 text-center text-sm text-slate-500">
+          No schools match.{' '}
+          <button onClick={() => update({ q: '', filter: 'all' })} className="text-emerald-700 underline">
+            Show all
+          </button>
+        </p>
+      )}
+
+      {shown.map((school) => (
+        <SchoolCard key={school.id} school={school} />
+      ))}
+    </section>
+  )
+}
+
+function SchoolCard({ school }) {
+  return (
+    <Link
+      to={`/schools/${school.id}`}
+      className="block rounded-xl border border-slate-200 bg-white p-4 shadow-sm active:bg-slate-50"
+    >
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="font-medium">{school.name}</p>
+          <p className="text-sm text-slate-500">{school.village}</p>
+        </div>
+        <FocusBadge area={school.focus.area} />
+      </div>
+      <p className="mt-2 text-sm text-slate-600">{school.focus.reason}</p>
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+        <span>{school.last_visit ? `Last visit ${formatDate(school.last_visit)}` : 'Not visited yet'}</span>
+        {school.open_actions > 0 && (
+          <span className="font-medium text-amber-700">
+            {school.open_actions} {school.open_actions === 1 ? 'action' : 'actions'} to check
+          </span>
+        )}
+      </div>
+    </Link>
+  )
+}
+
+// Which visits need the mentor first: failed, then packets to review, then visits still in progress.
+const NEEDS_ATTENTION = ['Failed', 'Review packet', 'In progress', 'Waiting to sync']
+const SHOW_FIRST = 3
+
+function attentionRank(visit) {
+  const rank = NEEDS_ATTENTION.indexOf(visitStatus(visit).label)
+  return rank === -1 ? NEEDS_ATTENTION.length : rank
+}
+
+// Visits recorded on this phone: the ones that need the mentor first, then newest first. Drafts can be continued.
 function PhoneVisits({ visits }) {
   const online = useOnline()
   const [syncing, setSyncing] = useState(false)
+  const [showAll, setShowAll] = useState(false)
   const waiting = visits.filter((visit) => visit.status === 'ready').length
+  // sort() is stable, so visits with the same rank stay newest first.
+  const sorted = [...visits].sort((a, b) => attentionRank(a) - attentionRank(b))
+  const shown = showAll ? sorted : sorted.slice(0, SHOW_FIRST)
 
   async function syncNow() {
     setSyncing(true)
@@ -85,9 +191,14 @@ function PhoneVisits({ visits }) {
           </button>
         )}
       </div>
-      {visits.map((visit) => (
+      {shown.map((visit) => (
         <PhoneVisit key={visit.id} visit={visit} />
       ))}
+      {visits.length > SHOW_FIRST && (
+        <button onClick={() => setShowAll(!showAll)} className="w-full py-1 text-sm text-emerald-700 underline">
+          {showAll ? 'Show fewer' : `Show all ${visits.length} visits on this phone`}
+        </button>
+      )}
     </section>
   )
 }

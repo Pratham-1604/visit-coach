@@ -5,6 +5,7 @@ Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
 - What we're building now, after the mentor review: [PLAN_V2.md](PLAN_V2.md) (v1 record: [PLAN.md](PLAN.md))
 - The pitch for the state: [PITCH.md](PITCH.md)
+- Submission checklist (2 Nov): [SUBMISSION.md](SUBMISSION.md)
 - Why we chose what we chose: [DECISIONS.md](DECISIONS.md)
 - How it works end to end: [FLOW.md](FLOW.md) (plain-words walkthrough)
 - What's left for later: [improvements/futurescope.md](improvements/futurescope.md)

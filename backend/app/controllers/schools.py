@@ -12,6 +12,16 @@ def list_schools():
     schools = db.query("SELECT * FROM schools ORDER BY name")
     for school in schools:
         school["focus"] = suggest_focus(school)
+        # For search and filters on the home screen.
+        school["teacher_names"] = [
+            row["name"] for row in db.query("SELECT name FROM teachers WHERE school_id = ? ORDER BY grade", (school["id"],))
+        ]
+        school["open_actions"] = len(open_followups(school["id"]))
+        school["last_visit"] = db.query_one(
+            "SELECT MAX(p.approved_at) AS last FROM visits v JOIN packets p ON p.visit_id = v.id"
+            " WHERE v.school_id = ? AND v.status = 'approved'",
+            (school["id"],),
+        )["last"]
     return schools
 
 

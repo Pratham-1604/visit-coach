@@ -8,6 +8,13 @@ def test_list_schools_has_seed_data_and_focus(client):
     assert schools[0]["focus"]["area"] in ("literacy", "numeracy", "general")
 
 
+def test_list_schools_has_fields_for_search_and_filters(client):
+    school = next(s for s in client.get("/api/schools").json() if s["name"] == "ZP Primary School Wagholi")
+    assert "Sunita Pawar" in school["teacher_names"]
+    assert school["open_actions"] >= 1
+    assert school["last_visit"]
+
+
 def test_get_school_includes_teachers(client):
     school_id = client.get("/api/schools").json()[0]["id"]
     school = client.get(f"/api/schools/{school_id}").json()
