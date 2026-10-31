@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS visits (
     language TEXT NOT NULL,
     rubric_json TEXT,                  -- {item_id: 'yes' | 'partly' | 'no'}
     typed_note TEXT,
-    mentor_name TEXT,                  -- who visited, typed once on the phone (no login yet)
+    mentor_name TEXT,                  -- who visited: the logged-in mentor's name
     children_present INTEGER,          -- children in class that day
     grades_together TEXT,              -- JSON list of grades sitting together, e.g. [1, 2]
     observed_at TEXT,
@@ -65,6 +65,20 @@ CREATE TABLE IF NOT EXISTS followups (
     note TEXT,
     teacher_rating INTEGER,            -- 1-5: how useful the teacher found the last packet
     checked_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,       -- 'salt$hash' (PBKDF2, see services/auth.py)
+    name TEXT NOT NULL,                -- shown to teachers as the mentor's name
+    role TEXT NOT NULL                 -- 'mentor' | 'officer'
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    token TEXT PRIMARY KEY,            -- random, sent by the app as 'Authorization: Bearer <token>'
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 """
 

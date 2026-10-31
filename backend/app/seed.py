@@ -19,6 +19,7 @@ import random
 from datetime import datetime, timedelta, timezone
 
 from app import db
+from app.controllers.auth import create_user
 from app.services import knowledge
 
 SCHOOLS = [
@@ -77,6 +78,13 @@ TEACHERS = [
 # Kendra Pramukhs (cluster mentors) who made the past visits. The demo mentor is someone new.
 MENTORS = ["Vandana Joshi", "Kiran Bhagat"]
 DEMO_MENTOR = "Sachin Gore"
+
+# Demo logins: username, password, name, role. Shown on the login screen; for the prototype only.
+DEMO_USERS = [
+    ("sachin", "sachin123", DEMO_MENTOR, "mentor"),
+    ("vandana", "vandana123", "Vandana Joshi", "mentor"),
+    ("officer", "officer123", "Block Education Officer, Haveli", "officer"),
+]
 
 # need area -> (rubric item, practice) used for seeded packets.
 NEEDS = {
@@ -147,6 +155,14 @@ FOLLOW_UPS = {
                "அடுத்த முறை மூன்று குழந்தைகளின் நோட்டுகளில் அவர்களே எழுதிய வாக்கியங்களைப் பார்த்தல்."),
     },
 }
+
+
+def seed_users_if_empty():
+    """Separate from the schools, so databases made before logins existed get the demo users too."""
+    if db.query_one("SELECT id FROM users LIMIT 1"):
+        return
+    for username, password, name, role in DEMO_USERS:
+        create_user(username, password, name, role)
 
 
 def seed_if_empty():

@@ -41,7 +41,7 @@ def open_followups(school_id):
     Only the latest visit counts. Older unchecked actions are out of date once a newer packet exists.
     """
     rows = db.query(
-        "SELECT v.id AS visit_id, v.teacher_id, p.edited_json, p.original_json, p.approved_at,"
+        "SELECT v.id AS visit_id, v.teacher_id, v.mentor_name, p.edited_json, p.original_json, p.approved_at,"
         " f.id AS followup_id"
         " FROM visits v JOIN packets p ON p.visit_id = v.id"
         " LEFT JOIN followups f ON f.visit_id = v.id"
@@ -63,5 +63,6 @@ def open_followups(school_id):
             "follow_up": packet.get("follow_up"),
             "follow_up_check": packet.get("follow_up_check"),
             "approved_at": row["approved_at"],
+            "mentor_name": row["mentor_name"],  # often a different mentor from the one visiting now
         }
     return list(latest.values())

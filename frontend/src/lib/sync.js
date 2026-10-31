@@ -96,22 +96,22 @@ export function useAutoSync() {
   }, [])
 }
 
-// What to show the CRP for a visit on this phone.
+// What to show the mentor for a visit on this phone: a lib/strings.js key for t(), and a colour.
 export function visitStatus(visit) {
-  if (visit.status === 'draft') return { label: 'In progress', tone: 'amber' }
-  if (visit.status === 'ready') return { label: 'Waiting to sync', tone: 'slate' }
+  if (visit.status === 'draft') return { key: 'status.draft', tone: 'amber' }
+  if (visit.status === 'ready') return { key: 'status.waiting', tone: 'slate' }
   switch (visit.server_status) {
     case 'queued':
     case 'transcribing':
-      return { label: 'Transcribing notes…', tone: 'sky' }
+      return { key: 'status.transcribing', tone: 'sky' }
     case 'generating':
-      return { label: 'Writing packet…', tone: 'sky' }
+      return { key: 'status.generating', tone: 'sky' }
     case 'failed':
-      return { label: 'Failed', tone: 'rose' }
+      return { key: 'status.failed', tone: 'rose' }
     case 'ready':
-      return { label: 'Review packet', tone: 'violet' }
+      return { key: 'status.ready', tone: 'violet' }
     default:
-      return { label: 'Approved', tone: 'emerald' }
+      return { key: 'status.approved', tone: 'emerald' }
   }
 }
 

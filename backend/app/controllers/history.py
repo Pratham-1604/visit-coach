@@ -36,6 +36,7 @@ def teacher_history(teacher_id):
                 "subject": row["subject"],
                 "focus": item["text"].get(row["language"], item["text"]["en"]) if item else None,
                 "focus_en": item["text"]["en"] if item else None,
+                "focus_id": item["id"] if item else None,  # so the app can show it in the mentor's language
                 "follow_up": packet.get("follow_up"),
                 "result": row["result"],  # done | partly | not_done | None (not checked yet)
                 "result_note": row["result_note"] or "",

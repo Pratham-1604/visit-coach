@@ -103,7 +103,9 @@ function History({ history, labels }) {
 function Page({ lang, children }) {
   return (
     <div lang={lang} className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="bg-emerald-700 px-4 py-3 text-center text-sm font-medium text-white">VisitCoach</div>
+      <div className="bg-emerald-700 px-4 py-3 text-center text-sm font-medium text-white dark:bg-emerald-200 dark:text-slate-950">
+        VisitCoach
+      </div>
       <main className="mx-auto max-w-md space-y-4 px-4 py-5 text-[15px] leading-relaxed">{children}</main>
     </div>
   )

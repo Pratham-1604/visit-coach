@@ -2,10 +2,14 @@
 
 from app.seed import DEMO_MENTOR, MENTORS
 from app.services.packet import visit_prompt
+from tests.conftest import log_in_as_mentor
 from tests.test_visits import EDITS, a_teacher, sync
 
 
-def approve(client, school, teacher, **extra):
+def approve(client, school, teacher, mentor_name=None, **extra):
+    """Sync and approve a visit, logged in as the given mentor (visits are by whoever is logged in)."""
+    if mentor_name:
+        log_in_as_mentor(client, mentor_name)
     visit_id = sync(client, school, teacher, **extra).json()["id"]
     client.put(f"/api/visits/{visit_id}/packet", json=EDITS)
     return client.post(f"/api/visits/{visit_id}/approve").json()
@@ -20,7 +24,7 @@ def test_history_is_newest_first_and_names_each_mentor(client, fake_ai):
     school, teacher = a_teacher(client)
     first = approve(client, school, teacher, mentor_name="Asha Mentor")
     client.post(f"/api/followups/{first['id']}", json={"status": "done", "note": "seen in class"})
-    second = approve(client, school, teacher, mentor_name="  Ravi Mentor  ")
+    second = approve(client, school, teacher, mentor_name="Ravi Mentor")
 
     history = history_of(client, school, teacher)
     assert [entry["visit_id"] for entry in history[:2]] == [second["id"], first["id"]]

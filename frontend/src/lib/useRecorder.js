@@ -4,7 +4,7 @@ export const MAX_NOTE_SECONDS = 30 // Sarvam's REST limit (DECISIONS.md #8)
 
 // Record one short voice note with MediaRecorder.
 // Usage: const rec = useRecorder((blob, mime, seconds) => save(...))
-//        rec.start() / rec.stop(); rec.recording, rec.seconds, rec.error
+//        rec.start() / rec.stop(); rec.recording, rec.seconds, rec.error (a lib/strings.js key)
 export function useRecorder(onDone) {
   const [recording, setRecording] = useState(false)
   const [seconds, setSeconds] = useState(0)
@@ -20,7 +20,7 @@ export function useRecorder(onDone) {
   async function start() {
     setError(null)
     if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === 'undefined') {
-      setError('This browser cannot record audio. Use Chrome, over https or localhost.')
+      setError('voice.unsupported')
       return
     }
 
@@ -28,7 +28,7 @@ export function useRecorder(onDone) {
     try {
       stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     } catch {
-      setError('Microphone permission was denied.')
+      setError('voice.denied')
       return
     }
 

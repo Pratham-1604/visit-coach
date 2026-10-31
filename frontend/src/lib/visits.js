@@ -1,6 +1,6 @@
 import { approveVisit, savePacket } from '../api/visits.js'
 import { db, newId, now } from './db.js'
-import { getMentorName } from './mentor.js'
+import { getSession } from './session.js'
 
 // All visit changes go through these functions, so every write is saved to IndexedDB at once.
 
@@ -17,7 +17,7 @@ export async function startVisit(school, teacher, rubricVersion) {
     subject: school.focus.area === 'numeracy' ? 'numeracy' : 'literacy',
     rubric: {},
     typed_note: '',
-    mentor_name: getMentorName(),
+    mentor_name: getSession()?.user.name ?? '', // the server also sets it from the login
     children_present: null,
     grades_together: [teacher.grade],
     rubric_version: rubricVersion,

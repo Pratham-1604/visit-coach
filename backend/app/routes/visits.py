@@ -1,20 +1,28 @@
 """HTTP endpoints for visits: sync from the phone, poll status, retry, review the packet."""
 
-from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
 from app.controllers import visits as visits_controller
+from app.controllers.auth import require_mentor
 
 router = APIRouter(prefix="/api/visits", tags=["visits"])
 
 
 @router.post("/sync")
-async def sync_visit(background: BackgroundTasks, visit: str = Form(...), notes: list[UploadFile] = File(default=[])):
+async def sync_visit(
+    background: BackgroundTasks,
+    visit: str = Form(...),
+    notes: list[UploadFile] = File(default=[]),
+    user=Depends(require_mentor),
+):
     """Multipart: `visit` is the visit JSON, `notes` are the voice-note audio files in order."""
     try:
         visit_in = visits_controller.VisitIn.model_validate_json(visit)
     except ValidationError as err:
         raise HTTPException(status_code=422, detail=err.errors(include_url=False)) from err
+    # The visit is by whoever is logged in, whatever the phone sent.
+    visit_in.mentor_name = user["name"]
 
     audio = [(await note.read(), note.content_type or "audio/webm") for note in notes]
     result, needs_processing = visits_controller.sync_visit(visit_in, audio)

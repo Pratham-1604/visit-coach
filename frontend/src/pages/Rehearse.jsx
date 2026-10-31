@@ -3,18 +3,15 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { rehearsalTurn, scoreRehearsal } from '../api/rehearsal.js'
 import { db } from '../lib/db.js'
+import { useT } from '../lib/i18n.js'
 import { useOnline } from '../lib/offline.js'
 
-const CRITERIA = [
-  { key: 'strength_first', label: 'Started with a real strength' },
-  { key: 'specific', label: 'Talked about what you actually saw' },
-  { key: 'one_priority', label: 'Kept to one priority' },
-  { key: 'invites_teacher', label: "Asked for the teacher's view and listened" },
-  { key: 'agreed_action', label: 'Ended with one agreed action' },
-]
+// Score card rows; labels are lib/strings.js score.<key>.
+const CRITERIA = ['strength_first', 'specific', 'one_priority', 'invites_teacher', 'agreed_action']
 
 // Practise the debrief before talking to the teacher. Claude plays the teacher, then gives feedback.
 export default function Rehearse() {
+  const t = useT()
   const { visitId } = useParams()
   const visit = useLiveQuery(() => db.visits.get(visitId), [visitId])
   const online = useOnline()
@@ -24,8 +21,8 @@ export default function Rehearse() {
   const [score, setScore] = useState(null)
   const [error, setError] = useState(null)
 
-  if (visit === undefined) return <p className="text-slate-500">Loading…</p>
-  if (!visit?.server_id) return <p className="text-red-600">This visit has no coaching packet yet.</p>
+  if (visit === undefined) return <p className="text-slate-500">{t('common.loading')}</p>
+  if (!visit?.server_id) return <p className="text-red-600">{t('rehearse.no_packet')}</p>
 
   const teacher = visit.teacher_name.split(' ')[0]
 
@@ -63,23 +60,19 @@ export default function Rehearse() {
   return (
     <div className="space-y-4 pb-40">
       <Link to={`/visits/${visit.id}/packet`} className="text-sm text-emerald-700">
-        ← Coaching packet
+        {t('rehearse.back')}
       </Link>
 
       <div>
-        <h1 className="text-xl font-semibold">Practise the conversation</h1>
-        <p className="text-sm text-slate-500">
-          Claude plays {teacher}, who may push back. Talk as you would in the debrief, in any language.
-        </p>
+        <h1 className="text-xl font-semibold">{t('rehearse.title')}</h1>
+        <p className="text-sm text-slate-500">{t('rehearse.intro', { name: teacher })}</p>
       </div>
 
-      {!online && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">Rehearsal needs internet.</p>}
+      {!online && <p className="rounded-lg bg-amber-50 p-3 text-sm text-amber-900">{t('rehearse.needs_internet')}</p>}
 
       <div className="space-y-2">
         {history.length === 0 && (
-          <p className="rounded-xl bg-slate-100 p-3 text-sm text-slate-600">
-            Tip: start with one specific thing that went well, then ask {teacher} what they noticed.
-          </p>
+          <p className="rounded-xl bg-slate-100 p-3 text-sm text-slate-600">{t('rehearse.tip', { name: teacher })}</p>
         )}
         {history.map((line, index) => (
           <div key={index} className={`flex ${line.role === 'crp' ? 'justify-end' : 'justify-start'}`}>
@@ -93,7 +86,7 @@ export default function Rehearse() {
             </p>
           </div>
         ))}
-        {waiting && <p className="text-sm text-slate-500">{score ? '' : `${teacher} is thinking…`}</p>}
+        {waiting && <p className="text-sm text-slate-500">{score ? '' : t('rehearse.thinking', { name: teacher })}</p>}
         {error && <p className="text-sm text-red-600">{error}</p>}
       </div>
 
@@ -106,8 +99,8 @@ export default function Rehearse() {
               value={draft}
               onChange={(event) => setDraft(event.target.value)}
               rows={2}
-              placeholder={`What you would say to ${teacher}…`}
-              className="w-full rounded-xl border border-slate-200 p-3 text-sm"
+              placeholder={t('rehearse.placeholder', { name: teacher })}
+              className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm"
             />
             <div className="flex gap-2">
               <button
@@ -115,14 +108,14 @@ export default function Rehearse() {
                 disabled={!online || waiting || !draft.trim()}
                 className="flex-1 rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white disabled:opacity-50"
               >
-                Say it
+                {t('rehearse.say')}
               </button>
               <button
                 onClick={finish}
                 disabled={!online || waiting || !history.some((line) => line.role === 'crp')}
                 className="rounded-lg border border-slate-300 px-4 py-3 font-medium text-slate-700 disabled:opacity-50"
               >
-                End and get feedback
+                {t('rehearse.finish')}
               </button>
             </div>
           </div>
@@ -132,32 +125,36 @@ export default function Rehearse() {
   )
 }
 
+// Claude's comments, tip and better line are in English (the better line is in the conversation's language).
 function ScoreCard({ score, onRestart }) {
+  const t = useT()
   return (
     <section className="space-y-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm">
-      <h2 className="font-semibold text-emerald-900">Feedback on your conversation</h2>
+      <h2 className="font-semibold text-emerald-900">{t('score.title')}</h2>
       <ul className="space-y-2">
-        {CRITERIA.map(({ key, label }) => (
+        {CRITERIA.map((key) => (
           <li key={key}>
             <div className="flex items-center justify-between gap-3">
-              <span className="font-medium text-slate-800">{label}</span>
-              <span className="shrink-0 font-semibold text-emerald-800" aria-label={`${score[key].score} out of 4`}>
+              <span className="font-medium text-slate-800">{t(`score.${key}`)}</span>
+              <span className="shrink-0 font-semibold text-emerald-800" aria-label={t('score.out_of', { n: score[key].score })}>
                 {'●'.repeat(score[key].score)}
                 <span className="text-emerald-200">{'●'.repeat(4 - score[key].score)}</span>
               </span>
             </div>
-            <p className="text-slate-600">{score[key].comment}</p>
+            <p lang="en" className="text-slate-600">
+              {score[key].comment}
+            </p>
           </li>
         ))}
       </ul>
       <p>
-        <span className="font-medium">Try next time:</span> {score.overall_tip}
+        <span className="font-medium">{t('score.tip')}</span> <span lang="en">{score.overall_tip}</span>
       </p>
       <p>
-        <span className="font-medium">A better way to say it:</span> “{score.better_line}”
+        <span className="font-medium">{t('score.better')}</span> “{score.better_line}”
       </p>
       <button onClick={onRestart} className="rounded-lg bg-emerald-700 px-4 py-2 font-medium text-white">
-        Practise again
+        {t('score.again')}
       </button>
     </section>
   )

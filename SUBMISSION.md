@@ -19,14 +19,16 @@ Tick each box as you go. Work top to bottom; each section depends on the one abo
 Do this once locally and once on the deployed site (section 4). Note anything broken in the "Problems found" list at the bottom.
 
 **Mentor side**
-- [ ] Top bar → **Set your name** → `Sachin Gore`.
+- [ ] The login screen shows. Tap the **Sachin Gore** demo user (`sachin` / `sachin123`) and log in.
+- [ ] Menu (top right) → **मराठी**: every label on every screen switches to Marathi. Switch back to English (or keep Marathi for the video).
+- [ ] Menu → **Dark**: all screens are readable, with no white boxes or invisible text. Switch back.
 - [ ] Home lists the schools.
   - [ ] Type `Sunita` in the search box: only Wagholi is left.
   - [ ] Tap **Action to check**: only schools with an open action show.
   - [ ] Clear the search with ×.
 - [ ] Open **ZP Primary School Wagholi**. Press back: the search and filter are kept.
 - [ ] The school page shows a suggested focus, and Sunita Pawar has a **Coaching history** with 3 visits by 2 mentors (Kiran Bhagat, Vandana Joshi).
-- [ ] The **last agreed action** card shows. Answer it: *Partly*, usefulness 4, note "only front rows".
+- [ ] The **Agreed at the previous visit** card shows the date and "by Vandana Joshi". Answer it: *Partly*, usefulness 4, note "only front rows".
 - [ ] **Start visit** for Sunita.
   - [ ] Children present: `32`. Grades sitting together: tick **1** and **2**.
   - [ ] Tap 5–6 checklist items. Each shows its **KPALP** indicator.
@@ -51,6 +53,8 @@ Do this once locally and once on the deployed site (section 4). Note anything br
 - [ ] Open `/block` (link at the bottom of Home).
   - [ ] It shows "14 of 22 schools …" and the 5 numbers.
   - [ ] It shows no teacher names.
+- [ ] Menu → **Log out**, then log in as `officer` / `officer123`: only support planning opens, with no schools or visits.
+- [ ] Open the teacher link while logged out: it still works without a login.
 
 **Offline (built version only, sections 3–4)**
 - [ ] Open the app once online, then turn on airplane mode (or DevTools → Network → Offline).
@@ -118,7 +122,8 @@ Target **3–4 minutes**, recorded on a phone screen or DevTools phone view. Fol
 
 - All schools, teachers and history are **made up**. There's no real child data.
 - Hindi, Marathi and Tamil labels are drafts awaiting a native-speaker check.
-- There's no login: the mentor types a name once on the phone.
+- Login is demo-grade: three demo users with passwords shown on the login screen, and no expiry or password reset (DECISIONS.md #25).
+- Marathi and Hindi screens are drafts awaiting a native-speaker check. Claude's summary and evidence for the mentor stay in English.
 - Approving a packet needs a connection. Observing, editing and the follow-up check work offline.
 - Voice notes are capped at 30 s.
 - The teacher message is sent from the mentor's own WhatsApp (DECISIONS.md #24). No automatic messages yet.

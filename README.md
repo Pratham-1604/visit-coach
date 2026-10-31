@@ -54,7 +54,17 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 22 made-up Maharashtra schools with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, set your mentor name to **Sachin Gore** (tap "Set your name" in the top bar). To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
+On first start the server creates 22 made-up Maharashtra schools with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
+
+| Username | Password | Who |
+|---|---|---|
+| `sachin` | `sachin123` | Mentor (Kendra Pramukh), Sachin Gore |
+| `vandana` | `vandana123` | Mentor, Vandana Joshi |
+| `officer` | `officer123` | Block officer: sees support planning only |
+
+The login screen lists these too (prototype only, DECISIONS.md #25). The teacher's shared link needs no login. The menu (your name, top right) switches the screens between English, मराठी and हिंदी, and between light and dark.
+
+To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
 
 ## Quality check (costs credits)
 
