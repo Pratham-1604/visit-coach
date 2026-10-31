@@ -2,9 +2,11 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getRubric } from '../api/rubric.js'
+import { reviewVisit } from '../api/visits.js'
 import { db } from '../lib/db.js'
 import { itemText } from '../lib/format.js'
 import { plural, useLanguage, useT } from '../lib/i18n.js'
+import { useOnline } from '../lib/offline.js'
 import { hasPacket, syncAll, visitStatus } from '../lib/sync.js'
 import { useFetch } from '../lib/useFetch.js'
 import { MAX_NOTE_SECONDS, useRecorder } from '../lib/useRecorder.js'
@@ -16,13 +18,18 @@ const RATINGS = [
   { value: 'no', on: 'bg-rose-600 text-white border-rose-600' },
 ]
 
-// In class: tap rubric items and record short voice notes. Everything saves to the phone as you go.
+// In class: tick the state checklist, keep notes beside it, record short voice notes. Everything saves to the
+// phone as you go. Before ending, "Did I miss anything?" compares the ticks with the notes.
 export default function Observe() {
   const t = useT()
+  const language = useLanguage()
   const { visitId } = useParams()
   const visit = useLiveQuery(() => db.visits.get(visitId), [visitId])
   const notes = useLiveQuery(() => db.notes.where('visit_id').equals(visitId).sortBy('created_at'), [visitId])
   const { data: rubric, error } = useFetch(() => getRubric(), [])
+  const [notesOpen, setNotesOpen] = useState(false) // the notes drawer on phones (always shown beside on wide screens)
+  const [noteDraft, setNoteDraft] = useState(null) // the typed note while editing; saved to the phone on every change
+  const [reviewing, setReviewing] = useState(false)
 
   if (error) return <p className="text-red-600">{t('observe.error', { error })}</p>
   if (visit === undefined || !rubric || !notes) return <p className="text-slate-500">{t('common.loading')}</p>
@@ -31,77 +38,240 @@ export default function Observe() {
   const items = rubric.items.filter((item) => item.subject === 'both' || item.subject === visit.subject)
   const ratedCount = items.filter((item) => visit.rubric[item.id]).length
   const ended = visit.status !== 'draft'
+  const typedNote = noteDraft ?? visit.typed_note
+
+  function changeNote(text) {
+    setNoteDraft(text)
+    updateVisit(visit.id, { typed_note: text })
+  }
+
+  // From a checklist item: start a new note line about it, then open the notes.
+  function noteAbout(item) {
+    const before = typedNote.trimEnd()
+    changeNote(`${before}${before ? '\n' : ''}• ${itemText(item, language)}: `)
+    setNotesOpen(true)
+  }
+
+  async function end() {
+    setReviewing(false)
+    await endVisit({ ...visit, typed_note: typedNote }, items.map((item) => item.id))
+    syncAll()
+  }
+
+  const notesPanel = (
+    <NotesPanel visit={visit} notes={notes} text={typedNote} onChange={changeNote} disabled={ended} />
+  )
 
   return (
-    <div className="space-y-5 pb-28">
-      <Link to={`/schools/${visit.school_id}`} className="text-sm text-emerald-700">
-        ← {visit.school_name}
-      </Link>
+    <div className="pb-28 md:grid md:grid-cols-[minmax(0,1fr)_22rem] md:items-start md:gap-6">
+      <div className="space-y-5">
+        <Link to={`/schools/${visit.school_id}`} className="text-sm text-emerald-700">
+          ← {visit.school_name}
+        </Link>
 
-      <div>
-        <h1 className="text-xl font-semibold">{visit.teacher_name}</h1>
-        <p className="text-sm text-slate-500">
-          {t('school.grade', { grade: visit.grade })} · {visit.school_name}
-        </p>
+        <div>
+          <h1 className="text-xl font-semibold">{visit.teacher_name}</h1>
+          <p className="text-sm text-slate-500">
+            {t('school.grade', { grade: visit.grade })} · {visit.school_name}
+          </p>
+        </div>
+
+        {ended && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            <p className="font-medium">{t('observe.ended')}</p>
+            <p className="mt-1">
+              {visit.status === 'ready'
+                ? t('observe.will_send')
+                : t('observe.sent', { status: t(visitStatus(visit).key) })}
+            </p>
+            <div className="mt-3 flex gap-3">
+              {hasPacket(visit) ? (
+                <Link to={`/visits/${visit.id}/packet`} className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
+                  {t('observe.open_packet')}
+                </Link>
+              ) : (
+                <Link to="/" className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
+                  {t('observe.back')}
+                </Link>
+              )}
+              {visit.status === 'ready' && (
+                <button onClick={() => reopenVisit(visit.id)} className="rounded-lg px-3 py-2 text-emerald-800 underline">
+                  {t('observe.edit')}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        <SubjectPicker visit={visit} disabled={ended} />
+
+        <ClassContext visit={visit} disabled={ended} />
+
+        <p className="text-xs text-slate-500">{t('observe.kpalp_note')}</p>
+
+        <p className="rounded-lg bg-slate-100 p-3 text-xs text-slate-600">{t('observe.privacy')}</p>
+
+        <RubricSections rubric={rubric} items={items} visit={visit} disabled={ended} onNote={noteAbout} />
       </div>
 
-      {ended && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
-          <p className="font-medium">{t('observe.ended')}</p>
-          <p className="mt-1">
-            {visit.status === 'ready'
-              ? t('observe.will_send')
-              : t('observe.sent', { status: t(visitStatus(visit).key) })}
-          </p>
-          <div className="mt-3 flex gap-3">
-            {hasPacket(visit) ? (
-              <Link to={`/visits/${visit.id}/packet`} className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
-                {t('observe.open_packet')}
-              </Link>
-            ) : (
-              <Link to="/" className="rounded-lg bg-emerald-700 px-3 py-2 font-medium text-white">
-                {t('observe.back')}
-              </Link>
-            )}
-            {visit.status === 'ready' && (
-              <button onClick={() => reopenVisit(visit.id)} className="rounded-lg px-3 py-2 text-emerald-800 underline">
-                {t('observe.edit')}
+      {/* Wide screens: notes beside the checklist. Phones: a drawer opened from the bottom bar. */}
+      <aside className="hidden md:sticky md:top-20 md:block">{notesPanel}</aside>
+      {notesOpen && (
+        <div className="fixed inset-0 z-30 md:hidden">
+          <button aria-label={t('notes.close')} onClick={() => setNotesOpen(false)} className="absolute inset-0 bg-slate-950/40" />
+          <div className="absolute inset-x-0 bottom-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-slate-50 p-4 shadow-2xl">
+            <div className="mb-2 flex justify-end">
+              <button onClick={() => setNotesOpen(false)} className="rounded-lg px-3 py-1 text-sm font-medium text-emerald-700">
+                {t('notes.close')}
               </button>
-            )}
+            </div>
+            {notesPanel}
           </div>
         </div>
       )}
 
-      <SubjectPicker visit={visit} disabled={ended} />
-
-      <ClassContext visit={visit} disabled={ended} />
-
-      <p className="text-xs text-slate-500">{t('observe.kpalp_note')}</p>
-
-      <p className="rounded-lg bg-slate-100 p-3 text-xs text-slate-600">{t('observe.privacy')}</p>
-
-      <RubricSections rubric={rubric} items={items} visit={visit} disabled={ended} />
-
-      <VoiceNotes visitId={visit.id} notes={notes} disabled={ended} />
-
-      <TypedNote visit={visit} disabled={ended} />
+      {reviewing && (
+        <EndVisitReview
+          visit={visit}
+          items={items}
+          typedNote={typedNote}
+          hasVoiceNotes={notes.length > 0}
+          onClose={() => setReviewing(false)}
+          onEnd={end}
+        />
+      )}
 
       {!ended && (
-        <div className="fixed inset-x-0 bottom-0 border-t border-slate-200 bg-white/95 backdrop-blur">
-          <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-slate-200 bg-white/95 backdrop-blur">
+          <div className="mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3 md:max-w-5xl">
             <p className="text-sm text-slate-600">
               {t('observe.rated', { rated: ratedCount, total: items.length })} · {plural(t, 'observe.notes', notes.length)}
             </p>
-            <button
-              onClick={() => endVisit(visit, items.map((item) => item.id)).then(syncAll)}
-              disabled={ratedCount === 0 && notes.length === 0 && !visit.typed_note.trim()}
-              className="rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white disabled:opacity-50"
-            >
-              {t('observe.end')}
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setNotesOpen(true)}
+                className="rounded-lg border border-slate-300 px-3 py-3 text-sm font-medium text-slate-700 md:hidden"
+              >
+                {t('notes.open')}
+              </button>
+              <button
+                onClick={() => setReviewing(true)}
+                disabled={ratedCount === 0 && notes.length === 0 && !typedNote.trim()}
+                className="rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white disabled:opacity-50"
+              >
+                {t('observe.end')}
+              </button>
+            </div>
           </div>
         </div>
       )}
+    </div>
+  )
+}
+
+// Shown when the mentor taps End visit: unrated items (on the phone, works offline), then Claude's check of
+// ticks against notes (needs internet). The mentor can go back and fix, or end anyway.
+function EndVisitReview({ visit, items, typedNote, hasVoiceNotes, onClose, onEnd }) {
+  const t = useT()
+  const language = useLanguage()
+  const online = useOnline()
+  const unrated = items.filter((item) => !visit.rubric[item.id])
+  const { data: review, error, loading } = useFetch(
+    () =>
+      online
+        ? reviewVisit({
+            checklist_id: visit.checklist_id ?? null,
+            rubric: Object.fromEntries(Object.entries(visit.rubric).filter(([id]) => items.some((i) => i.id === id))),
+            typed_note: typedNote,
+            grade: visit.grade,
+            subject: visit.subject,
+            language,
+          })
+        : Promise.resolve(null),
+    [],
+  )
+  const itemById = Object.fromEntries(items.map((item) => [item.id, item]))
+  const allGood = review && unrated.length === 0 && !review.mismatches.length && !review.missed.length
+
+  function goTo(itemId) {
+    onClose()
+    setTimeout(() => document.getElementById(`item-${itemId}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50)
+  }
+
+  return (
+    <div className="fixed inset-0 z-40">
+      <button aria-label={t('review.back')} onClick={onClose} className="absolute inset-0 bg-slate-950/40" />
+      <div className="absolute inset-x-0 bottom-0 mx-auto max-h-[85vh] max-w-xl space-y-4 overflow-y-auto rounded-t-2xl bg-white p-5 shadow-2xl md:bottom-auto md:top-16 md:rounded-2xl">
+        <h2 className="text-lg font-semibold">{t('review.title')}</h2>
+
+        {unrated.length > 0 && (
+          <section className="space-y-2">
+            <h3 className="text-sm font-semibold text-amber-800">{plural(t, 'review.unrated', unrated.length)}</h3>
+            <ul className="space-y-1 text-sm">
+              {unrated.map((item) => (
+                <li key={item.id} className="flex items-center justify-between gap-3 rounded-lg bg-amber-50 px-3 py-2">
+                  <span>{itemText(item, language)}</span>
+                  <button onClick={() => goTo(item.id)} className="shrink-0 text-emerald-700 underline">
+                    {t('review.go')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {!online && <p className="rounded-lg bg-slate-100 p-3 text-sm text-slate-600">{t('review.offline')}</p>}
+        {online && loading && <p className="animate-pulse text-sm text-slate-500">{t('review.checking')}</p>}
+        {error && <p className="text-sm text-red-600">{t('review.error', { error })}</p>}
+
+        {review?.mismatches.length > 0 && (
+          <section className="space-y-2">
+            <h3 className="text-sm font-semibold text-rose-800">{t('review.mismatch_title')}</h3>
+            <ul className="space-y-2 text-sm">
+              {review.mismatches.map((mismatch, index) => (
+                <li key={index} className="rounded-lg bg-rose-50 px-3 py-2">
+                  <p className="font-medium">
+                    {itemById[mismatch.item_id] ? itemText(itemById[mismatch.item_id], language) : mismatch.item_id} ·{' '}
+                    {t(`rating.${visit.rubric[mismatch.item_id] ?? 'no'}`)}
+                  </p>
+                  <p className="text-slate-700">“{mismatch.notes_say}”</p>
+                  <p className="text-slate-600">{mismatch.suggestion}</p>
+                  <button onClick={() => goTo(mismatch.item_id)} className="mt-1 text-emerald-700 underline">
+                    {t('review.go')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {review?.missed.length > 0 && (
+          <section className="space-y-2">
+            <h3 className="text-sm font-semibold text-sky-800">{t('review.missed_title')}</h3>
+            <ul className="space-y-2 text-sm">
+              {review.missed.map((missed, index) => (
+                <li key={index} className="rounded-lg bg-sky-50 px-3 py-2">
+                  <p className="font-medium">{missed.point}</p>
+                  <p className="text-slate-600">{missed.why}</p>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-slate-500">{t('review.missed_hint')}</p>
+          </section>
+        )}
+
+        {allGood && <p className="rounded-lg bg-emerald-50 p-3 text-sm text-emerald-900">✓ {t('review.all_good')}</p>}
+        {hasVoiceNotes && <p className="text-xs text-slate-500">{t('review.voice')}</p>}
+
+        <div className="flex flex-wrap justify-end gap-2 pt-2">
+          <button onClick={onClose} className="rounded-lg border border-slate-300 px-4 py-3 font-medium text-slate-700">
+            {t('review.back')}
+          </button>
+          <button onClick={onEnd} className="rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white">
+            {allGood || (!online && unrated.length === 0) ? t('review.end') : t('review.end_anyway')}
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -180,7 +350,7 @@ function ClassContext({ visit, disabled }) {
   )
 }
 
-function RubricSections({ rubric, items, visit, disabled }) {
+function RubricSections({ rubric, items, visit, disabled, onNote }) {
   const t = useT()
   // Group items under their need area, in the rubric's order.
   const sections = rubric.need_areas
@@ -191,13 +361,13 @@ function RubricSections({ rubric, items, visit, disabled }) {
     <section key={area.id} className="space-y-2">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">{t(`need.${area.id}`)}</h2>
       {items.map((item) => (
-        <RubricItem key={item.id} item={item} visit={visit} disabled={disabled} />
+        <RubricItem key={item.id} item={item} visit={visit} disabled={disabled} onNote={onNote} />
       ))}
     </section>
   ))
 }
 
-function RubricItem({ item, visit, disabled }) {
+function RubricItem({ item, visit, disabled, onNote }) {
   const t = useT()
   const uiLanguage = useLanguage()
   const rating = visit.rubric[item.id]
@@ -206,8 +376,20 @@ function RubricItem({ item, visit, disabled }) {
   const lookFor = t(`look_for.${item.id}`)
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4">
-      <p className="font-medium">{itemText(item, uiLanguage)}</p>
+    <div id={`item-${item.id}`} className="scroll-mt-24 rounded-xl border border-slate-200 bg-white p-4">
+      <div className="flex items-start justify-between gap-2">
+        <p className="font-medium">{itemText(item, uiLanguage)}</p>
+        {!disabled && (
+          <button
+            onClick={() => onNote(item)}
+            aria-label={t('notes.about')}
+            title={t('notes.about')}
+            className="shrink-0 rounded-lg px-1.5 text-lg leading-none"
+          >
+            📝
+          </button>
+        )}
+      </div>
       {teacherWords && (
         <p lang={visit.language} className="mt-0.5 text-sm text-slate-500">
           {teacherWords}
@@ -300,25 +482,23 @@ function NoteRow({ note, number, disabled }) {
   )
 }
 
-// Local state while typing; each change is also saved to the phone.
-function TypedNote({ visit, disabled }) {
+// The mentor's notes: typed (or dictated with the keyboard's mic) and short voice notes. Saved to the phone
+// as they type. The text lives in Observe, so a checklist item's 📝 can add a line to it.
+function NotesPanel({ visit, notes, text, onChange, disabled }) {
   const t = useT()
-  const [text, setText] = useState(visit.typed_note)
-
   return (
-    <section className="space-y-2">
-      <h2 className="font-medium">{t('typed.title')}</h2>
+    <section className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
+      <h2 className="font-medium">{t('notes.title')}</h2>
+      {!disabled && <p className="text-xs text-slate-500">{t('notes.hint')}</p>}
       <textarea
         value={text}
         disabled={disabled}
-        onChange={(event) => {
-          setText(event.target.value)
-          updateVisit(visit.id, { typed_note: event.target.value })
-        }}
-        rows={3}
-        placeholder={t('typed.placeholder')}
+        onChange={(event) => onChange(event.target.value)}
+        rows={10}
+        placeholder={t('notes.placeholder')}
         className="w-full rounded-xl border border-slate-200 bg-white p-3 text-sm disabled:bg-slate-50"
       />
+      <VoiceNotes visitId={visit.id} notes={notes} disabled={disabled} />
     </section>
   )
 }

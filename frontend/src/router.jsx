@@ -19,7 +19,8 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'schools/:schoolId', element: <School /> },
-      { path: 'visits/:visitId', element: <Observe /> },
+      // wide: on tablets the notes sit beside the checklist (Layout reads this).
+      { path: 'visits/:visitId', element: <Observe />, handle: { wide: true } },
       { path: 'visits/:visitId/packet', element: <Packet /> },
       { path: 'visits/:visitId/rehearse', element: <Rehearse /> },
       { path: 'block', element: <Block /> },

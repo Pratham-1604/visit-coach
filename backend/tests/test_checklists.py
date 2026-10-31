@@ -96,3 +96,34 @@ def test_packet_uses_the_checklist_the_visit_was_observed_with(admin, client, fa
 
     sent = fake_ai["packet"][-1]
     assert set(sent["checklist"]) == {"children_read", "water_corner"}
+
+
+def test_review_before_ending_a_visit(client, monkeypatch):
+    from app.services import llm, review
+
+    seen = {}
+
+    def fake_parse(system, user, model, **kwargs):
+        seen["user"] = user
+        return model(
+            mismatches=[
+                {"item_id": "every_child_turn", "notes_say": "only front rows", "suggestion": "re-check"},
+                {"item_id": "not_on_list", "notes_say": "x", "suggestion": "y"},
+            ],
+            missed=[{"point": "no drinking water", "why": "children leave class"}],
+        ), {}
+
+    monkeypatch.setattr(llm, "parse", fake_parse)
+    response = client.post(
+        "/api/visits/review",
+        json={"rubric": {"every_child_turn": "yes"}, "typed_note": "Only front rows answered.", "language": "mr"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert [m["item_id"] for m in data["mismatches"]] == ["every_child_turn"]  # unknown ids are dropped
+    assert data["missed"][0]["point"] == "no drinking water"
+    assert "Write in: Marathi" in seen["user"] and "every_child_turn" in seen["user"] and "-> yes" in seen["user"]
+    assert review.INSTRUCTIONS  # the prompt exists
+
+    monkeypatch.setattr(llm, "parse", lambda *a, **k: (_ for _ in ()).throw(llm.LLMError("down")))
+    assert client.post("/api/visits/review", json={}).status_code == 502

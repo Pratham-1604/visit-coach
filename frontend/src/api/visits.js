@@ -44,3 +44,8 @@ export function savePacket(serverId, edits) {
 export function approveVisit(serverId) {
   return apiPost(`/api/visits/${serverId}/approve`)
 }
+
+// 'Did I miss anything?' before ending a visit: Claude compares the ticks with the notes. Needs internet.
+export function reviewVisit(review) {
+  return apiPost('/api/visits/review', review)
+}

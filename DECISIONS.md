@@ -36,6 +36,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 | 26 | The mentor's screens switch between English, Marathi and Hindi; packets stay in the teacher's language |
 | 27 | Dark mode by flipping the colour palette, not by restyling every page |
 | 28 | Each state's checklist is data the state uploads, with versions |
+| 29 | Notes beside the checklist, and a "Did I miss anything?" check before ending a visit |
 
 ---
 
@@ -242,3 +243,17 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - Items must use our 8 need areas, so support planning can still count them.
   - Maharashtra version 1 is our reading-and-maths list mapped to KPALP.
 - **Change it when:** a second state joins (add it to `STATES` in `controllers/checklists.py` and upload its list), or a state wants to review a version before it goes live (add a draft step).
+
+### 29. Notes beside the checklist, and a "Did I miss anything?" check before ending a visit
+- **We chose:**
+  - **Notes panel.** The mentor's notes sit beside the checklist on a tablet, or in a pull-up drawer on a phone. Voice notes are in the same panel. Tapping 📝 on any checklist item starts a note line about that item. The mentor can also dictate with the phone keyboard's 🎤.
+  - **End visit opens a short check:**
+    - Unrated items are worked out on the phone, so this works offline.
+    - Claude compares the ticks with the typed notes. It reports **ratings the notes contradict** (e.g. "every child gets a turn: Yes", but the notes say only the front rows answered) and **important points the checklist doesn't capture** (e.g. no drinking water, a child who needs extra help).
+    - "Go to item" jumps back to fix it, or the mentor ends the visit anyway.
+- **Why:** the mentor's job in class is to watch, not to fill in a form perfectly. The check makes sure no critical point is lost.
+- **How:**
+  - One small Claude call at effort `low` (`POST /api/visits/review`), with nothing stored. It answers in the mentor's screen language.
+  - Only ids on the visit's own checklist are kept.
+  - Voice notes aren't checked here, because they are transcribed after upload. The visit report covers them.
+- **Change it when:** voice notes are transcribed on the phone, so they can be checked too.
