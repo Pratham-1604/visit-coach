@@ -42,7 +42,10 @@ def test_cannot_approve_with_a_note_for_the_crp(client, fake_ai):
 def test_crp_notes_are_found_in_text_and_lists():
     assert crp_notes_in({"strength": "[ crp: fill in]"}) == ["strength"]
     assert crp_notes_in({"practice_steps": ["one", "CRP: check this"]}) == ["practice_steps"]
+    assert crp_notes_in({"strength": "[Mentor: add an example]"}) == ["strength"]
     assert crp_notes_in({"strength": "बच्चों ने खुद पढ़ा", "follow_up": None}) == []
+    # A demo script written as dialogue is fine.
+    assert crp_notes_in({"demo_script": "Mentor: Let's read it together."}) == []
 
 
 def test_rubric_ids_become_wording():

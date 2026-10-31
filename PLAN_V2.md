@@ -6,7 +6,7 @@
 2. **WhatsApp is where the teacher already is.** The advice is in the message itself, and teachers never install anything (#11, #12).
 3. **The app supports teachers, it doesn't inspect them, and it's built for Maharashtra.** We use the state's own words, mentor role (Kendra Pramukh) and NIPUN goals (#1–4, #14).
 
-**Status (31 Oct):** steps 1–5 are built ✅. 52 backend tests pass, and the frontend lints and builds. One real Claude packet was tested end to end. **Not yet clicked through in a real browser** 🌐. Step 6 is next.
+**Status (1 Nov):** steps 1–5 are built ✅ and merged into v2. 54 backend tests pass, and the frontend lints and builds. One real Claude packet was tested end to end. **Not yet clicked through in a real browser** 🌐. Step 6 is next.
 
 **Time:** today is Sat 31 Oct and the deadline is Sun 1 Nov, so there's about **1.5 days**. The order below protects the demo: each step stands on its own, so if we stop after any step we can still submit. Deploying and the demo video (PLAN.md "Still to do") stay **mandatory** and get the last half-day no matter what.
 

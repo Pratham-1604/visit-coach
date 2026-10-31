@@ -47,7 +47,8 @@ class CoachingPacket(BaseModel):
 TEACHER_FIELDS = ("strength", "priority", "practice_steps", "materials", "demo_script", "follow_up", "follow_up_check")
 
 # A note addressed to the mentor (CRP), e.g. "[Mentor: add an example here]". Must never reach the teacher.
-CRP_NOTE = re.compile(r"\[\s*(CRP|mentor)\b|\b(CRP|mentor)\s*:", re.IGNORECASE)
+# A bare "Mentor:" is allowed: the demo script may be written as dialogue ("Mentor: Let's try it together").
+CRP_NOTE = re.compile(r"\[\s*(CRP|mentor)\b|\bCRP\s*:", re.IGNORECASE)
 
 
 INSTRUCTIONS = """You are VisitCoach, a coaching assistant for cluster mentors (Kendra Pramukhs in Maharashtra, also \
