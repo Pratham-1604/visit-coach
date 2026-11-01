@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Navigate, Outlet, useLocation, useMatches } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom'
 import { logout } from '../api/auth.js'
 import { useT } from '../lib/i18n.js'
 import { useOnline } from '../lib/offline.js'
@@ -42,7 +42,19 @@ function AutoSync() {
 function TopBar({ user, width }) {
   const t = useT()
   const online = useOnline()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+
+  // Back to the home page, so the next person to log in doesn't land on this role's page (e.g. the admin's checklists).
+  async function logOut() {
+    try {
+      await logout()
+    } catch {
+      // Offline or already logged out on the server: forget the login on this phone anyway.
+    }
+    navigate('/', { replace: true })
+    clearSession()
+  }
 
   return (
     // In dark mode colour names are flipped (index.css): emerald-200 is dark green there, slate-950 near white.
@@ -90,13 +102,4 @@ function TopBar({ user, width }) {
       </div>
     </header>
   )
-}
-
-async function logOut() {
-  try {
-    await logout()
-  } catch {
-    // Offline or already logged out on the server: forget the login on this phone anyway.
-  }
-  clearSession()
 }
