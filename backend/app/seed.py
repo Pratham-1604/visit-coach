@@ -1,6 +1,6 @@
 """Synthetic demo data: one block of 22 Maharashtra schools (Haveli, Pune) with a few weeks of visit history.
 
-No real teachers or children. School numbers are made up (DECISIONS.md #12).
+No real teachers or children. School numbers are made up.
 Seeding runs only on an empty database; delete backend/data/visitcoach.db to reseed.
 
 History per school (first teacher only):

@@ -301,7 +301,7 @@ function SubjectPicker({ visit, disabled }) {
   )
 }
 
-// Class size and multi-grade, so Claude picks a practice that fits the class (MENTOR.md #7, #8).
+// Class size and multi-grade, so Claude picks a practice that fits the class.
 function ClassContext({ visit, disabled }) {
   const t = useT()
   const grades = visit.grades_together ?? [visit.grade]

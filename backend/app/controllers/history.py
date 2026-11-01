@@ -1,6 +1,6 @@
 """A teacher's coaching history: every approved visit, who visited, what was agreed and whether it happened.
 
-Teachers get different mentors over time, so feedback breaks off (MENTOR.md #6). The history
+Teachers get different mentors over time, so feedback breaks off. The history
 lets the next mentor pick up where the last one left off, and lets the teacher keep track too.
 """
 

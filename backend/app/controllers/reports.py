@@ -1,7 +1,7 @@
 """Visit reports: write (with Claude), read, and mark as sent.
 
 The report stays with the mentor: it is sent where the state's process says (WhatsApp, a printed or PDF
-copy). The block officer's page still sees only counts (DECISIONS.md #10).
+copy). The block officer's page still sees only counts.
 """
 
 import json

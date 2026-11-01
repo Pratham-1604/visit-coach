@@ -70,7 +70,7 @@ const RESULT_STYLES = {
   open: 'bg-slate-100 text-slate-600',
 }
 
-// The teacher's earlier visits, across mentors, so the coaching reads as one story (MENTOR.md #6).
+// The teacher's earlier visits, across mentors, so the coaching reads as one story.
 function History({ history, labels }) {
   return (
     <Section title={labels.history}>

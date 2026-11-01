@@ -4,7 +4,7 @@ import { teacherLabels } from './labels.js'
 const MAX_PART = 220 // characters per part, so the message reads at a glance on a phone
 
 // The WhatsApp message for the teacher, in their language: the advice itself, with the link only for details.
-// Teachers get feedback where they already are, with no app or login (MENTOR.md #11).
+// Teachers get feedback where they already are, with no app or login.
 export function whatsappMessage(server, url) {
   const labels = teacherLabels(server.language)
   const { packet } = server

@@ -1,7 +1,7 @@
 """The teacher's view of an approved packet, opened from the link the CRP shares.
 
 Only the parts written for the teacher leave the server: no transcripts, evidence,
-sources or English summary for the CRP (DECISIONS.md #10, #19).
+sources or English summary for the CRP.
 """
 
 import json

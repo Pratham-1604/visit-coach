@@ -1,4 +1,4 @@
-"""Quality check for coaching packets (DECISIONS.md #11).
+"""Quality check for coaching packets.
 
 For each synthetic visit in cases.jsonl: generate a real packet, run automatic checks, then have
 Claude grade it on six criteria. Writes evals/results.json and prints a summary table.
@@ -48,7 +48,7 @@ government primary schools, after a CRP observed a Grade 1-3 lesson. Grade stric
 would show it to an expert teacher educator without changes. Judge only what is in front of you."""
 
 
-# Optional per case: class context and coaching history (multi-grade cases, MENTOR.md #6 and #8).
+# Optional per case: class context and coaching history (multi-grade cases).
 CONTEXT_KEYS = ("children_present", "grades_together", "previous_actions")
 
 

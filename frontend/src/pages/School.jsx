@@ -102,7 +102,7 @@ const RESULT_STYLES = {
   open: 'bg-slate-100 text-slate-600',
 }
 
-// Every earlier visit, whoever the mentor was, so a new mentor picks up where the last one left off (MENTOR.md #6).
+// Every earlier visit, whoever the mentor was, so a new mentor picks up where the last one left off.
 function CoachingHistory({ history, language, rubric }) {
   const t = useT()
   const uiLanguage = useLanguage()
