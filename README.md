@@ -1,15 +1,8 @@
 # VisitCoach
 
-VisitCoach gives Maharashtra's mentors (Kendra Pramukhs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off.
+VisitCoach gives India's cluster mentors (CRPs, Kendra Pramukhs, ARPs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off. Our research and demo use Maharashtra as the example state. Any state can upload its own checklist; the teacher gets advice in Hindi, Marathi or Tamil.
 Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
-- What we're building now, after the mentor review: [PLAN_V2.md](PLAN_V2.md) (v1 record: [PLAN.md](PLAN.md))
-- The pitch for the state: [PITCH.md](PITCH.md)
-- Submission checklist (2 Nov): [SUBMISSION.md](SUBMISSION.md)
-- Why we chose what we chose: [DECISIONS.md](DECISIONS.md)
-- How it works end to end: [FLOW.md](FLOW.md) (plain-words walkthrough)
-- What's left for later: [improvements/futurescope.md](improvements/futurescope.md)
-- Mentor call feedback (27 Oct) and what we changed because of it: [MENTOR.md](MENTOR.md)
 - Research and source documents (NIPUN Bharat, NCF-FS, KVS FLN tools): Dhruv's workspace `../edu-hackathon-fln/` (outside this repo). The app only needs the verified excerpts in `backend/app/knowledge/grounding.json`.
 
 ## Run it locally
@@ -32,10 +25,9 @@ npm run dev
 
 Open http://localhost:5173. Use Chrome DevTools' device mode to see the phone layout.
 
-## Tests and checks
+## Checks
 
 ```bash
-cd backend && uv run pytest
 cd frontend && npm run lint && npm run build
 
 # every grounding excerpt must appear on its cited page (needs Dhruv's sources folder)
@@ -54,15 +46,16 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 22 made-up Maharashtra schools with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
+On first start the server creates 22 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
 
 | Username | Password | Who |
 |---|---|---|
 | `sachin` | `sachin123` | Mentor (Kendra Pramukh), Sachin Gore |
 | `vandana` | `vandana123` | Mentor, Vandana Joshi |
 | `officer` | `officer123` | Block officer: sees support planning only |
+| `admin` | `admin123` | State admin (SCERT): manages the state checklist only |
 
-The login screen lists these too (prototype only, DECISIONS.md #25). The teacher's shared link needs no login. The menu (your name, top right) switches the screens between English, मराठी and हिंदी, and between light and dark.
+The login screen lists these too (prototype only). The teacher's shared link needs no login. The menu (your name, top right) switches the screens between English, मराठी and हिंदी, and between light and dark.
 
 To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
 
@@ -104,7 +97,6 @@ backend/app/
   routes/          HTTP endpoints, thin — they call a controller
   controllers/     the logic for each feature: db reads/writes + services
   services/        external APIs (Claude, Sarvam) and pure helpers
-backend/tests/     pytest, uses a throwaway db
 backend/scripts/   one-off checks, e.g. check_grounding.py (excerpts vs source PDFs)
 backend/evals/     quality check: synthetic visits + AI grader (costs credits)
 

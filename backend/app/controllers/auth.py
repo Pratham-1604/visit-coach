@@ -1,7 +1,8 @@
 """Simple login for the demo: users with passwords, one random token per login (no expiry yet).
 
-Mentors use the whole app. The block officer only sees support planning. The teacher's shared
-link (/api/t/...) needs no login: teachers never install or sign in to anything.
+Mentors use the whole app. The block officer only sees support planning. The state admin only
+manages the state checklist. The teacher's shared link (/api/t/...) needs no login: teachers
+never install or sign in to anything.
 """
 
 from fastapi import Depends, Header, HTTPException
@@ -10,7 +11,7 @@ from pydantic import BaseModel
 from app import db
 from app.services import auth
 
-ROLES = ("mentor", "officer")
+ROLES = ("mentor", "officer", "admin")
 
 
 class LoginIn(BaseModel):
@@ -18,10 +19,10 @@ class LoginIn(BaseModel):
     password: str
 
 
-def create_user(username, password, name, role):
+def create_user(username, password, name, role, state="MH"):
     return db.execute(
-        "INSERT INTO users (username, password_hash, name, role) VALUES (?, ?, ?, ?)",
-        (username.strip().lower(), auth.hash_password(password), name.strip(), role),
+        "INSERT INTO users (username, password_hash, name, role, state) VALUES (?, ?, ?, ?, ?)",
+        (username.strip().lower(), auth.hash_password(password), name.strip(), role, state),
     )
 
 
@@ -39,7 +40,7 @@ def logout(token):
 
 
 def public(user):
-    return {key: user[key] for key in ("id", "username", "name", "role")}
+    return {key: user[key] for key in ("id", "username", "name", "role", "state")}
 
 
 # FastAPI dependencies: add them to a route or router to require a login.
@@ -62,4 +63,10 @@ def current_user(token: str = Depends(bearer_token)):
 def require_mentor(user=Depends(current_user)):
     if user["role"] != "mentor":
         raise HTTPException(status_code=403, detail="Only mentors can do this")
+    return user
+
+
+def require_admin(user=Depends(current_user)):
+    if user["role"] != "admin":
+        raise HTTPException(status_code=403, detail="Only the state admin can do this")
     return user

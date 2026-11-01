@@ -1,7 +1,7 @@
 """Block officer's view: where schools need support, and whether coaching is happening.
 
 Pure functions over rows the controller reads. Only counts and averages come out:
-no school, teacher, note or packet text (DECISIONS.md #10).
+no school, teacher, note or packet text.
 """
 
 from collections import Counter

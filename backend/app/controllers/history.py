@@ -1,6 +1,6 @@
 """A teacher's coaching history: every approved visit, who visited, what was agreed and whether it happened.
 
-Teachers get different mentors over time, so feedback breaks off (MENTOR.md #6). The history
+Teachers get different mentors over time, so feedback breaks off. The history
 lets the next mentor pick up where the last one left off, and lets the teacher keep track too.
 """
 
@@ -38,6 +38,7 @@ def teacher_history(teacher_id):
                 "focus_en": item["text"]["en"] if item else None,
                 "focus_id": item["id"] if item else None,  # so the app can show it in the mentor's language
                 "follow_up": packet.get("follow_up"),
+                "follow_up_en": packet.get("follow_up_en"),
                 "result": row["result"],  # done | partly | not_done | None (not checked yet)
                 "result_note": row["result_note"] or "",
             }

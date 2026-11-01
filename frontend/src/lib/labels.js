@@ -1,5 +1,5 @@
 // What the teacher reads, in their language: the shared page (TeacherView) and the WhatsApp message (share.js).
-// Drafts: to be checked by native speakers (DECISIONS.md #13).
+// Drafts: to be checked by native speakers.
 // In Maharashtra the mentor is the Kendra Pramukh (केंद्रप्रमुख), the title teachers already know.
 export const TEACHER_LABELS = {
   en: {

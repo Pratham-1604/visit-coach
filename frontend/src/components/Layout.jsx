@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Link, Navigate, Outlet, useLocation, useMatches, useNavigate } from 'react-router-dom'
 import { logout } from '../api/auth.js'
 import { useT } from '../lib/i18n.js'
 import { useOnline } from '../lib/offline.js'
@@ -8,20 +8,25 @@ import { useAutoSync } from '../lib/sync.js'
 import Login from '../pages/Login.jsx'
 import Settings from './Settings.jsx'
 
+// The one page each non-mentor role uses. Mentors use the whole app.
+const ROLE_PAGES = { officer: '/block', admin: '/checklists' }
+
 // Shared page frame: top bar + a phone-width content column. Shows the login screen until someone logs in.
 export default function Layout() {
   const session = useSession()
   const location = useLocation()
+  // Pages marked { wide: true } in router.jsx use the full width on tablets; the rest stay phone-width.
+  const width = useMatches().some((match) => match.handle?.wide) ? 'max-w-md md:max-w-5xl' : 'max-w-md'
 
   if (!session) return <Login />
-  // The block officer only uses support planning.
-  if (session.user.role === 'officer' && location.pathname !== '/block') return <Navigate to="/block" replace />
+  const rolePage = ROLE_PAGES[session.user.role]
+  if (rolePage && location.pathname !== rolePage) return <Navigate to={rolePage} replace />
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       {session.user.role === 'mentor' && <AutoSync />}
-      <TopBar user={session.user} />
-      <main className="mx-auto max-w-md px-4 py-4">
+      <TopBar user={session.user} width={width} />
+      <main className={`mx-auto px-4 py-4 ${width}`}>
         <Outlet />
       </main>
     </div>
@@ -34,15 +39,27 @@ function AutoSync() {
   return null
 }
 
-function TopBar({ user }) {
+function TopBar({ user, width }) {
   const t = useT()
   const online = useOnline()
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+
+  // Back to the home page, so the next person to log in doesn't land on this role's page (e.g. the admin's checklists).
+  async function logOut() {
+    try {
+      await logout()
+    } catch {
+      // Offline or already logged out on the server: forget the login on this phone anyway.
+    }
+    navigate('/', { replace: true })
+    clearSession()
+  }
 
   return (
     // In dark mode colour names are flipped (index.css): emerald-200 is dark green there, slate-950 near white.
-    <header className="sticky top-0 z-20 bg-emerald-700 text-white dark:bg-emerald-200 dark:text-slate-950">
-      <div className="relative mx-auto flex max-w-md items-center justify-between gap-3 px-4 py-3">
+    <header className="sticky top-0 z-20 bg-emerald-700 text-white dark:bg-emerald-200 dark:text-slate-950 print:hidden">
+      <div className={`relative mx-auto flex items-center justify-between gap-3 px-4 py-3 ${width}`}>
         <Link to="/" className="text-lg font-semibold">
           VisitCoach
         </Link>
@@ -85,13 +102,4 @@ function TopBar({ user }) {
       </div>
     </header>
   )
-}
-
-async function logOut() {
-  try {
-    await logout()
-  } catch {
-    // Offline or already logged out on the server: forget the login on this phone anyway.
-  }
-  clearSession()
 }

@@ -4,7 +4,7 @@ import { getSession } from './session.js'
 
 // All visit changes go through these functions, so every write is saved to IndexedDB at once.
 
-export async function startVisit(school, teacher, rubricVersion) {
+export async function startVisit(school, teacher, checklist) {
   const id = newId()
   await db.visits.add({
     id,
@@ -20,7 +20,8 @@ export async function startVisit(school, teacher, rubricVersion) {
     mentor_name: getSession()?.user.name ?? '', // the server also sets it from the login
     children_present: null,
     grades_together: [teacher.grade],
-    rubric_version: rubricVersion,
+    checklist_id: checklist.id, // the state checklist version in use when the visit started
+    rubric_version: checklist.version,
     status: 'draft',
     started_at: now(),
     ended_at: null,

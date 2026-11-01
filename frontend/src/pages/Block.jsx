@@ -5,8 +5,8 @@ import { useSession } from '../lib/session.js'
 import { useFetch } from '../lib/useFetch.js'
 
 // Support planning for the block officer: which training the cluster needs, and whether mentoring helps teachers.
-// It plans support, it doesn't monitor anyone (MENTOR.md #1).
-// Only counts. No school, teacher or coaching text ever reaches this page (DECISIONS.md #10).
+// It plans support, it doesn't monitor anyone.
+// Only counts. No school, teacher or coaching text ever reaches this page.
 export default function Block() {
   const t = useT()
   const session = useSession()

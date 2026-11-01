@@ -1,4 +1,4 @@
-# One container: FastAPI serves the API and the built React app (DECISIONS.md #4).
+# One container: FastAPI serves the API and the built React app.
 # Build:  docker build -t visitcoach .
 # Run:    docker run -p 8000:8000 -e ANTHROPIC_API_KEY=... -e SARVAM_API_KEY=... visitcoach
 

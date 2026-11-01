@@ -30,6 +30,8 @@ class CoachingPacket(BaseModel):
     demo_script: str = Field(description="What the mentor says and does in a 2-minute demo during the debrief. Teacher's language.")
     follow_up: str = Field(description="The one action the teacher agrees to try before the next visit. Teacher's language.")
     follow_up_check: str = Field(description="How the mentor will check it on the next visit. Teacher's language.")
+    follow_up_en: str = Field(description="For the mentor: follow_up translated into plain English.")
+    follow_up_check_en: str = Field(description="For the mentor: follow_up_check translated into plain English.")
     evidence: list[str] = Field(
         description="For the mentor, in plain English: observations or short quotes from the notes (quotes may stay "
         "in their original language) that support the priority. Name rubric items by their wording, not ids."
@@ -77,6 +79,8 @@ write alternatives such as "करूँगा/करूँगी".
 - Never use children's names, not even made-up ones. Say "one child", "the first child", "a child in the back row".
 - evidence and english_gloss are for the mentor: write them in plain English. Name rubric items by their wording, \
 never by their ids.
+- follow_up_en and follow_up_check_en are faithful English translations of follow_up and follow_up_check, for a \
+mentor who doesn't read the teacher's language. Translate; don't add or drop anything.
 - Keep priority_rubric_item and practice_id exactly as the ids given.
 - The teachers are in Maharashtra. If a Maharashtra passage (ids starting with "mh-") supports the advice, include it in grounded_in, next to the national NIPUN Bharat / NCF passages.
 - grounded_in lists the 2-4 passage ids from the "Grounding passages" section below that most directly support \
@@ -89,7 +93,7 @@ def system_prompt():
 
 def visit_prompt(visit):
     """The per-visit part of the request (everything that changes between calls)."""
-    items = knowledge.rubric_items()
+    items = visit.get("checklist") or knowledge.rubric_items()
     language = LANGUAGES.get(visit["language"], visit["language"])
     lines = [
         f"Teacher's language: {language}",
@@ -106,6 +110,11 @@ def visit_prompt(visit):
         if item_id in items:
             lines.append(f"- {item_id} ({items[item_id]['text']['en']}): {rating}")
 
+    # A state may have uploaded its own checklist: then the ids differ from the knowledge pack's rubric.
+    if set(items) - set(knowledge.rubric_items()):
+        lines += ["", "The state's checklist used in this visit (priority_rubric_item must be one of these ids):"]
+        lines += [f"- {item_id}: {item['text']['en']}" for item_id, item in items.items()]
+
     lines += ["", "Mentor voice notes (transcripts, may be code-mixed):"]
     notes = [note for note in visit.get("notes", []) if note.strip()]
     lines += [f"{n}. {note}" for n, note in enumerate(notes, 1)] or ["(none)"]
@@ -118,10 +127,10 @@ def visit_prompt(visit):
     return "\n".join(lines)
 
 
-def check_packet(packet):
-    """Return a list of problems with Claude's packet (empty list = fine)."""
+def check_packet(packet, items=None):
+    """Return a list of problems with Claude's packet (empty list = fine). items: the visit's checklist."""
     problems = []
-    if packet.priority_rubric_item not in knowledge.rubric_items():
+    if packet.priority_rubric_item not in (items or knowledge.rubric_items()):
         problems.append(f"priority_rubric_item '{packet.priority_rubric_item}' is not a rubric item id")
     if packet.practice_id != "custom" and packet.practice_id not in knowledge.practices():
         problems.append(f"practice_id '{packet.practice_id}' is not in the practice library")
@@ -146,9 +155,9 @@ def crp_notes_in(packet):
     return found
 
 
-def readable_ids(text):
+def readable_ids(text, items=None):
     """Swap rubric ids (e.g. children_read) for their wording, in text meant for the mentor."""
-    for item_id, item in knowledge.rubric_items().items():
+    for item_id, item in (items or knowledge.rubric_items()).items():
         text = re.sub(rf"\b{item_id}\b", f'"{item["text"]["en"]}"', text)
     return text
 
@@ -157,27 +166,29 @@ def generate_packet(visit):
     """Build a coaching packet for one visit. Returns (packet dict, usage list)."""
     system = system_prompt()
     user = visit_prompt(visit)
+    items = visit.get("checklist")
     packet, usage = llm.parse(system, user, CoachingPacket)
     usages = [usage]
 
-    problems = check_packet(packet)
+    problems = check_packet(packet, items)
     if problems:
         retry = f"{user}\n\nYour previous packet had problems; fix them:\n- " + "\n- ".join(problems)
         packet, usage = llm.parse(system, retry, CoachingPacket)
         usages.append(usage)
-        problems = check_packet(packet)
+        problems = check_packet(packet, items)
         if problems:
             raise llm.LLMError("Packet failed checks twice: " + "; ".join(problems))
 
-    return with_details(packet), usages
+    return with_details(packet, items), usages
 
 
-def with_details(packet):
+def with_details(packet, items=None):
     """Add what the app needs that Claude shouldn't decide: need area and source labels."""
-    item = knowledge.rubric_items()[packet.priority_rubric_item]
+    items = items or knowledge.rubric_items()
+    item = items[packet.priority_rubric_item]
     data = packet.model_dump()
-    data["english_gloss"] = readable_ids(data["english_gloss"])
-    data["evidence"] = [readable_ids(line) for line in data["evidence"]]
+    data["english_gloss"] = readable_ids(data["english_gloss"], items)
+    data["evidence"] = [readable_ids(line, items) for line in data["evidence"]]
     data["need_area"] = item["need_area"]
     data["sources"] = [knowledge.source_label(pid) for pid in packet.grounded_in]
     return data

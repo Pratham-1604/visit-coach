@@ -41,7 +41,14 @@ export async function apiPut(path, body) {
   )
 }
 
-// For uploads (audio files): the browser sets the multipart Content-Type itself.
+// For files to save, e.g. a checklist as CSV.
+export async function apiGetBlob(path) {
+  const response = await fetch(path, { headers: withToken() })
+  if (!response.ok) return handle(response)
+  return response.blob()
+}
+
+// For uploads (audio files, checklists): the browser sets the multipart Content-Type itself.
 export async function apiPostForm(path, formData) {
   return handle(await fetch(path, { method: 'POST', headers: withToken(), body: formData }))
 }

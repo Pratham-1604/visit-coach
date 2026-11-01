@@ -3,6 +3,7 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 from pydantic import ValidationError
 
+from app.controllers import review as review_controller
 from app.controllers import visits as visits_controller
 from app.controllers.auth import require_mentor
 
@@ -29,6 +30,12 @@ async def sync_visit(
     if needs_processing:
         background.add_task(visits_controller.process_visit, result["id"])
     return result
+
+
+@router.post("/review")
+def review_visit(review_in: review_controller.ReviewIn, user=Depends(require_mentor)):
+    """'Did I miss anything?' before ending a visit: ratings the notes contradict, points the checklist misses."""
+    return review_controller.review_visit(review_in, user)
 
 
 @router.get("/{visit_id}")
