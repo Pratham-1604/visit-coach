@@ -135,6 +135,11 @@ function CoachingHistory({ history, language, rubric }) {
                   {entry.follow_up}
                 </p>
               )}
+              {entry.follow_up && uiLanguage !== language && entry.follow_up_en && (
+                <p lang="en" className="text-xs text-slate-500">
+                  {t('common.in_english', { text: entry.follow_up_en })}
+                </p>
+              )}
               <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${RESULT_STYLES[result]}`}>
                 {t(`result.${result}`)}
               </span>
@@ -156,6 +161,8 @@ const RESULTS = [
 // The previous visit may have been by another mentor, so the card says who.
 function FollowUp({ followUp, teacher, language, answer }) {
   const t = useT()
+  // The action stays as the teacher agreed it; a mentor reading another language also gets it in English.
+  const showEnglish = useLanguage() !== language
   const [editing, setEditing] = useState(!answer)
   const [status, setStatus] = useState(answer?.body.status ?? null)
   const [note, setNote] = useState(answer?.body.note ?? '')
@@ -196,9 +203,19 @@ function FollowUp({ followUp, teacher, language, answer }) {
         <p lang={language} className="mt-2 text-slate-800">
           {t('followup.agreed', { name: firstName, action: followUp.follow_up })}
         </p>
+        {showEnglish && followUp.follow_up_en && (
+          <p lang="en" className="text-xs text-slate-500">
+            {t('common.in_english', { text: followUp.follow_up_en })}
+          </p>
+        )}
         {followUp.follow_up_check && (
           <p lang={language} className="mt-1 text-slate-600">
             {t('followup.how', { check: followUp.follow_up_check })}
+          </p>
+        )}
+        {showEnglish && followUp.follow_up_check_en && (
+          <p lang="en" className="text-xs text-slate-500">
+            {t('common.in_english', { text: followUp.follow_up_check_en })}
           </p>
         )}
       </div>

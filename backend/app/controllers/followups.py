@@ -62,6 +62,8 @@ def open_followups(school_id):
             "teacher_id": row["teacher_id"],
             "follow_up": packet.get("follow_up"),
             "follow_up_check": packet.get("follow_up_check"),
+            "follow_up_en": packet.get("follow_up_en"),  # for a mentor who doesn't read the teacher's language
+            "follow_up_check_en": packet.get("follow_up_check_en"),
             "approved_at": row["approved_at"],
             "mentor_name": row["mentor_name"],  # often a different mentor from the one visiting now
         }

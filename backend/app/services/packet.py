@@ -30,6 +30,8 @@ class CoachingPacket(BaseModel):
     demo_script: str = Field(description="What the mentor says and does in a 2-minute demo during the debrief. Teacher's language.")
     follow_up: str = Field(description="The one action the teacher agrees to try before the next visit. Teacher's language.")
     follow_up_check: str = Field(description="How the mentor will check it on the next visit. Teacher's language.")
+    follow_up_en: str = Field(description="For the mentor: follow_up translated into plain English.")
+    follow_up_check_en: str = Field(description="For the mentor: follow_up_check translated into plain English.")
     evidence: list[str] = Field(
         description="For the mentor, in plain English: observations or short quotes from the notes (quotes may stay "
         "in their original language) that support the priority. Name rubric items by their wording, not ids."
@@ -77,6 +79,8 @@ write alternatives such as "करूँगा/करूँगी".
 - Never use children's names, not even made-up ones. Say "one child", "the first child", "a child in the back row".
 - evidence and english_gloss are for the mentor: write them in plain English. Name rubric items by their wording, \
 never by their ids.
+- follow_up_en and follow_up_check_en are faithful English translations of follow_up and follow_up_check, for a \
+mentor who doesn't read the teacher's language. Translate; don't add or drop anything.
 - Keep priority_rubric_item and practice_id exactly as the ids given.
 - The teachers are in Maharashtra. If a Maharashtra passage (ids starting with "mh-") supports the advice, include it in grounded_in, next to the national NIPUN Bharat / NCF passages.
 - grounded_in lists the 2-4 passage ids from the "Grounding passages" section below that most directly support \

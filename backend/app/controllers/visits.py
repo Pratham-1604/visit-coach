@@ -171,6 +171,11 @@ def save_packet_edits(visit_id, edits):
     edited = {**current_packet(packet), **edits.model_dump()}
     edited["practice_steps"] = [step.strip() for step in edited["practice_steps"] if step.strip()]
     edited["materials"] = [item.strip() for item in edited["materials"] if item.strip()]
+    # Claude's English version no longer matches an action the mentor rewrote, so drop it.
+    original = json.loads(packet["original_json"])
+    for field in ("follow_up", "follow_up_check"):
+        if edited[field] != original.get(field):
+            edited.pop(f"{field}_en", None)
     db.execute(
         "UPDATE packets SET edited_json = ? WHERE visit_id = ?",
         (json.dumps(edited, ensure_ascii=False), visit_id),

@@ -130,6 +130,8 @@ FOLLOW_UPS = {
                "अगली बार किन्हीं तीन बच्चों से उस दिन के पाठ की एक पंक्ति पढ़वाना।"),
         "ta": ("அடுத்த வருகை வரை தினமும் 5 நிமிடம் அன்றைய பாடத்திலிருந்து இணையாகப் படித்தல்.",
                "அடுத்த முறை ஏதேனும் மூன்று குழந்தைகளை அன்றைய பாடத்திலிருந்து ஒரு வரி படிக்கச் சொல்லுதல்."),
+        "en": ("Until the next visit, 5 minutes of paired reading every day from that day's lesson.",
+               "At the next visit, ask any three children to read one line from that day's lesson."),
     },
     "bead_sharing": {
         "mr": ("गणिताच्या तासाला रोज काड्या किंवा मणी मुलांच्या हातात देऊन वाटणीचे प्रश्न सोडवणे.",
@@ -138,6 +140,8 @@ FOLLOW_UPS = {
                "अगली बार देखना कि गणित के पीरियड में तीलियाँ या मोती बच्चों की मेज़ों पर हैं या नहीं।"),
         "ta": ("கணக்கு வகுப்பில் தினமும் குச்சிகள் அல்லது மணிகளைக் குழந்தைகள் கையில் கொடுத்துப் பகிர்வுக் கணக்குகள் செய்தல்.",
                "அடுத்த முறை கணக்கு வகுப்பில் குச்சிகள் அல்லது மணிகள் குழந்தைகளின் மேசைகளில் உள்ளனவா என்று பார்த்தல்."),
+        "en": ("Every day in the maths period, give children sticks or beads in their hands to solve sharing problems.",
+               "At the next visit, check whether sticks or beads are on the children's desks in the maths period."),
     },
     "name_sticks": {
         "mr": ("प्रश्न विचारताना नावाच्या काड्या वापरून रोज वेगवेगळ्या मुलांना संधी देणे.",
@@ -146,6 +150,8 @@ FOLLOW_UPS = {
                "अगली बार देखना कि नाम की पर्चियाँ इस्तेमाल हो रही हैं और पीछे बैठे बच्चों को भी बारी मिल रही है।"),
         "ta": ("கேள்வி கேட்கும்போது பெயர்க் குச்சிகளைப் பயன்படுத்தி தினமும் வெவ்வேறு குழந்தைகளுக்கு வாய்ப்பு தருதல்.",
                "அடுத்த முறை பெயர்க் குச்சிகள் பயன்படுத்தப்படுகின்றனவா, பின் வரிசைக் குழந்தைகளுக்கும் வாய்ப்பு கிடைக்கிறதா என்று பார்த்தல்."),
+        "en": ("When asking questions, use name sticks to give different children a turn every day.",
+               "At the next visit, see whether name sticks are used and children in the back rows also get a turn."),
     },
     "shared_writing": {
         "mr": ("आठवड्यातून तीन वेळा मुलांनी फळ्यावरून न उतरवता स्वतःचे एक वाक्य लिहिणे.",
@@ -154,6 +160,8 @@ FOLLOW_UPS = {
                "अगली बार तीन बच्चों की कॉपियों में उनके खुद लिखे वाक्य देखना।"),
         "ta": ("வாரத்தில் மூன்று முறை குழந்தைகள் கரும்பலகையிலிருந்து பார்த்து எழுதாமல், தாங்களே ஒரு வாக்கியம் எழுதுதல்.",
                "அடுத்த முறை மூன்று குழந்தைகளின் நோட்டுகளில் அவர்களே எழுதிய வாக்கியங்களைப் பார்த்தல்."),
+        "en": ("Three times a week, children write one sentence of their own, not copied from the board.",
+               "At the next visit, look in three children's notebooks for sentences they wrote themselves."),
     },
 }
 
@@ -229,7 +237,7 @@ def check_action(rng, visit_id, checked, status=None):
 TYPICAL_RATINGS = {
     "print_rich": (93, 5, 2, 0),
     "home_language": (91, 6, 2, 1),
-    "explain_thinking": (10, 15, 15, 60),
+    "explain_thinking": (5, 10, 10, 75),
     "daily_life_maths": (20, 25, 20, 35),
 }
 DEFAULT_RATINGS = (35, 30, 25, 10)
@@ -274,7 +282,9 @@ def add_visit(rng, school_id, teacher_id, language, need_area, observed, mentor)
     approved = observed + timedelta(minutes=rng.randint(25, 240))
 
     # A separate random source, so adding ratings and notes doesn't change the rest of the demo history.
-    detail_rng = random.Random(f"{school_id}-{observed:%Y%m%d}")
+    # Keyed on days ago, not the date, so the checklist review shows the same patterns whatever day it is.
+    days_ago = (datetime.now(timezone.utc).date() - observed.date()).days
+    detail_rng = random.Random(f"{school_id}-{days_ago}")
     visit_id = db.execute(
         "INSERT INTO visits (client_id, school_id, teacher_id, subject, language, rubric_json, typed_note,"
         " mentor_name, observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?)",
@@ -315,6 +325,7 @@ def seed_packet(rubric_item, practice_id, language, need_area):
     """A complete packet built from the practice library. Only the action lines are in the teacher's language."""
     practice = knowledge.practices()[practice_id]
     follow_up, follow_up_check = FOLLOW_UPS[practice_id][language]
+    follow_up_en, follow_up_check_en = FOLLOW_UPS[practice_id]["en"]
     source_ids = practice["source_ids"][:3]
     return {
         "strength": "Demo data: the teacher's read-aloud held the children's attention.",
@@ -326,6 +337,8 @@ def seed_packet(rubric_item, practice_id, language, need_area):
         "demo_script": practice["demo_tip"],
         "follow_up": follow_up,
         "follow_up_check": follow_up_check,
+        "follow_up_en": follow_up_en,
+        "follow_up_check_en": follow_up_check_en,
         "evidence": ["Demo data, not a real visit."],
         "english_gloss": f"Demo data. Priority: {practice['title']}.",
         "grounded_in": source_ids,

@@ -119,6 +119,7 @@ function PacketReview({ visit }) {
 // Editable packet. Edits are kept on the phone as the mentor types, and sent to the server on approve.
 function PacketForm({ visit, packet, language, onApproved }) {
   const t = useT()
+  const uiLanguage = useLanguage()
   const online = useOnline()
   const original = toForm(packet)
   const [form, setForm] = useState(visit.packet_draft ?? original)
@@ -168,6 +169,12 @@ function PacketForm({ visit, packet, language, onApproved }) {
             }`}
           />
           {hasCrpNote(form[key]) && <span className="block text-xs text-rose-700">{t('packet.note_warning')}</span>}
+          {/* Claude's English version, until the mentor rewrites the line. */}
+          {uiLanguage !== language && packet[`${key}_en`] && form[key] === original[key] && (
+            <span lang="en" className="block text-xs text-slate-500">
+              {t('common.in_english', { text: packet[`${key}_en`] })}
+            </span>
+          )}
         </label>
       ))}
 
@@ -205,6 +212,7 @@ function PacketForm({ visit, packet, language, onApproved }) {
 
 function ApprovedPacket({ packet, language }) {
   const t = useT()
+  const uiLanguage = useLanguage()
   return FIELDS.map(({ key, list }) => (
     <section key={key} className="space-y-1">
       <h2 className="font-medium">{t(`field.${key}`)}</h2>
@@ -217,6 +225,11 @@ function ApprovedPacket({ packet, language }) {
       ) : (
         <p lang={language} className="whitespace-pre-line text-sm">
           {packet[key]}
+        </p>
+      )}
+      {uiLanguage !== language && packet[`${key}_en`] && (
+        <p lang="en" className="text-xs text-slate-500">
+          {t('common.in_english', { text: packet[`${key}_en`] })}
         </p>
       )}
     </section>

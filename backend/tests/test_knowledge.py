@@ -76,6 +76,8 @@ def make_packet(**changes):
         "demo_script": "d",
         "follow_up": "f",
         "follow_up_check": "c",
+        "follow_up_en": "f",
+        "follow_up_check_en": "c",
         "evidence": ["e"],
         "english_gloss": "g",
         "grounded_in": ["ncf-p115-reading"],
