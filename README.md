@@ -5,6 +5,51 @@ Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
 - Research and source documents (NIPUN Bharat, NCF-FS, KVS FLN tools): Dhruv's workspace `../edu-hackathon-fln/` (outside this repo). The app only needs the verified excerpts in `backend/app/knowledge/grounding.json`.
 
+## For evaluators
+
+- **Working demo:** https://visitcoach-514819575049.asia-south1.run.app (public; opens in any phone or laptop browser, nothing to install). The first load after a quiet spell takes a few seconds.
+- **Demo video:** https://youtube.com/shorts/bS4kY_5r2ts
+- **Code:** this repository is public. To run it yourself, see [Run it locally](#run-it-locally).
+
+All schools, teachers and visit history are made up. Every evaluator shares the same demo accounts, and the demo data reloads when the server restarts, so a visit you add may later disappear.
+
+### Test credentials
+
+| Role | Login | What to look at |
+|---|---|---|
+| Mentor (Kendra Pramukh) | `sachin` / `sachin123` | ZP Primary School Wagholi → Sunita Pawar: coaching history, then **Start visit** |
+| Mentor | `vandana` / `vandana123` | Same schools, as one of the earlier mentors |
+| Teacher | no login | The link a mentor sends on WhatsApp, e.g. https://visitcoach-514819575049.asia-south1.run.app/t/seed3: the notes read aloud, with **Read in English** |
+| Block officer | `officer` / `officer123` | Support planning: needs counted across schools, never a teacher's name |
+| State admin (SCERT) | `admin` / `admin123` | The state checklist and **What the visits say** about it |
+
+The menu (your name, top right) switches the screens between English, मराठी and हिंदी. Please don't upload a new checklist version on the shared demo: it would change the checklist for every evaluator. To try uploads, run the app locally with the sample file `demo/maharashtra_checklist_v2.csv`.
+
+### Sample inputs
+
+Log in as `sachin`, open **ZP Primary School Wagholi**, and tap **Start visit** for a teacher.
+
+1. **A visit with a typed note (Sunita Pawar).** Set *Children present* to `31` and tick Grades `1` and `2` as sitting together. Rate a few checklist items, and rate *Most children, including back rows and slower learners, get a turn* as **Yes**. Open **📝 Notes** and paste:
+   > Paired reading from the last visit has started: most pairs read the day's lesson together for about 5 minutes. The back-row Grade 1 children mostly watched and did not get a turn. Number cards are on the wall but were not used; children counted on their fingers for subtraction. The teacher explained new words with examples from home. Four children had no textbook and shared.
+
+   **Expected:** **End visit** shows *Before you end the visit*, where Claude flags that the "back rows get a turn" tick disagrees with the note. After ending, the coaching packet is ready in about a minute: Marathi for the teacher, with English under each line. It builds on the earlier mentor's paired-reading action. **Approve and share** gives the WhatsApp message and its audio.
+
+2. **A note written in Marathi (Rahul Jadhav).** Paste:
+   > मुलांनी मण्यांच्या माळेने दहाच्या गटात मोजणी केली. फळ्यावरील बेरजेची उदाहरणे शिक्षकांनी स्वतःच सोडवली; मुलांना स्वतः करून पाहण्याची संधी कमी मिळाली. पहिलीची काही मुले अंक तोंडपाठ म्हणत होती, पण वस्तू मोजताना अडखळत होती.
+
+   **Expected:** a packet focused on children working with objects themselves, and an English summary for the mentor.
+
+3. **A voice note.** In **📝 Notes**, tap **Record a note** (allow the microphone) and speak for up to 30 seconds, in English, Hindi or Marathi. For example: *"Children read in pairs today, but the teacher answered most questions herself."*
+   **Expected:** after the visit ends, the packet page shows the transcript under *Your notes, as the app heard them*, and the advice uses it.
+
+4. **Rehearse the debrief.** From any coaching packet, open **Practise the conversation** and type:
+   > Sunita tai, the paired reading has really started, well done. What did you notice about the back-row children today?
+
+   **Expected:** Claude replies in Marathi as the teacher and may push back. **End and get feedback** gives a score card on 5 criteria.
+
+5. **A visit with no signal.** Open the app once while online, turn on airplane mode, then run a visit with taps and a note and end it.
+   **Expected:** everything works offline, and the visit waits on the phone. When the phone is back online, it uploads without a tap and the packet follows.
+
 ## Run it locally
 
 You need [uv](https://docs.astral.sh/uv/) and Node 20+.
@@ -46,16 +91,7 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 5 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
-
-| Username | Password | Who |
-|---|---|---|
-| `sachin` | `sachin123` | Mentor (Kendra Pramukh), Sachin Gore |
-| `vandana` | `vandana123` | Mentor, Vandana Joshi |
-| `officer` | `officer123` | Block officer: sees support planning only |
-| `admin` | `admin123` | State admin (SCERT): manages the state checklist only |
-
-The login screen lists these too (prototype only). The teacher's shared link needs no login. The menu (your name, top right) switches the screens between English, मराठी and हिंदी, and between light and dark.
+On first start the server creates 5 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**. The logins are in [Test credentials](#test-credentials); the login screen lists them too (prototype only). The teacher's shared link needs no login. The menu (your name, top right) also switches between light and dark.
 
 To start fresh (for example after pulling new demo data), stop the server and delete `backend/data/visitcoach.db`.
 
