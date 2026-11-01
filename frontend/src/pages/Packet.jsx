@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getRubric } from '../api/rubric.js'
+import { sharedAudioUrl } from '../api/teacher.js'
 import { getVisitCached } from '../api/visits.js'
 import { db } from '../lib/db.js'
 import { formatDate, hasCrpNote, itemText } from '../lib/format.js'
@@ -259,6 +260,10 @@ function ShareLink({ server }) {
       <p lang={server.language} className="whitespace-pre-wrap rounded-lg bg-white p-3 text-slate-800 shadow-sm">
         {message}
       </p>
+      <div className="space-y-1">
+        <p className="font-medium">{t('share.listen')}</p>
+        <audio controls preload="none" src={sharedAudioUrl(server.share_token)} className="w-full" />
+      </div>
       <div className="flex flex-wrap gap-3">
         <a
           href={whatsappUrl(message)}

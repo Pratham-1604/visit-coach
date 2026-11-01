@@ -4,3 +4,8 @@ import { getWithCache } from '../lib/offline.js'
 export function getSharedPacket(token) {
   return getWithCache(`/api/t/${token}`)
 }
+
+// The same notes read aloud (MP3), made by the server with Sarvam.
+export function sharedAudioUrl(token) {
+  return `/api/t/${token}/audio`
+}

@@ -21,7 +21,7 @@ export function whatsappMessage(server, url) {
     `📌 *${labels.follow_up}*`,
     short(packet.follow_up),
     '',
-    `${labels.details}: ${url}`,
+    `🔊 ${labels.details}: ${url}`,
   ].join('\n')
 }
 

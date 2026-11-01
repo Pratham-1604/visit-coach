@@ -4,6 +4,7 @@ from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPExcepti
 from pydantic import ValidationError
 
 from app.controllers import review as review_controller
+from app.controllers import teacher as teacher_controller
 from app.controllers import visits as visits_controller
 from app.controllers.auth import require_mentor
 
@@ -56,5 +57,7 @@ def save_packet_edits(visit_id: int, edits: visits_controller.PacketEdits):
 
 
 @router.post("/{visit_id}/approve")
-def approve_visit(visit_id: int):
-    return visits_controller.approve_visit(visit_id)
+def approve_visit(visit_id: int, background: BackgroundTasks):
+    visit = visits_controller.approve_visit(visit_id)
+    background.add_task(teacher_controller.prepare_audio, visit["share_token"])
+    return visit
