@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { getSharedPacket } from '../api/teacher.js'
+import { getSharedPacket, sharedAudioUrl } from '../api/teacher.js'
 import { formatDate } from '../lib/format.js'
 import { teacherLabels } from '../lib/labels.js'
 import { useFetch } from '../lib/useFetch.js'
@@ -32,6 +32,10 @@ export default function TeacherView() {
           </p>
         )}
       </header>
+
+      <Section title={labels.listen}>
+        <audio controls preload="none" src={sharedAudioUrl(token)} className="w-full" />
+      </Section>
 
       {TEXT_FIELDS.map((key) => (
         <Section key={key} title={labels[key]} highlight={key === 'priority'}>

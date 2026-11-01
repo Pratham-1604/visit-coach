@@ -14,7 +14,8 @@ export const TEACHER_LABELS = {
     history: 'Your coaching so far',
     history_empty: 'This was your first visit with VisitCoach.',
     results: { done: 'Done', partly: 'Partly done', not_done: 'Not done yet', open: 'To look at next visit' },
-    details: 'Full notes and the 5-minute practice',
+    details: 'Listen to the notes, or read them in full',
+    listen: 'Listen to these notes',
     error: 'This link does not work. Please ask your mentor to share it again.',
   },
   hi: {
@@ -29,7 +30,8 @@ export const TEACHER_LABELS = {
     history: 'अब तक का मार्गदर्शन',
     history_empty: 'VisitCoach के साथ यह आपकी पहली मुलाक़ात थी।',
     results: { done: 'हो गया', partly: 'कुछ हद तक हुआ', not_done: 'अभी नहीं हुआ', open: 'अगली मुलाक़ात में देखेंगे' },
-    details: 'पूरे नोट्स और 5 मिनट का अभ्यास',
+    details: 'नोट्स सुनें या पूरे पढ़ें',
+    listen: 'ये नोट्स सुनें',
     error: 'यह लिंक काम नहीं कर रहा। कृपया अपने मार्गदर्शक से इसे दोबारा भेजने को कहें।',
   },
   mr: {
@@ -44,7 +46,8 @@ export const TEACHER_LABELS = {
     history: 'आतापर्यंतचे मार्गदर्शन',
     history_empty: 'VisitCoach सोबत ही तुमची पहिली भेट होती.',
     results: { done: 'झाले', partly: 'काही प्रमाणात झाले', not_done: 'अजून झाले नाही', open: 'पुढच्या भेटीत पाहू' },
-    details: 'सविस्तर नोंदी आणि ५ मिनिटांचा सराव',
+    details: 'नोंदी ऐका किंवा सविस्तर वाचा',
+    listen: 'या नोंदी ऐका',
     error: 'ही लिंक चालत नाही. कृपया तुमच्या केंद्रप्रमुखांना ती पुन्हा पाठवायला सांगा.',
   },
   ta: {
@@ -59,7 +62,8 @@ export const TEACHER_LABELS = {
     history: 'இதுவரை பெற்ற வழிகாட்டல்',
     history_empty: 'VisitCoach உடன் இது உங்கள் முதல் வருகை.',
     results: { done: 'முடிந்தது', partly: 'ஓரளவு முடிந்தது', not_done: 'இன்னும் இல்லை', open: 'அடுத்த வருகையில் பார்ப்போம்' },
-    details: 'முழுக் குறிப்புகளும் 5 நிமிடப் பயிற்சியும்',
+    details: 'குறிப்புகளைக் கேளுங்கள் அல்லது முழுமையாகப் படியுங்கள்',
+    listen: 'இந்தக் குறிப்புகளைக் கேளுங்கள்',
     error: 'இந்த இணைப்பு வேலை செய்யவில்லை. உங்கள் வழிகாட்டியிடம் மீண்டும் அனுப்பச் சொல்லுங்கள்.',
   },
 }
