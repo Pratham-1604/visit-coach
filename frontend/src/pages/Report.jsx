@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getReport, markReportSent, writeReport } from '../api/reports.js'
 import { db } from '../lib/db.js'
-import { formatDate, itemText } from '../lib/format.js'
+import { covers, formatDate, itemText } from '../lib/format.js'
 import { LANGUAGES, useLanguage, useT } from '../lib/i18n.js'
 import { useOnline } from '../lib/offline.js'
 import { useFetch } from '../lib/useFetch.js'
@@ -109,7 +109,7 @@ function ReportBody({ view }) {
             label={t('report.class')}
             value={[
               t('school.grade', { grade: visit.grade }),
-              t(`subject.${visit.subject}`),
+              visit.subject !== 'both' && t(`subject.${visit.subject}`), // older visits observed one subject
               visit.children_present && t('report.children', { n: visit.children_present }),
               visit.grades_together?.length > 1 && t('report.grades_together', { grades: visit.grades_together.join(', ') }),
             ]
@@ -236,9 +236,9 @@ function ListSection({ title, lines, lang }) {
   )
 }
 
-// The items for the subject observed (a checklist has literacy, numeracy and shared items).
+// The items rated in the visit: the whole checklist, or one subject's items for older visits.
 function visibleItems(view) {
-  return view.checklist.items.filter((item) => item.subject === 'both' || item.subject === view.visit.subject)
+  return view.checklist.items.filter((item) => covers(view.visit.subject, item))
 }
 
 function countRatings(items, rubric) {

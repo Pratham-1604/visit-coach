@@ -35,7 +35,7 @@ class VisitIn(BaseModel):
     client_id: str
     school_id: int
     teacher_id: int
-    subject: Literal["literacy", "numeracy"]
+    subject: Literal["literacy", "numeracy", "both"]
     rubric: dict[str, Literal["yes", "partly", "no"]] = {}
     typed_note: str = ""
     observed_at: str | None = None

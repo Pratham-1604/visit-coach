@@ -8,7 +8,7 @@ are shown by the app straight from the data, so Claude can't get them wrong.
 from pydantic import BaseModel, Field
 
 from app.services import llm
-from app.services.packet import LANGUAGES
+from app.services.packet import LANGUAGES, subject_text
 
 
 class VisitReport(BaseModel):
@@ -45,7 +45,7 @@ def write_report(visit, items, rubric, notes, follow_up, previous_actions, langu
     """visit: the visit row with grade/teacher; items: {id: checklist item}. Returns the report as a dict."""
     lines = [
         f"Write in: {LANGUAGES.get(language, language)}",
-        f"Class: Grade {visit['grade']}, subject observed: {visit['subject']}",
+        f"Class: Grade {visit['grade']}, subject observed: {subject_text(visit['subject'])}",
     ]
     if visit.get("children_present"):
         lines.append(f"Children present: {visit['children_present']}")

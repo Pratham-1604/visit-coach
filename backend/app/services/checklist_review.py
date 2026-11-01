@@ -12,9 +12,9 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.services import llm
-from app.services.packet import LANGUAGES
+from app.services.packet import LANGUAGES, covers
 
-MIN_VISITS = 10  # don't judge an item on fewer visits than this
+MIN_VISITS = 5  # don't judge an item on fewer visits than this (5 suits the 5-school demo; a real state would use more)
 MET_PCT = 90  # "yes" in at least this share of visits: almost always met
 SKIPPED_PCT = 50  # unrated in at least this share of visits: often skipped
 MAX_NOTES = 80
@@ -25,7 +25,7 @@ def item_stats(items, visits):
     """items: the checklist items; visits: [{subject, rubric}]. Returns one row per item, with a flag."""
     rows = []
     for item in items:
-        relevant = [visit for visit in visits if item["subject"] in ("both", visit["subject"])]
+        relevant = [visit for visit in visits if covers(visit["subject"], item)]
         counts = {"yes": 0, "partly": 0, "no": 0, "skipped": 0}
         for visit in relevant:
             counts[visit["rubric"].get(item["id"], "skipped")] += 1
