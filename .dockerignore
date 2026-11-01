@@ -1,0 +1,11 @@
+# Keep the image small and secrets out of it.
+.env
+.git
+**/node_modules
+**/dist
+**/.venv
+**/__pycache__
+**/.pytest_cache
+backend/data
+dhruv_research
+*.pdf

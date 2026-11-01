@@ -4,26 +4,50 @@ Dev:  uv run uvicorn app.main:app --reload   (from backend/)
 Prod: the same app also serves the built React app from frontend/dist.
 """
 
+import mimetypes
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
 from app import config, db
-from app.routes import schools
-from app.seed import seed_if_empty
+from app.controllers.auth import current_user, require_mentor
+from app.controllers.checklists import seed_checklists_if_empty
+from app.controllers.visits import fail_interrupted
+from app.routes import auth, block, checklists, followups, offline, rehearsal, reports, rubric, schools, teacher, visits
+from app.seed import seed_if_empty, seed_users
 
 
 @asynccontextmanager
 async def lifespan(app):
     db.init_db()
+    seed_checklists_if_empty()
     seed_if_empty()
+    seed_users()
+    fail_interrupted()
     yield
 
 
+# The PWA manifest (frontend/dist/manifest.webmanifest) must be served with its own content type.
+mimetypes.add_type("application/manifest+json", ".webmanifest")
+
 app = FastAPI(title="VisitCoach API", lifespan=lifespan)
 
-app.include_router(schools.router)
+# Who may call what: mentors use the whole app, the block officer only support planning,
+# the state admin only the checklist pages (their routes check the role themselves).
+# The teacher's shared link stays open: teachers never log in (controllers/auth.py).
+mentors_only = [Depends(require_mentor)]
+app.include_router(auth.router)
+app.include_router(schools.router, dependencies=mentors_only)
+app.include_router(rubric.router, dependencies=mentors_only)
+app.include_router(visits.router, dependencies=mentors_only)
+app.include_router(followups.router, dependencies=mentors_only)
+app.include_router(offline.router, dependencies=mentors_only)
+app.include_router(rehearsal.router, dependencies=mentors_only)
+app.include_router(reports.router, dependencies=mentors_only)
+app.include_router(block.router, dependencies=[Depends(current_user)])
+app.include_router(checklists.router)
+app.include_router(teacher.router)
 
 
 @app.get("/api/health")

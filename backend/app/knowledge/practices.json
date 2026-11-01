@@ -1,0 +1,277 @@
+{
+  "_about": "5-minute practice library v1. Each practice fixes one or more rubric gaps, needs only materials found in a government classroom, and comes with a 2-minute CRP demo tip and a next-visit check. Activities come from KVS suggested activities (kv_fln pp.17-21) and NCF-FS section 4.5 strategies; steps, timing and checks are written by VisitCoach.",
+  "practices": [
+    {
+      "id": "paired_reading",
+      "title": "Paired reading",
+      "subject": "literacy",
+      "rubric_item_ids": ["children_read", "pair_group_work"],
+      "grades": [1, 2, 3],
+      "materials": ["Textbook or any short story page, one per pair"],
+      "steps": [
+        "Pair a stronger reader with a child who is still learning (1 min).",
+        "Child A reads one line aloud while pointing to each word; child B follows with a finger.",
+        "Swap lines. The partner helps only when the reader is stuck for 3 seconds.",
+        "Teacher walks around and listens to 3-4 pairs, noting who needs help."
+      ],
+      "demo_tip": "CRP sits with one pair, models pointing and the 3-second wait, then lets the pair continue.",
+      "check": "Next visit: ask 3 random children to read one line to you from the day's text.",
+      "source_ids": ["kvs-p18-reading-writing", "kvs-p21-remediation", "ncf-p115-reading"]
+    },
+    {
+      "id": "sound_clap",
+      "title": "Sound clap and first-sound hunt",
+      "subject": "literacy",
+      "rubric_item_ids": ["sounds_aksharas"],
+      "grades": [1, 2],
+      "materials": ["None (classroom objects)"],
+      "steps": [
+        "Say a familiar word; children clap once for each syllable.",
+        "Ask: what is the first sound? Children say only the sound.",
+        "Children find one object in the room that starts with the same sound.",
+        "Three children share their object and say its first sound."
+      ],
+      "demo_tip": "CRP leads two words while the teacher watches, then the teacher leads the next three.",
+      "check": "Next visit: say two words and ask 3 children for the first sound of each.",
+      "source_ids": ["kvs-p17-oral-phonics", "ncf-p115-decoding", "nipun-p20-literacy"]
+    },
+    {
+      "id": "make_a_word",
+      "title": "Blend aksharas to make a word",
+      "subject": "literacy",
+      "rubric_item_ids": ["sounds_aksharas", "children_read"],
+      "grades": [1, 2],
+      "materials": ["8-10 akshara cards made from old cartons, or written on the board"],
+      "steps": [
+        "Show two akshara cards; children say each sound.",
+        "Children blend the sounds into a word (e.g. क + म = कम) and say what it means.",
+        "In pairs, children make one new word from the cards and read it to each other.",
+        "Two pairs read their word to the class."
+      ],
+      "demo_tip": "CRP shows one blend slowly, stretching the sounds, then hands the cards to the teacher.",
+      "check": "Next visit: give 3 children a new two-akshara word to blend and read.",
+      "source_ids": ["ncf-p115-decoding", "kvs-p17-oral-phonics", "nipun-p200-class1-2"]
+    },
+    {
+      "id": "read_aloud_predict",
+      "title": "Read-aloud with a prediction stop",
+      "subject": "literacy",
+      "rubric_item_ids": ["read_aloud_talk", "understanding_questions"],
+      "grades": [1, 2, 3],
+      "materials": ["Any picture storybook or textbook story"],
+      "steps": [
+        "Read the first half of a short story aloud with expression; children only listen.",
+        "Stop and ask: what will happen next? Take 3 different answers.",
+        "Finish the story.",
+        "Ask one 'why' question; children tell a partner, then two children share."
+      ],
+      "demo_tip": "CRP models one prediction stop with a 2-page story; the teacher does the 'why' question.",
+      "check": "Next visit: ask the teacher which story they read and what children predicted.",
+      "source_ids": ["ncf-p115-reading", "kvs-p18-reading-writing"]
+    },
+    {
+      "id": "picture_talk",
+      "title": "Picture talk in the home language",
+      "subject": "literacy",
+      "rubric_item_ids": ["home_language", "read_aloud_talk"],
+      "grades": [1, 2],
+      "materials": ["One large picture from the textbook or a poster"],
+      "steps": [
+        "Show the picture. Children say what they see in any language they like.",
+        "Teacher repeats each answer in the school language, adding one new word.",
+        "Write 3 of the children's words on the board and read them together.",
+        "Children point to the word and the matching part of the picture."
+      ],
+      "demo_tip": "CRP accepts a child's home-language word warmly and shows how to echo it in the school language.",
+      "check": "Next visit: look for children's words from picture talk on the board or wall.",
+      "source_ids": ["kvs-p17-oral-phonics", "ncf-p117-home-language"]
+    },
+    {
+      "id": "word_wall",
+      "title": "Living word wall",
+      "subject": "literacy",
+      "rubric_item_ids": ["print_rich", "children_read"],
+      "grades": [1, 2, 3],
+      "materials": ["Chart paper or a wall section at child height", "Marker or chalk"],
+      "steps": [
+        "Pick 3 words from today's lesson that children found interesting.",
+        "A child says each word; the teacher writes it large on the wall at child height.",
+        "Children read the wall words aloud, pointing.",
+        "Each day add words and ask 2 children to find and read a word from earlier."
+      ],
+      "demo_tip": "CRP helps put up the first 3 words and shows the 'find a word' game.",
+      "check": "Next visit: count the words on the wall and ask a child to read two.",
+      "source_ids": ["kvs-p17-oral-phonics", "ncf-p113-print-rich"]
+    },
+    {
+      "id": "shared_writing",
+      "title": "Shared sentence starter",
+      "subject": "literacy",
+      "rubric_item_ids": ["own_writing"],
+      "grades": [1, 2, 3],
+      "materials": ["Board", "Notebooks or slates"],
+      "steps": [
+        "Write a sentence starter on the board, e.g. 'Today I ate ___'.",
+        "Two children come up and complete it with their own word; the class reads it.",
+        "Every child writes the starter and their own ending (invented spelling is fine).",
+        "Three children read their sentence aloud."
+      ],
+      "demo_tip": "CRP models completing one sentence and praises a child's invented spelling.",
+      "check": "Next visit: look in 3 notebooks for sentences children wrote themselves.",
+      "source_ids": ["ncf-p115-writing", "kvs-p18-reading-writing"]
+    },
+    {
+      "id": "picture_description",
+      "title": "One picture, one sentence",
+      "subject": "literacy",
+      "rubric_item_ids": ["own_writing", "home_language"],
+      "grades": [2, 3],
+      "materials": ["A picture from the textbook", "Notebooks"],
+      "steps": [
+        "Children look at the picture and tell a partner one thing happening in it.",
+        "Each child writes 1-2 sentences about the picture in their own words.",
+        "Partners read each other's sentence.",
+        "Teacher reads out two sentences that are different from each other."
+      ],
+      "demo_tip": "CRP shows how to praise the idea first and fix only one spelling.",
+      "check": "Next visit: ask 3 children to read you a sentence they wrote this week.",
+      "source_ids": ["kvs-p18-reading-writing", "ncf-p115-writing"]
+    },
+    {
+      "id": "bead_sharing",
+      "title": "Share it out (equal sharing with objects)",
+      "subject": "numeracy",
+      "rubric_item_ids": ["concrete_first", "daily_life_maths", "tlm_use"],
+      "grades": [1, 2, 3],
+      "materials": ["10-20 stones, seeds, bottle caps or beads per pair"],
+      "steps": [
+        "Give each pair 10 objects: 'Share these equally between you. How many each?'",
+        "Pairs say their answer in words: 'We each got 5.'",
+        "Change it: share 12 among 3 friends. Pairs act it out.",
+        "One pair draws the sharing on the board; the teacher writes the number sentence."
+      ],
+      "demo_tip": "CRP gives one pair the objects and asks the question, so the teacher sees children do it themselves.",
+      "check": "Next visit: see whether objects are out on desks during the maths period.",
+      "source_ids": ["kvs-p19-manipulatives", "ncf-p119-elps", "kvs-p20-real-life"]
+    },
+    {
+      "id": "bundles_of_ten",
+      "title": "Bundles of ten",
+      "subject": "numeracy",
+      "rubric_item_ids": ["concrete_first", "tlm_use"],
+      "grades": [1, 2],
+      "materials": ["Sticks, straws or matchsticks and rubber bands"],
+      "steps": [
+        "Each pair counts out 10 sticks and ties them into a bundle.",
+        "Show '2 bundles and 3 loose'. Children say how many: 23.",
+        "Teacher says a number; pairs make it with bundles and loose sticks.",
+        "Children draw the bundles and write the number."
+      ],
+      "demo_tip": "CRP builds one number with a pair and asks them to explain it to the teacher.",
+      "check": "Next visit: ask 2 children to show a number like 34 with sticks.",
+      "source_ids": ["kvs-p19-manipulatives", "ncf-p119-elps"]
+    },
+    {
+      "id": "shop_play",
+      "title": "Classroom shop",
+      "subject": "numeracy",
+      "rubric_item_ids": ["daily_life_maths", "pair_group_work"],
+      "grades": [1, 2, 3],
+      "materials": ["Paper 'coins' and notes", "5-6 classroom objects with price labels"],
+      "steps": [
+        "Set up a shop: label 5 objects with prices up to ₹20 (₹100 for Class 3).",
+        "One child is the shopkeeper; a partner buys two items and pays.",
+        "The shopkeeper works out the total and the change; the buyer checks.",
+        "Swap roles. Two pairs share how they worked out the change."
+      ],
+      "demo_tip": "CRP plays the buyer once so the teacher sees how children work out change.",
+      "check": "Next visit: ask a child what two items cost together and the change from ₹20.",
+      "source_ids": ["kvs-p20-real-life", "ncf-p119-real-life", "nipun-p201-class3"]
+    },
+    {
+      "id": "two_ways",
+      "title": "Show me two ways",
+      "subject": "numeracy",
+      "rubric_item_ids": ["explain_thinking", "understanding_questions"],
+      "grades": [1, 2, 3],
+      "materials": ["Board", "Objects or slates"],
+      "steps": [
+        "Give one word problem from daily life (e.g. 15 pencils, 5 children).",
+        "Pairs solve it any way they like: objects, drawing or numbers.",
+        "Ask: 'How did you find it?' Two pairs with different methods show theirs.",
+        "Teacher names both methods as correct and asks which one children like."
+      ],
+      "demo_tip": "CRP asks 'how did you find it?' to one child and shows the teacher how to wait for the answer.",
+      "check": "Next visit: listen for the teacher asking 'how did you find it?' at least once.",
+      "source_ids": ["ncf-p118-reasoning", "kvs-p20-real-life"]
+    },
+    {
+      "id": "name_sticks",
+      "title": "Name sticks for fair turns",
+      "subject": "both",
+      "rubric_item_ids": ["every_child_turn", "understanding_questions"],
+      "grades": [1, 2, 3],
+      "materials": ["Ice-cream sticks or paper slips with each child's name, in a cup"],
+      "steps": [
+        "Ask the question to everyone and wait 3 seconds (thinking time).",
+        "Pull a name stick; that child answers. Put the stick aside.",
+        "If the child is stuck, give a hint or let them ask a friend, then come back to them.",
+        "Use the sticks for at least 3 questions in the lesson."
+      ],
+      "demo_tip": "CRP runs 2 questions with name sticks so the teacher sees back-row children answer.",
+      "check": "Next visit: see whether name sticks are in use and back-row children get turns.",
+      "source_ids": ["kvs-p5-observe", "nipun-p191-crc"]
+    },
+    {
+      "id": "think_pair_share",
+      "title": "Think, pair, share",
+      "subject": "both",
+      "rubric_item_ids": ["pair_group_work", "every_child_turn", "understanding_questions"],
+      "grades": [1, 2, 3],
+      "materials": ["None"],
+      "steps": [
+        "Ask one 'why' or 'how' question. Children think silently for 10 seconds.",
+        "Children tell their partner their answer.",
+        "Call on 3 pairs to share what their partner said.",
+        "Teacher sums up and praises one specific idea."
+      ],
+      "demo_tip": "CRP runs one round so the teacher hears every child talking at once.",
+      "check": "Next visit: count how many times children talk to a partner in the lesson.",
+      "source_ids": ["kvs-p20-real-life", "kvs-p5-observe"]
+    },
+    {
+      "id": "specific_praise",
+      "title": "Name what the child did",
+      "subject": "both",
+      "rubric_item_ids": ["encouraging_feedback"],
+      "grades": [1, 2, 3],
+      "materials": ["None"],
+      "steps": [
+        "When a child answers, name exactly what they did well ('You split the word into sounds').",
+        "When a child makes a mistake, give a hint instead of the answer ('Look at the first sound again').",
+        "Let the child try again and praise the second try.",
+        "Aim for 5 specific praises in the lesson."
+      ],
+      "demo_tip": "CRP shows one hint-instead-of-answer exchange with a child.",
+      "check": "Next visit: count specific praises and hints in a 10-minute stretch.",
+      "source_ids": ["kvs-p5-observe", "ncf-p117-home-language"]
+    },
+    {
+      "id": "materials_in_hands",
+      "title": "Materials in every hand",
+      "subject": "both",
+      "rubric_item_ids": ["play_based", "tlm_use"],
+      "grades": [1, 2, 3],
+      "materials": ["Whatever TLM the school has, or stones, leaves, cards"],
+      "steps": [
+        "Before the activity, give each pair or group one set of materials.",
+        "Children do the task with the materials (sort, count, match, build).",
+        "Teacher moves between groups asking 'what are you doing?'",
+        "One group shows the class what they made."
+      ],
+      "demo_tip": "CRP helps hand out materials in under a minute and shows how to collect them back fast.",
+      "check": "Next visit: see whether TLM is out of the cupboard and in children's hands.",
+      "source_ids": ["nipun-p191-crc", "kvs-p19-manipulatives", "kvs-p5-observe"]
+    }
+  ]
+}
