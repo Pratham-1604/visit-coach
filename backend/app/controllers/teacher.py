@@ -1,7 +1,8 @@
 """The teacher's view of an approved packet, opened from the link the CRP shares.
 
 Only the parts written for the teacher leave the server: no transcripts, evidence,
-sources or English summary for the CRP. The same notes can be listened to as audio.
+sources or English summary for the CRP. The same notes can be listened to as audio,
+and read (and heard) in English if the teacher asks.
 """
 
 import json
@@ -10,15 +11,16 @@ from fastapi import HTTPException
 
 from app import config, db
 from app.controllers.history import teacher_history
-from app.services import tts
+from app.services import llm, translate, tts
 from app.services.packet import TEACHER_FIELDS
 
 # The parts of the history the teacher sees: no notes the mentor wrote at the check.
 HISTORY_FIELDS = ("date", "mentor_name", "focus", "follow_up", "result")
 
 
-# What the audio reads, in the order of the teacher's page. Headings match frontend/src/lib/labels.js.
-SPOKEN_FIELDS = ("strength", "priority", "practice_steps", "materials", "follow_up", "follow_up_check")
+# What the teacher's page shows, in order: read aloud, and translated for the English view.
+# Headings match frontend/src/lib/labels.js.
+PAGE_FIELDS = ("strength", "priority", "practice_steps", "materials", "follow_up", "follow_up_check")
 SPOKEN_HEADINGS = {
     "en": {
         "title": "Notes from your class visit",
@@ -74,39 +76,68 @@ def approved_packet(token):
     return row, json.loads(row["edited_json"] or row["original_json"])
 
 
-def get_shared_packet(token):
+def get_shared_packet(token, english=False):
+    """The teacher's page. With `english`, the notes and earlier actions are shown in English instead."""
     row, packet = approved_packet(token)
-    earlier = [
-        {field: entry[field] for field in HISTORY_FIELDS}
-        for entry in teacher_history(row["teacher_id"])
-        if entry["visit_id"] < row["visit_id"]
-    ]
+    english = english and row["language"] != "en"
+    notes = english_notes(token, row, packet) if english else {field: packet.get(field) for field in TEACHER_FIELDS}
+    earlier = []
+    for entry in teacher_history(row["teacher_id"]):
+        if entry["visit_id"] >= row["visit_id"]:
+            continue
+        shown = {field: entry[field] for field in HISTORY_FIELDS}
+        if english:
+            shown["focus"] = entry["focus_en"] or entry["focus"]
+            shown["follow_up"] = entry.get("follow_up_en") or entry["follow_up"]
+        earlier.append(shown)
     return {
         "school_name": row["school_name"],
         "teacher_first_name": row["teacher_name"].split()[0],
         "grade": row["grade"],
         "language": row["language"],
+        "english": english,
         "approved_at": row["approved_at"],
         "mentor_name": row["mentor_name"],
-        "packet": {field: packet.get(field) for field in TEACHER_FIELDS},
+        "packet": notes,
         "history": earlier,
     }
 
 
-def shared_audio(token):
+def english_notes(token, row, packet):
+    """The page's notes in English, translated once by Claude and kept (an approved packet can't change)."""
+    path = config.SHARED_DIR / f"{token}-en.json"
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    try:
+        notes = translate.to_english({field: packet.get(field) for field in PAGE_FIELDS}, row["language"])
+    except llm.LLMError as err:
+        raise HTTPException(status_code=503, detail=str(err)) from err
+    save(path, json.dumps(notes, ensure_ascii=False).encode("utf-8"))
+    return notes
+
+
+def shared_audio(token, english=False):
     """Path to the MP3 of the approved notes, made once with Sarvam. An approved packet can't change, so it is kept."""
     row, packet = approved_packet(token)
-    path = config.AUDIO_DIR / f"{token}.mp3"
+    language = row["language"]
+    if english and language != "en":
+        packet, language = english_notes(token, row, packet), "en"
+    path = config.SHARED_DIR / (f"{token}-en.mp3" if language != row["language"] else f"{token}.mp3")
     if not path.exists():
         try:
-            audio = tts.speak(spoken_text(packet, row["language"]), row["language"])
+            audio = tts.speak(spoken_text(packet, language), language)
         except tts.TTSError as err:
             raise HTTPException(status_code=503, detail=str(err)) from err
-        config.AUDIO_DIR.mkdir(parents=True, exist_ok=True)
-        partial = path.with_suffix(".part")
-        partial.write_bytes(audio)
-        partial.replace(path)
+        save(path, audio)
     return path
+
+
+def save(path, content):
+    """Write the whole file or nothing, so a half-written file is never served."""
+    config.SHARED_DIR.mkdir(parents=True, exist_ok=True)
+    partial = path.with_suffix(".part")
+    partial.write_bytes(content)
+    partial.replace(path)
 
 
 def prepare_audio(token):
@@ -121,7 +152,7 @@ def spoken_text(packet, language):
     """The teacher's page as one script: each heading, then its text; lists read as numbered steps."""
     headings = SPOKEN_HEADINGS.get(language, SPOKEN_HEADINGS["en"])
     paragraphs = [f"{headings['title']}."]
-    for field in SPOKEN_FIELDS:
+    for field in PAGE_FIELDS:
         value = packet.get(field)
         if not value:
             continue

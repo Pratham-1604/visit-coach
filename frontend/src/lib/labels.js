@@ -16,6 +16,7 @@ export const TEACHER_LABELS = {
     results: { done: 'Done', partly: 'Partly done', not_done: 'Not done yet', open: 'To look at next visit' },
     details: 'Listen to the notes, or read them in full',
     listen: 'Listen to these notes',
+    read_in: 'Read in English',
     error: 'This link does not work. Please ask your mentor to share it again.',
   },
   hi: {
@@ -32,6 +33,7 @@ export const TEACHER_LABELS = {
     results: { done: 'हो गया', partly: 'कुछ हद तक हुआ', not_done: 'अभी नहीं हुआ', open: 'अगली मुलाक़ात में देखेंगे' },
     details: 'नोट्स सुनें या पूरे पढ़ें',
     listen: 'ये नोट्स सुनें',
+    read_in: 'हिंदी में पढ़ें',
     error: 'यह लिंक काम नहीं कर रहा। कृपया अपने मार्गदर्शक से इसे दोबारा भेजने को कहें।',
   },
   mr: {
@@ -48,6 +50,7 @@ export const TEACHER_LABELS = {
     results: { done: 'झाले', partly: 'काही प्रमाणात झाले', not_done: 'अजून झाले नाही', open: 'पुढच्या भेटीत पाहू' },
     details: 'नोंदी ऐका किंवा सविस्तर वाचा',
     listen: 'या नोंदी ऐका',
+    read_in: 'मराठीत वाचा',
     error: 'ही लिंक चालत नाही. कृपया तुमच्या केंद्रप्रमुखांना ती पुन्हा पाठवायला सांगा.',
   },
   ta: {
@@ -64,6 +67,7 @@ export const TEACHER_LABELS = {
     results: { done: 'முடிந்தது', partly: 'ஓரளவு முடிந்தது', not_done: 'இன்னும் இல்லை', open: 'அடுத்த வருகையில் பார்ப்போம்' },
     details: 'குறிப்புகளைக் கேளுங்கள் அல்லது முழுமையாகப் படியுங்கள்',
     listen: 'இந்தக் குறிப்புகளைக் கேளுங்கள்',
+    read_in: 'தமிழில் படிக்கவும்',
     error: 'இந்த இணைப்பு வேலை செய்யவில்லை. உங்கள் வழிகாட்டியிடம் மீண்டும் அனுப்பச் சொல்லுங்கள்.',
   },
 }
