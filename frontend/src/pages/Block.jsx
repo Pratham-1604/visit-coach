@@ -44,10 +44,10 @@ export default function Block() {
             />
           ))}
           {data.other_schools > 0 && (
-            <NeedBar label={t('block.other')} schools={data.other_schools} total={data.schools_total} muted />
+            <NeedBar label={t('block.other', { min: data.min_schools })} schools={data.other_schools} total={data.schools_total} muted />
           )}
         </ul>
-        <p className="text-xs text-slate-500">{t('block.privacy')}</p>
+        <p className="text-xs text-slate-500">{t('block.privacy', { min: data.min_schools })}</p>
       </section>
 
       <section className="space-y-3">
