@@ -46,7 +46,7 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 22 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
+On first start the server creates 5 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
 
 | Username | Password | Who |
 |---|---|---|
@@ -92,7 +92,7 @@ backend/app/
   main.py          app setup, routers, serves frontend/dist
   config.py        settings from .env
   db.py            sqlite3 helpers: query(), query_one(), execute()
-  seed.py          made-up demo data: 22 schools + visit history
+  seed.py          made-up demo data: 5 schools + visit history
   knowledge/       FLN knowledge pack (JSON): rubric, practices, Lakshyas, source excerpts
   routes/          HTTP endpoints, thin — they call a controller
   controllers/     the logic for each feature: db reads/writes + services

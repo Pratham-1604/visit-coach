@@ -71,7 +71,7 @@ export default function Block() {
   )
 }
 
-// One need area: "14 of 22 schools", with a thin bar for the share of the block.
+// One need area: "3 of 5 schools", with a thin bar for the share of the block.
 function NeedBar({ label, schools, total, muted }) {
   const t = useT()
   const share = total ? Math.round((100 * schools) / total) : 0

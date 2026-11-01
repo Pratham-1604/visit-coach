@@ -8,8 +8,16 @@ from app.controllers.history import teacher_history
 from app.services.focus import suggest_focus
 
 
+# The demo mentor's cluster: the first schools seeded (Wagholi, Lonikand, Kesnand). The block officer's
+# counts and the state's checklist insights still use every school.
+MENTOR_SCHOOLS = 3
+
+
 def list_schools():
-    schools = db.query("SELECT * FROM schools ORDER BY name")
+    schools = db.query(
+        "SELECT * FROM (SELECT * FROM schools ORDER BY id LIMIT ?) ORDER BY name",
+        (MENTOR_SCHOOLS,),
+    )
     for school in schools:
         school["focus"] = suggest_focus(school)
         # For search and filters on the home screen.

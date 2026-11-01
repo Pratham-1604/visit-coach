@@ -8,8 +8,9 @@ from collections import Counter
 from datetime import datetime, timezone
 from statistics import mean, median
 
-# A need area is shown only if at least this many schools share it, so nobody can tell which school it is.
-MIN_SCHOOLS = 5
+# A need area is shown only if at least this many schools share it, so no single school stands out.
+# 2 suits the 5-school demo block; a real block (20-30 schools) would use 5.
+MIN_SCHOOLS = 2
 
 
 def aggregate_needs(latest_need_by_school, labels, min_schools=MIN_SCHOOLS):

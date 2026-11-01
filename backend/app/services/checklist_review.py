@@ -14,7 +14,7 @@ from pydantic import BaseModel, Field
 from app.services import llm
 from app.services.packet import LANGUAGES
 
-MIN_VISITS = 10  # don't judge an item on fewer visits than this
+MIN_VISITS = 5  # don't judge an item on fewer visits than this (5 suits the 5-school demo; a real state would use more)
 MET_PCT = 90  # "yes" in at least this share of visits: almost always met
 SKIPPED_PCT = 50  # unrated in at least this share of visits: often skipped
 MAX_NOTES = 80
