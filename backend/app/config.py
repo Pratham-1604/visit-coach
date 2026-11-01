@@ -17,6 +17,7 @@ CLAUDE_MODEL = "claude-opus-5-5"
 
 DB_PATH = Path(os.getenv("DB_PATH", BACKEND_DIR / "data" / "visitcoach.db"))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", BACKEND_DIR / "data" / "uploads"))
+SHARED_DIR = Path(os.getenv("SHARED_DIR", BACKEND_DIR / "data" / "shared"))  # teacher notes as audio and in English
 
 # Built React app (npm run build). Served by FastAPI in production.
 FRONTEND_DIST = ROOT_DIR / "frontend" / "dist"

@@ -4,7 +4,7 @@ import json
 
 from app import db
 from app.services import knowledge
-from app.services.block import aggregate_needs, compute_metrics
+from app.services.block import MIN_SCHOOLS, aggregate_needs, compute_metrics
 
 
 def block_summary():
@@ -34,6 +34,7 @@ def block_summary():
 
     return {
         "schools_total": db.query_one("SELECT COUNT(*) AS n FROM schools")["n"],
+        "min_schools": MIN_SCHOOLS,  # needs shared by fewer schools are grouped as "other"
         **aggregate_needs({k: v for k, v in latest_need.items() if v}, labels),
         "metrics": compute_metrics(synced, packets, followups),
     }

@@ -20,6 +20,16 @@ from app.services import knowledge, llm
 LANGUAGES = {"mr": "Marathi", "hi": "Hindi", "ta": "Tamil", "en": "English"}
 
 
+def covers(subject, item):
+    """True if a visit of this subject rates the checklist item. New visits are 'both': the whole checklist."""
+    return subject == "both" or item["subject"] in ("both", subject)
+
+
+def subject_text(subject):
+    """The subject observed, for Claude."""
+    return "literacy and numeracy" if subject == "both" else subject
+
+
 class CoachingPacket(BaseModel):
     strength: str = Field(description="One specific thing that went well, with what the mentor saw. Teacher's language.")
     priority_rubric_item: str = Field(description="The ONE rubric item id to work on next")
@@ -98,7 +108,7 @@ def visit_prompt(visit):
     lines = [
         f"Teacher's language: {language}",
         f"Class: {visit['grade']}",
-        f"Subject observed: {visit['subject']}",
+        f"Subject observed: {subject_text(visit['subject'])}",
     ]
     if visit.get("grades_together") and len(visit["grades_together"]) > 1:
         grades = ", ".join(str(grade) for grade in visit["grades_together"])

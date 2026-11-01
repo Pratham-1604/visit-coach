@@ -11,6 +11,11 @@ export function itemText(item, language) {
   return item.text[language] ?? item.text.en
 }
 
+// True if a visit of this subject rates the item. New visits are 'both': the whole checklist in one list.
+export function covers(subject, item) {
+  return subject === 'both' || item.subject === 'both' || item.subject === subject
+}
+
 // Why to watch a school, in the mentor's language. Same rules as backend/app/services/focus.py.
 export function focusReason(t, school) {
   const { area } = school.focus

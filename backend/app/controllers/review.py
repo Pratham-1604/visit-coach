@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 
 from app.controllers.checklists import active_checklist, checklist_by_id
 from app.services import llm, review
+from app.services.packet import covers
 
 
 class ReviewIn(BaseModel):
@@ -14,7 +15,7 @@ class ReviewIn(BaseModel):
     rubric: dict[str, Literal["yes", "partly", "no"]] = {}
     typed_note: str = Field(default="", max_length=20000)
     grade: int = 1
-    subject: Literal["literacy", "numeracy"] = "literacy"
+    subject: Literal["literacy", "numeracy", "both"] = "both"
     language: Literal["en", "mr", "hi"] = "en"  # the mentor's screen language: the answer comes back in it
 
 
@@ -23,7 +24,7 @@ def review_visit(review_in, user):
     items = {
         item["id"]: item
         for item in checklist["items"]
-        if item["subject"] in ("both", review_in.subject)
+        if covers(review_in.subject, item)
     }
     try:
         return review.review_visit(

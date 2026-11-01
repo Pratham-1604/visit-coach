@@ -1,17 +1,17 @@
-"""Synthetic demo data: one block of 22 Maharashtra schools (Haveli, Pune) with a few weeks of visit history.
+"""Synthetic demo data: 5 Maharashtra schools in one block (Haveli, Pune) with a few weeks of visit history.
 
 No real teachers or children. School numbers are made up.
 Seeding runs only on an empty database; delete backend/data/visitcoach.db to reseed.
 
-History per school (first teacher only):
+History per teacher (two per school):
 - an older visit (about a month ago): approved, and its action checked at the newer visit
 - a newer visit (last week or two): approved, its action still open, so the next visit can check it
 Sunita Pawar (Wagholi, the demo teacher) also has a visit two months ago. Her three visits are by two
 different mentors, so the demo shows the coaching history carrying over when the mentor changes.
 Hindi and Tamil stay supported in the code (rubric, packets, teacher page) as the next states.
 
-The newer visits' need areas are skewed on purpose, so the block view shows
-"14 of 22 schools need support: Children reading for themselves".
+The newer visits' need areas are set per school, so the block view shows
+"3 of 5 schools need support: Children reading for themselves".
 """
 
 import json
@@ -29,23 +29,6 @@ SCHOOLS = [
     ("ZP Primary School Kesnand", "Kesnand", "mr", 22, 18),
     ("ZP Primary School Lohegaon", "Lohegaon", "mr", 52, 35),
     ("ZP Primary School Avhalwadi", "Avhalwadi", "mr", 38, 41),
-    ("ZP Primary School Perne", "Perne", "mr", 41, 33),
-    ("ZP Primary School Bakori", "Bakori", "mr", 37, 25),
-    ("ZP Primary School Wade Bolhai", "Wade Bolhai", "mr", 49, 30),
-    ("ZP Primary School Koregaon Mul", "Koregaon Mul", "mr", 28, 36),
-    ("ZP Primary School Ashtapur", "Ashtapur", "mr", 44, 22),
-    ("ZP Primary School Bhavadi", "Bhavadi", "mr", 35, 40),
-    ("ZP Primary School Burkegaon", "Burkegaon", "mr", 39, 27),
-    ("ZP Primary School Pimpri Sandas", "Pimpri Sandas", "mr", 47, 31),
-    ("ZP Primary School Dongargaon", "Dongargaon", "mr", 33, 44),
-    ("ZP Primary School Kolwadi", "Kolwadi", "mr", 42, 29),
-    ("ZP Primary School Theur", "Theur", "mr", 26, 21),
-    ("ZP Primary School Kunjirwadi", "Kunjirwadi", "mr", 45, 38),
-    ("ZP Primary School Manjari Khurd", "Manjari Khurd", "mr", 30, 34),
-    ("ZP Primary School Nhavi Sandas", "Nhavi Sandas", "mr", 50, 26),
-    ("ZP Primary School Shindewadi", "Shindewadi", "mr", 36, 42),
-    ("ZP Primary School Phulgaon", "Phulgaon", "mr", 48, 37),
-    ("ZP Primary School Tulapur", "Tulapur", "mr", 34, 45),
 ]
 
 TEACHERS = [
@@ -53,26 +36,13 @@ TEACHERS = [
     (0, "Sunita Pawar", 1),
     (0, "Rahul Jadhav", 2),
     (1, "Meena Shinde", 2),
+    (1, "Asha Kulkarni", 1),
     (2, "Anil Kale", 3),
+    (2, "Pooja Deshmukh", 1),
     (3, "Kavita Sonawane", 2),
+    (3, "Ganesh Kamble", 1),
     (4, "Lata Bhise", 2),
-    (5, "Asha Kulkarni", 1),
-    (6, "Vijay More", 2),
-    (7, "Rekha Gaikwad", 3),
-    (8, "Sandeep Patil", 2),
-    (9, "Pooja Deshmukh", 1),
-    (10, "Mahesh Bhosale", 3),
-    (11, "Shubhangi Salunkhe", 2),
-    (12, "Ganesh Kamble", 1),
-    (13, "Vaishali Jagtap", 2),
-    (14, "Nitin Shirke", 3),
-    (15, "Swati Lokhande", 2),
-    (16, "Prakash Mane", 1),
-    (17, "Jyoti Ghule", 2),
-    (18, "Rohini Waghmare", 3),
-    (19, "Dattatray Chavan", 2),
-    (20, "Ramesh Thorat", 2),
-    (21, "Savita Kadam", 2),
+    (4, "Mahesh Bhosale", 3),
 ]
 
 # Kendra Pramukhs (cluster mentors) who made the past visits. The demo mentor is someone new.
@@ -95,30 +65,13 @@ NEEDS = {
     "writing": ("own_writing", "shared_writing"),
 }
 
-# Latest need area per school, in school order: 14 reading, 5 maths, 2 inclusion, 1 writing.
+# Latest need area per school, in school order: 3 reading, 2 maths.
 LATEST_NEEDS = [
     "early_reading",   # Wagholi
     "early_reading",   # Lonikand
-    "early_reading",   # Kesnand
+    "concrete_maths",  # Kesnand
     "early_reading",   # Lohegaon
     "concrete_maths",  # Avhalwadi
-    "early_reading",   # Perne
-    "inclusion",       # Bakori
-    "early_reading",   # Wade Bolhai
-    "concrete_maths",  # Koregaon Mul
-    "early_reading",   # Ashtapur
-    "concrete_maths",  # Bhavadi
-    "early_reading",   # Burkegaon
-    "early_reading",   # Pimpri Sandas
-    "concrete_maths",  # Dongargaon
-    "early_reading",   # Kolwadi
-    "writing",         # Theur
-    "early_reading",   # Kunjirwadi
-    "concrete_maths",  # Manjari Khurd
-    "early_reading",   # Nhavi Sandas
-    "inclusion",       # Shindewadi
-    "early_reading",   # Phulgaon
-    "early_reading",   # Tulapur
 ]
 
 # The agreed action and how to check it, in the teacher's language (what the next-visit card shows).
@@ -186,30 +139,35 @@ def seed_if_empty():
         for school in SCHOOLS
     ]
 
-    first_teacher = {}
-    for school_index, name, grade in TEACHERS:
-        teacher_id = db.execute(
-            "INSERT INTO teachers (school_id, name, grade) VALUES (?, ?, ?)",
-            (school_ids[school_index], name, grade),
+    teachers = [
+        (
+            school_index,
+            name,
+            db.execute(
+                "INSERT INTO teachers (school_id, name, grade) VALUES (?, ?, ?)",
+                (school_ids[school_index], name, grade),
+            ),
         )
-        first_teacher.setdefault(school_index, teacher_id)
+        for school_index, name, grade in TEACHERS
+    ]
 
-    seed_history(school_ids, first_teacher)
+    seed_history(school_ids, teachers)
 
 
-def seed_history(school_ids, first_teacher):
+def seed_history(school_ids, teachers):
     rng = random.Random(7)  # same history every time
     today = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0)
 
-    for index, school_id in enumerate(school_ids):
+    for index, name, teacher_id in teachers:
+        school_id = school_ids[index]
         language = SCHOOLS[index][2]
-        teacher_id = first_teacher[index]
+        demo_teacher = name == "Sunita Pawar"
         older_seen = today - timedelta(days=rng.randint(28, 40), hours=-rng.randint(4, 7))
         newer_seen = today - timedelta(days=rng.randint(4, 12), hours=-rng.randint(4, 7))
         # Mentors change between visits at some schools, as they do in real clusters.
         older_mentor, newer_mentor = rng.choice(MENTORS), rng.choice(MENTORS)
 
-        if index == 0:  # the demo teacher: one more visit, two months ago
+        if demo_teacher:  # one more visit, two months ago
             oldest_seen = today - timedelta(days=62, hours=-5)
             oldest = add_visit(rng, school_id, teacher_id, language, "inclusion", oldest_seen, "Kiran Bhagat")
             check_action(rng, oldest, older_seen, "done")
@@ -219,7 +177,7 @@ def seed_history(school_ids, first_teacher):
         add_visit(rng, school_id, teacher_id, language, LATEST_NEEDS[index], newer_seen, newer_mentor)
 
         # The older visit's action was checked at the newer visit.
-        check_action(rng, older, newer_seen, "partly" if index == 0 else None)
+        check_action(rng, older, newer_seen, "partly" if demo_teacher else None)
 
 
 def check_action(rng, visit_id, checked, status=None):
@@ -236,8 +194,8 @@ def check_action(rng, visit_id, checked, status=None):
 # often left unrated (hard to see in one visit?).
 TYPICAL_RATINGS = {
     "print_rich": (93, 5, 2, 0),
-    "home_language": (91, 6, 2, 1),
-    "explain_thinking": (5, 10, 10, 75),
+    "home_language": (97, 2, 1, 0),
+    "explain_thinking": (3, 5, 5, 87),
     "daily_life_maths": (20, 25, 20, 35),
 }
 DEFAULT_RATINGS = (35, 30, 25, 10)
@@ -284,12 +242,12 @@ def add_visit(rng, school_id, teacher_id, language, need_area, observed, mentor)
     # A separate random source, so adding ratings and notes doesn't change the rest of the demo history.
     # Keyed on days ago, not the date, so the checklist review shows the same patterns whatever day it is.
     days_ago = (datetime.now(timezone.utc).date() - observed.date()).days
-    detail_rng = random.Random(f"{school_id}-{days_ago}")
+    detail_rng = random.Random(f"{teacher_id}-{days_ago}")
     visit_id = db.execute(
         "INSERT INTO visits (client_id, school_id, teacher_id, subject, language, rubric_json, typed_note,"
         " mentor_name, observed_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'approved', ?)",
         (
-            f"seed-{school_id}-{observed:%Y%m%d}",
+            f"seed-{teacher_id}-{observed:%Y%m%d}",
             school_id,
             teacher_id,
             subject,
