@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS visits (
     client_id TEXT UNIQUE,             -- id created on the phone, makes sync safe to retry
     school_id INTEGER NOT NULL REFERENCES schools(id),
     teacher_id INTEGER NOT NULL REFERENCES teachers(id),
-    subject TEXT,                      -- 'literacy' | 'numeracy'
+    subject TEXT,                      -- 'both' (whole checklist) | older visits: 'literacy' | 'numeracy'
     language TEXT NOT NULL,
     rubric_json TEXT,                  -- {item_id: 'yes' | 'partly' | 'no'}
     typed_note TEXT,

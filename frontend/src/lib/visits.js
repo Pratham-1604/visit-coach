@@ -14,7 +14,7 @@ export async function startVisit(school, teacher, checklist) {
     teacher_name: teacher.name,
     grade: teacher.grade,
     language: school.language,
-    subject: school.focus.area === 'numeracy' ? 'numeracy' : 'literacy',
+    subject: 'both', // the whole checklist in one list
     rubric: {},
     typed_note: '',
     mentor_name: getSession()?.user.name ?? '', // the server also sets it from the login
@@ -58,7 +58,7 @@ export function deleteNote(noteId) {
   return db.notes.delete(noteId)
 }
 
-// Keep only ratings for items shown for the chosen subject, then mark the visit ready to sync.
+// Keep only ratings for items shown in the visit, then mark the visit ready to sync.
 export function endVisit(visit, visibleItemIds) {
   const rubric = Object.fromEntries(
     Object.entries(visit.rubric).filter(([itemId]) => visibleItemIds.includes(itemId)),

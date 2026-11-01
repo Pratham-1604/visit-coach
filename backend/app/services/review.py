@@ -7,7 +7,7 @@ notes that no checklist item captures. One quick call (effort low); nothing is s
 from pydantic import BaseModel, Field
 
 from app.services import llm
-from app.services.packet import LANGUAGES
+from app.services.packet import LANGUAGES, subject_text
 
 
 class Mismatch(BaseModel):
@@ -45,7 +45,7 @@ def review_visit(items, rubric, notes, grade, subject, language):
     """items: {id: checklist item}; rubric: {id: yes/partly/no}. Returns a VisitReview (dict)."""
     lines = [
         f"Write in: {LANGUAGES.get(language, language)}",
-        f"Class: Grade {grade}, subject observed: {subject}",
+        f"Class: Grade {grade}, subject observed: {subject_text(subject)}",
         "",
         "Checklist (id: wording -> rating):",
     ]

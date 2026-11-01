@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { getRubric } from '../api/rubric.js'
 import { reviewVisit } from '../api/visits.js'
 import { db } from '../lib/db.js'
-import { itemText } from '../lib/format.js'
+import { covers, itemText } from '../lib/format.js'
 import { plural, useLanguage, useT } from '../lib/i18n.js'
 import { useOnline } from '../lib/offline.js'
 import { hasPacket, syncAll, visitStatus } from '../lib/sync.js'
@@ -35,7 +35,7 @@ export default function Observe() {
   if (visit === undefined || !rubric || !notes) return <p className="text-slate-500">{t('common.loading')}</p>
   if (visit === null) return <p className="text-red-600">{t('observe.not_here')}</p>
 
-  const items = rubric.items.filter((item) => item.subject === 'both' || item.subject === visit.subject)
+  const items = rubric.items.filter((item) => covers(visit.subject, item))
   const ratedCount = items.filter((item) => visit.rubric[item.id]).length
   const ended = visit.status !== 'draft'
   const typedNote = noteDraft ?? visit.typed_note
@@ -107,8 +107,6 @@ export default function Observe() {
             </div>
           </div>
         )}
-
-        <SubjectPicker visit={visit} disabled={ended} />
 
         <ClassContext visit={visit} disabled={ended} />
 
@@ -277,26 +275,6 @@ function EndVisitReview({ visit, items, typedNote, hasVoiceNotes, onClose, onEnd
           </button>
         </div>
       </div>
-    </div>
-  )
-}
-
-function SubjectPicker({ visit, disabled }) {
-  const t = useT()
-  return (
-    <div className="grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
-      {['literacy', 'numeracy'].map((subject) => (
-        <button
-          key={subject}
-          disabled={disabled}
-          onClick={() => updateVisit(visit.id, { subject })}
-          className={`rounded-lg py-2 text-sm font-medium ${
-            visit.subject === subject ? 'bg-white shadow-sm' : 'text-slate-500'
-          }`}
-        >
-          {t(`subject.${subject}`)}
-        </button>
-      ))}
     </div>
   )
 }
