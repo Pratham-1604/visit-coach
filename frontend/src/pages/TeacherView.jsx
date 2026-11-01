@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getSharedPacket, sharedAudioUrl } from '../api/teacher.js'
 import { formatDate } from '../lib/format.js'
@@ -11,18 +12,32 @@ const ACTION_FIELDS = ['follow_up', 'follow_up_check']
 // What the teacher sees from the mentor's shared link. No app, no login, no mentor-only details.
 export default function TeacherView() {
   const { token } = useParams()
-  const { data, error, loading } = useFetch(() => getSharedPacket(token), [token])
+  const [english, setEnglish] = useState(false)
+  const { data, error, loading } = useFetch(() => getSharedPacket(token, english), [token, english])
 
-  if (loading) return <Page>…</Page>
-  if (error) return <Page>{teacherLabels('en').error}</Page>
+  // Switching language keeps the page on screen until the other version arrives.
+  if (!data) return <Page>{error ? teacherLabels('en').error : '…'}</Page>
 
-  const labels = teacherLabels(data.language)
+  const shown = data.english ? 'en' : data.language
+  const labels = teacherLabels(shown)
   const { packet } = data
 
   return (
-    <Page lang={data.language}>
+    <Page lang={shown}>
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold">{labels.title}</h1>
+        <div className="flex items-start justify-between gap-3">
+          <h1 className="text-xl font-semibold">{labels.title}</h1>
+          {data.language !== 'en' && (
+            <button
+              onClick={() => setEnglish(!english)}
+              disabled={loading}
+              lang={data.english ? data.language : 'en'}
+              className="shrink-0 rounded-lg border border-emerald-300 bg-white px-3 py-1 text-sm font-medium text-emerald-800 disabled:opacity-60"
+            >
+              {loading ? '…' : teacherLabels(data.english ? data.language : 'en').read_in}
+            </button>
+          )}
+        </div>
         <p className="text-sm text-slate-500">
           {data.teacher_first_name} · {data.school_name} · {formatDate(data.approved_at)}
         </p>
@@ -34,7 +49,7 @@ export default function TeacherView() {
       </header>
 
       <Section title={labels.listen}>
-        <audio controls preload="none" src={sharedAudioUrl(token)} className="w-full" />
+        <audio key={shown} controls preload="none" src={sharedAudioUrl(token, data.english)} className="w-full" />
       </Section>
 
       {TEXT_FIELDS.map((key) => (
