@@ -70,6 +70,34 @@ npm run dev
 
 Open http://localhost:5173. Use Chrome DevTools' device mode to see the phone layout.
 
+## AI models and external services
+
+All AI calls are made by the server. The phone never calls an AI service, and API keys stay on the server.
+
+| Service | Model | Used for | Code |
+|---|---|---|---|
+| Anthropic Claude API | `claude-opus-5-5`, effort `medium` | Coaching packet in the teacher's language; rehearsal score card; new checklist items suggested to the state | `services/packet.py`, `rehearsal.py`, `checklist_review.py` |
+| Anthropic Claude API | `claude-opus-5-5`, effort `low` | "Did I miss anything?" check at the end of a visit; the teacher in rehearsal; visit report; teacher's notes in English | `services/review.py`, `rehearsal.py`, `report.py`, `translate.py` |
+| Sarvam AI speech-to-text | `saaras:v3` | Turns each voice note (up to 30 s) into text, once | `services/asr.py` |
+| Sarvam AI text-to-speech | `bulbul:v3` | Reads the approved teacher's notes aloud (Marathi, Hindi, Tamil, or English) | `services/tts.py` |
+| Google Cloud Run (`asia-south1`, Mumbai) | – | Hosts the live demo: one container with the API and the built app | `Dockerfile` |
+
+Every Claude call goes through one function, `services/llm.py`. It uses structured output (a fixed JSON shape), a cached FLN knowledge pack as the system prompt, and Anthropic's server-side fallback model if a request is refused. The quality check in `backend/evals/` also uses Claude, as a grader; it is not part of the app.
+
+## Configuration
+
+Settings are read from a `.env` file in the repo root (copy `.env.example`), or from environment variables in Docker and Cloud Run.
+
+| Variable | Required | What it does |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | Yes | Claude: coaching packets, checks, rehearsal, reports, translation |
+| `SARVAM_API_KEY` | For voice | Voice notes (speech-to-text) and the teacher's audio (text-to-speech). Without it, visits with only typed notes still work, and the teacher's page shows text without audio |
+| `DB_PATH` | No | SQLite database file. Default `backend/data/visitcoach.db` |
+| `UPLOAD_DIR` | No | Uploaded voice notes. Default `backend/data/uploads` |
+| `SHARED_DIR` | No | Cached teacher audio and English notes. Default `backend/data/shared` |
+
+On first start the server creates the database, the demo checklist, the demo data and the demo logins, so no other setup is needed.
+
 ## Checks
 
 ```bash
@@ -78,8 +106,6 @@ cd frontend && npm run lint && npm run build
 # every grounding excerpt must appear on its cited page (needs Dhruv's sources folder)
 cd backend && uv run python scripts/check_grounding.py ../../edu-hackathon-fln/sources
 ```
-
-`.env` needs `ANTHROPIC_API_KEY` for packets and `SARVAM_API_KEY` for voice notes. Without the Sarvam key, visits that only have a typed note still work.
 
 ## Coaching packet from the CLI
 
