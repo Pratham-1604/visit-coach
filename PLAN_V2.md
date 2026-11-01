@@ -6,9 +6,13 @@
 2. **WhatsApp is where the teacher already is.** The advice is in the message itself, and teachers never install anything (#11, #12).
 3. **The app supports teachers, it doesn't inspect them, and it's built for Maharashtra.** We use the state's own words, mentor role (Kendra Pramukh) and NIPUN goals (#1–4, #14).
 
-**Status (1 Nov):** steps 1–5 are built ✅ and merged into v2. 54 backend tests pass, and the frontend lints and builds. One real Claude packet was tested end to end. **Not yet clicked through in a real browser** 🌐. Step 6 is next.
+**Status (1 Nov):**
+- Steps 1–5 are built ✅ and merged into v2.
+- After v2 we also built the extras in "Built after v2" below: login, Marathi and Hindi screens, dark mode, search, state checklists, the notes panel, the visit report and checklist suggestions.
+- 73 backend tests pass, and the frontend lints and builds. One real Claude packet was tested end to end.
+- **Not yet clicked through in a real browser** 🌐. Step 6 is next: [SUBMISSION.md](SUBMISSION.md) is its checklist.
 
-**Time:** today is Sat 31 Oct and the deadline is Sun 1 Nov, so there's about **1.5 days**. The order below protects the demo: each step stands on its own, so if we stop after any step we can still submit. Deploying and the demo video (PLAN.md "Still to do") stay **mandatory** and get the last half-day no matter what.
+**Time (written 31 Oct):** each step below stands on its own, so if we stop after any step we can still submit. Deploying and the demo video stay **mandatory** no matter what.
 
 ---
 
@@ -30,7 +34,7 @@ These are the names in the demo data (`backend/app/seed.py`: `MENTORS`, `DEMO_ME
 
 | Part | Change | Files |
 |---|---|---|
-| Mentor name | The mentor types their name once on the phone (saved in localStorage), and the header shows "Mentor: Rahul · change". The name is sent with every visit. There's no login, which fits the prototype. | `Layout.jsx`, `lib/visits.js`, `controllers/visits.py` (`VisitIn.mentor_name`), `db.py` (`ADDED_COLUMNS`: `visits.mentor_name`) |
+| Mentor name | The mentor types their name once on the phone (saved in localStorage), and the header shows "Mentor: Rahul · change". The name is sent with every visit. There's no login, which fits the prototype. *(Replaced by login: the name now comes from the logged-in user, DECISIONS.md #25.)* | `Layout.jsx`, `lib/visits.js`, `controllers/visits.py` (`VisitIn.mentor_name`), `db.py` (`ADDED_COLUMNS`: `visits.mentor_name`) |
 | History API | `teacher_history(teacher_id)` returns the teacher's approved visits, newest first: date, mentor, subject, focus (the checklist item's wording), agreed action, follow-up result. It's added to the school details, so the **offline pack** carries it automatically. | `controllers/schools.py` (or a new `controllers/history.py`), `controllers/offline.py` |
 | School page timeline | Under each teacher, show a compact timeline: *"12/08 · Meena · Letter sounds → 'Letter cards daily' · Partly done"*. It works offline. | `School.jsx` |
 | Claude reads the last 3 actions | Replace `previous_action` with `previous_actions(limit=3)`. New prompt rules: build on earlier actions, **don't repeat an action that's already done**, and if the same action wasn't done twice, make it smaller. | `controllers/followups.py`, `services/packet.py` (`visit_prompt`, rules) |
@@ -75,9 +79,24 @@ Write `PITCH.md` (5 slides of content):
 
 Use only numbers MENTOR.md section 3 has a source for. **Don't** quote the UP 2-hour visit split.
 
-### Step 6: Ship (mandatory), the last half-day · ⏳ next
+### Step 6: Ship (mandatory) · ⏳ next
 
-PLAN.md "Still to do": click through in a real browser, run one real Claude visit, deploy, test on an Android phone, record the demo video following the story above, **submit**.
+Follow [SUBMISSION.md](SUBMISSION.md): click through in a real browser, run one real Claude visit, deploy, test on an Android phone, record the demo video following the story above, **submit**.
+
+---
+
+## Built after v2 (31 Oct – 1 Nov)
+
+| What | Why | Decision |
+|---|---|---|
+| **Login with demo users and roles**: mentor, block officer, state admin. The teacher's link still needs no login | Visits are recorded under a real user instead of a typed name, and each role sees only its own pages | #25 |
+| **Every mentor screen in English, मराठी or हिंदी** | Half-translated screens are hard to use | #26 |
+| **Dark mode** | Readability in different light | #27 |
+| **Search and filters on Home** (school, village or teacher; action to check, reading focus, maths focus) | Faster to find a school | — |
+| **State checklists with versions**: the state admin downloads, edits and uploads its own checklist | Feedback #4: the state decides the checklist | #28 |
+| **Notes panel and "Did I miss anything?" check** before ending a visit | No critical point is lost while the mentor watches the class | #29 |
+| **Visit report**: Claude writes it, and the mentor checks it and sends it on WhatsApp or as a PDF | No report to write by hand, so more mentoring time (feedback #1) | #30 |
+| **Suggestions for the next checklist version**, from the visits, printable for the government | Feedback #14: something concrete to bring to the state | #31 |
 
 ---
 
@@ -98,9 +117,9 @@ PLAN.md "Still to do": click through in a real browser, run one real Claude visi
 
 These are dropped from the v1 CAN list or moved to later:
 - A WhatsApp bot so mentors can send voice notes with no app (#12)
-- Loading a state's checklist as a swappable JSON file (#4)
-- Noto fonts, mentor screens in Marathi, the Claude-written block summary, the eval growing to 50 cases
-- Mentor login and roles, so the mentor name comes from an account instead of being typed
+- ~~Loading a state's checklist as a swappable file (#4)~~: built after v2 (#28)
+- Noto fonts, the Claude-written block summary, the eval growing to 50 cases
+- ~~Mentor screens in Marathi~~ and ~~mentor login and roles~~: built after v2 (#25, #26)
 
 ## Still open: questions for the mentor (MENTOR.md section 4)
 
@@ -115,7 +134,7 @@ These don't block the build. Put the answers into the pitch if they arrive in ti
 | 1 | Mentoring, not monitoring | Step 4 (wording, block view), Step 1 (continuity) |
 | 2 | Maharashtra | Step 4 (all schools), Step 5 |
 | 3 | NIPUN | Already in the app (grounding) + Step 5 |
-| 4 | State checklist | Step 4 (add-on wording); swappable checklist → future |
+| 4 | State checklist | Step 4 (add-on wording); state checklists with versions and suggestions (built after v2) |
 | 5 | Mentor cadre | Step 4 (Kendra Pramukh naming); still asking the mentor |
 | 6 | Discontinuous feedback | **Steps 1 and 2** |
 | 7 | Enrolment | Step 3 (children present) |
@@ -125,14 +144,14 @@ These don't block the build. Put the answers into the pitch if they arrive in ti
 | 11 | WhatsApp | **Step 2** |
 | 12 | Not radically different | Steps 2 and 4; WhatsApp bot → future |
 | 13 | UP example | Research only (not quoted) |
-| 14 | Convince the state | Step 5 |
+| 14 | Convince the state | Step 5; printable checklist suggestions for the government (built after v2) |
 
 ## Verification
 
 - `cd backend && uv run pytest` (all existing tests plus the new ones above)
 - `cd frontend && npm run lint && npm run build`
 - Delete `backend/data/visitcoach.db`, restart, then play the demo story end to end in Chrome mobile mode:
-  1. Set the mentor name to "Sachin Gore". Open Wagholi → Sunita → Coaching history: 3 visits by Kiran and Vandana, and it still shows when offline.
+  1. Log in as `sachin` / `sachin123` (Sachin Gore). Open Wagholi → Sunita → Coaching history: 3 visits by Kiran and Vandana, and it still shows when offline.
   2. Check the follow-up, observe (32 children, Grades 1+2), then sync.
   3. The packet refers to the earlier action and suggests a practice for two grades.
   4. Approve, then Share: the WhatsApp text is in Marathi with the advice in it.

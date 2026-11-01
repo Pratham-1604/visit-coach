@@ -7,7 +7,7 @@ Tick each box as you go. Work top to bottom; each section depends on the one abo
 
 ## 0. See the app yourself first (about 15 min)
 
-- [ ] Get the latest code: `git checkout v2`. It already has Dhruv's work and the 1 Nov fixes.
+- [ ] Get the latest code: `git checkout v2 && git merge --ff-only claude`. v2 already has Dhruv's work. `claude` adds the state checklist, notes panel, visit report and checklist suggestions.
 - [ ] `.env` in the repo root has `ANTHROPIC_API_KEY` (needed for new packets) and `SARVAM_API_KEY` (needed for voice notes).
 - [ ] **Delete `backend/data/visitcoach.db`** so the server creates the new demo data: 22 Maharashtra schools, mentor names and coaching history. An old database won't show the history.
 - [ ] Terminal 1: `cd backend` → `uv sync` → `uv run uvicorn app.main:app --reload`
@@ -98,6 +98,10 @@ Do this once locally and once on the deployed site (section 4). Note anything br
 ## 5. Live AI checks (costs a little credit)
 
 - [ ] One packet with a **real Marathi voice note** (Sarvam) has a correct transcript under "Your notes, as the app heard them".
+- [ ] The new Claude features, which have only been tested with a stand-in for Claude so far:
+  - [ ] **End visit** gives a real "Did I miss anything?" answer
+  - [ ] **Visit report** writes a sensible report
+  - [ ] **Ask Claude for new items** (as `admin`) gives sensible suggestions
 - [ ] Optional: `cd backend && uv run python -m evals.run_eval --limit 3` (about $0.30–0.45). Note the scores for the write-up.
 - [ ] If possible, a Marathi speaker reads one packet and the teacher page and confirms they sound natural.
 
@@ -109,7 +113,8 @@ Target **3–4 minutes**, recorded on a phone screen or DevTools phone view. Fol
 - [ ] **1:00–1:45 In class:** offline, the KPALP add-on checklist, 32 children with Grades 1+2, a Marathi voice note.
 - [ ] **1:45–2:30 Packet:** builds on Vandana's action, fits multi-grade, cites sources; edit, then approve.
 - [ ] **2:30–3:00 Teacher:** the WhatsApp message in Marathi and the teacher's page with "your coaching so far".
-- [ ] **3:00–3:30 Support planning** (no names, counts only), then the ask: a one-cluster pilot.
+- [ ] **3:00–3:30 After the visit:** a quick look at the visit report (no report to write by hand) and support planning (no names, counts only).
+- [ ] **3:30–4:00 The state:** the admin's "What the visits say" with Claude's suggested new items. Then the ask: a one-cluster pilot.
 - [ ] Say once that **all data is made up**.
 - [ ] Upload (YouTube unlisted or Drive), check the link opens in a private window, and set it to "anyone with the link".
 
@@ -128,14 +133,14 @@ Target **3–4 minutes**, recorded on a phone screen or DevTools phone view. Fol
 ## 8. Known limitations (to state in the write-up)
 
 - All schools, teachers and history are **made up**. There's no real child data.
-- Hindi, Marathi and Tamil labels are drafts awaiting a native-speaker check.
-- Login is demo-grade: three demo users with passwords shown on the login screen, and no expiry or password reset (DECISIONS.md #25).
-- Marathi and Hindi screens are drafts awaiting a native-speaker check. Claude's summary and evidence for the mentor stay in English.
+- Login is demo-grade: four demo users with passwords shown on the login screen, and no expiry or password reset (DECISIONS.md #25).
+- Marathi and Hindi screens, and the checklist labels, are drafts awaiting a native-speaker check. Claude's summary and evidence for the mentor stay in English.
 - Approving a packet needs a connection. Observing, editing and the follow-up check work offline.
 - Voice notes are capped at 30 s.
 - The teacher message is sent from the mentor's own WhatsApp (DECISIONS.md #24). No automatic messages yet.
 - Free hosting: it sleeps when idle, and data resets on redeploy.
-- Not yet confirmed with the mentor: schools per Kendra Pramukh, and typical Grade 1–2 class size.
+- Not yet confirmed with the mentor: schools per Kendra Pramukh, typical Grade 1–2 class size, and where the state wants visit reports submitted (today the mentor sends them on WhatsApp or as a PDF).
+- One state only (Maharashtra). The state comes from the user's login, not the phone's location.
 
 ## 9. Freeze
 

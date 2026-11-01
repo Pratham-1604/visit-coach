@@ -85,7 +85,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 - **Change it when:** we add whole state handbooks and the pack becomes too big.
 
 ### 8. Voice notes are at most 30 seconds
-- **Why:** Sarvam's simple upload accepts clips under 30 seconds. Short notes also force clear, specific observations. Meena can record as many notes as needed.
+- **Why:** Sarvam's simple upload accepts clips under 30 seconds. Short notes also force clear, specific observations. The mentor can record as many notes as needed.
 
 ### 9. No login for the demo (replaced by #25)
 - **Why:** Login isn't what we're judged on, and it would cost a day. The teacher's page is protected by a hard-to-guess link instead.
@@ -136,14 +136,14 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - Never rename a checklist item id; add a new one instead, or old packets break.
 
 ### 16. Reviewing works offline; approving needs internet
-- **Why:** Meena often reads the packet while still in the school, with no signal, so edits are saved on the phone as they're typed. But approving creates Sunita's link, which has to be stored on the server, so it waits for a connection.
+- **Why:** The mentor often reads the packet while still in the school, with no signal, so edits are saved on the phone as they're typed. But approving creates the teacher's link, which has to be stored on the server, so it waits for a connection.
 - **What it means for us:**
   - After approval the packet is locked.
-  - Meena can edit only the parts Sunita will read, not the evidence or sources.
+  - The mentor can edit only the parts the teacher will read, not the evidence or sources.
 
 ### 17. Each voice note is transcribed once; typed notes skip Sarvam
 - **Why:**
-  - If writing the packet fails and Meena presses Retry, the notes already turned into text are kept, so we don't pay Sarvam twice.
+  - If writing the packet fails and the mentor presses Retry, the notes already turned into text are kept, so we don't pay Sarvam twice.
   - A visit with **only a typed note** never calls Sarvam. That's our backup plan for the demo if Sarvam is down.
 
 ### 18. Deadline is 1 Nov; features freeze on Thu 29
@@ -151,6 +151,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - **Fri 30:** quality checks
   - **Sat 31:** submit
   - **Sun 1 Nov:** left free in case something goes wrong
+- **Update (1 Nov):** submission is on Mon 2 Nov ([SUBMISSION.md](SUBMISSION.md)). The features in #25–#31 were built after the planned freeze, so the click-through in SUBMISSION.md section 1 matters more.
 
 ### 19. The teacher's text holds only what the teacher should read
 - **What happened:** In the first real packet (25 Oct), Claude put a note for the CRP inside the teacher's text: *"[CRP: add an example here]"* in "What went well". The CRP approved it, and approving locks the packet, so the teacher would have seen it.
@@ -165,11 +166,11 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 ### 20. Only a teacher's latest agreed action is followed up, and it works offline
 - **We chose:**
   - At the next visit, the app asks about the action from the teacher's **most recent** approved visit only. Older unchecked actions are out of date once there's a newer packet.
-  - Meena's answer (done / partly / not done, a note, and how useful the teacher found the advice, 1–5) is saved on the phone in an **outbox** and sent when there's signal.
-  - Each visit keeps one answer, so sending it twice is harmless, and Meena can change it.
-- **Why:** The next visit is in a school without internet too, so the question must be on the phone before Meena arrives. That's what the **offline pack** is for: the phone downloads every school's open actions every couple of minutes while online.
+  - The mentor's answer (done / partly / not done, a note, and how useful the teacher found the advice, 1–5) is saved on the phone in an **outbox** and sent when there's signal.
+  - Each visit keeps one answer, so sending it twice is harmless, and the mentor can change it.
+- **Why:** The next visit is in a school without internet too, so the question must be on the phone before the mentor arrives. That's what the **offline pack** is for: the phone downloads every school's open actions every couple of minutes while online.
 - **Also:** The answer goes into Claude's next packet for that teacher ("agreed: pair reading → partly done"), so the advice builds on what happened.
-- **Usefulness rating:** asked by Meena at the next visit, because the teacher has no app to rate in.
+- **Usefulness rating:** asked by the mentor at the next visit, because the teacher has no app to rate in.
 
 ### 21. The app is saved on the phone with a ready-made PWA plugin
 - **We chose:** `vite-plugin-pwa`. When the app is built, it adds a service worker that keeps a copy of every app file on the phone, plus a manifest and icons so the app can be installed.
@@ -201,14 +202,15 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 - **Change it when:** the state wants automatic messages (reminders before the next visit) or a WhatsApp bot for mentors (futurescope, phase 2). Then use a state-owned number on the WhatsApp Business API, through Meta directly or a provider such as Twilio.
 
 ### 25. Simple login with demo users; teachers still never log in
-- **We chose:** a username and password per person, checked by our own server. Three demo users are created on first start and shown on the login screen:
+- **We chose:** a username and password per person, checked by our own server. Four demo users are created on first start and shown on the login screen:
   - `sachin` / `sachin123` (mentor)
   - `vandana` / `vandana123` (mentor)
   - `officer` / `officer123` (block officer)
+  - `admin` / `admin123` (state admin, added with #28)
 - **How it works:**
   - Passwords are stored hashed (PBKDF2, from Python's standard library, so no new package).
   - Logging in gives the phone a random token, which every request sends.
-  - Mentors can use everything. The block officer only sees support planning.
+  - Mentors can use everything except the state checklist page. The block officer only sees support planning, and the state admin only sees the state checklist (#28).
   - **The teacher's link needs no login**, as before.
 - **Why now:** the mentor's name used to be typed into a pop-up and could be anything. Now each visit is recorded under whoever is logged in, which the coaching history (#6 in MENTOR.md) depends on.
 - **Offline:** the first login needs internet. After that the login is kept on the phone, so visits still work with no signal.

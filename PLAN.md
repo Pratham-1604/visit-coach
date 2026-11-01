@@ -1,6 +1,6 @@
 # VisitCoach — Build plan
 
-> **Replaced by [PLAN_V2.md](PLAN_V2.md)** after the mentor review (27 Oct). This file is the v1 record. Its "Still to do" list is now step 6 of v2.
+> **Replaced by [PLAN_V2.md](PLAN_V2.md)** after the mentor review (27 Oct). This file is the v1 record, kept as it was on 26 Oct. Its "Still to do" list is now step 6 of v2, and [SUBMISSION.md](SUBMISSION.md) is the checklist for it.
 
 **Deadline:** Sun 1 Nov 2026 · **Feature freeze:** Thu 29 Oct · **Submit by:** Sat 31 Oct (a spare day before the deadline)
 **Team:** Prathamesh Mundada, Dhruv Yadav · **Budget:** $500 Claude API credits

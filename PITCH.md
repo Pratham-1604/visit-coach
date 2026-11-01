@@ -31,7 +31,7 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 
 1. **Before:** Sachin, the new Kendra Pramukh, opens Sunita's page. Sachin sees Sunita's **coaching history**: three visits by two earlier mentors, what each one agreed, and whether it happened. This opens with no signal.
 2. **In class:** Sachin taps a short reading/maths checklist next to the KPALP form, notes *32 children, Grades 1 and 2 together*, and records 30-second voice notes in Marathi. Everything is saved on the phone offline.
-3. **After:** in about a minute, Claude writes one page of coaching in Marathi. It **builds on the earlier mentor's action** and picks a practice that works for two grades at once. Sachin edits and approves. **No report to write.**
+3. **After:** in about a minute, Claude writes one page of coaching in Marathi. It **builds on the earlier mentor's action** and picks a practice that works for two grades at once. Sachin edits and approves. Claude also drafts the **visit report**, which Sachin checks and sends. **No report to write by hand.**
 4. **To the teacher:** Sunita gets a **WhatsApp message in Marathi** with what went well, one thing to work on and the agreed action. The link shows the full 5-minute practice and **Sunita's coaching so far**.
 5. **Next visit:** whoever comes checks the action ("done / partly / not done"), and the next advice builds on it.
 
@@ -42,7 +42,7 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 | What the state has | How VisitCoach fits |
 |---|---|
 | Kendra Pramukhs visit and observe | Same visit, same talk with the teacher; just no write-up afterwards |
-| KPALP observation checklist | Our checklist is a **reading and maths add-on**, not a replacement: every item shows the KPALP indicator it adds detail to (e.g. *"Children read text themselves" → KPALP 2.1 Student engagement*). It's a data file, so the state can swap in its own |
+| KPALP observation checklist | Our checklist is a **reading and maths add-on**, not a replacement: every item shows the KPALP indicator it adds detail to (e.g. *"Children read text themselves" → KPALP 2.1 Student engagement*). The state uploads its **own checklist** as a spreadsheet, with versions, and the app shows which items the visits say need changing |
 | Teachers asked for training in **multi-grade** teaching (Pragat Shaikshanik: 1.82 lakh training requests, "mainly for constructivist, multi grade, maths and language") | The mentor records which grades sit together, and the practice is built to work across them |
 | NIPUN Bharat / NIPUN goals (Lakshyas), Pragat Shaikshanik, KPALP | Every piece of advice cites the page it comes from: 31 checked excerpts, 10 of them from Maharashtra documents |
 | Teachers on WhatsApp: **73%** use it; **98%** use EdTech, **83%** have a device in school (BSET 2025, Maharashtra) | The teacher gets the advice **in WhatsApp**. No app, no login |
@@ -61,6 +61,7 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
   4. how often mentors edit the AI's draft
   5. how useful teachers find the advice (1–5)
 - **The ask:** a **one-cluster pilot** (about 20 schools) with SCERT Maharashtra / Samagra Shiksha Maharashtra for one term, using the state's KPALP checklist next to ours.
+- **Something back for the state from day one:** a printable summary, whenever the state asks for it, of what the visits say about the checklist: items almost always met, items mentors skip, and new items suggested from recurring problems in the notes (e.g. drinking water, attendance at harvest time). No school, teacher or child is named.
 - **Phase 2:** a WhatsApp bot, so mentors can also send voice notes with no app at all. It reuses the same speech-to-text, AI coaching and history.
 
 ---
