@@ -1,8 +1,8 @@
-# VisitCoach: pitch for Maharashtra
+# VisitCoach: pitch for state governments
 
-Slide content for the state pitch (MENTOR.md #14). Every number has a source in [MENTOR.md](MENTOR.md) section 3. Demo numbers from our made-up data are **not** quoted as results.
+Slide content for pitching to a state government (MENTOR.md #14). VisitCoach is built for any Indian state. Our research, and so the examples below, use **Maharashtra**, the example state the mentor suggested. Every number has a source in [MENTOR.md](MENTOR.md) section 3. Demo numbers from our made-up data are **not** quoted as results.
 
-> **One line:** VisitCoach gives Maharashtra's mentors more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off.
+> **One line:** VisitCoach gives India's cluster mentors (CRPs, Kendra Pramukhs, ARPs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off. Our research and demo use Maharashtra as the example state.
 
 ---
 
@@ -15,7 +15,7 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 - **Mentors change.** The next mentor doesn't know what was agreed last time, so every visit starts from zero, and the teacher can't keep track either.
 - Classes are often **multi-grade**. Maharashtra has about **8,150–9,270 single-teacher schools** (UDISE+ 2024-25 / 2025-26), where all grades sit together, so general advice doesn't fit.
 
-## Slide 2: What the state already asks for
+## Slide 2: What states already ask for (Maharashtra as the example)
 
 > The supervision system should give **"support, counselling, facilitation and mentoring"**, not inspection.
 > (*Pragat Shaikshanik Maharashtra*)
@@ -37,12 +37,12 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 
 > From our real test packet (31 Oct): *"Paired reading has started, good progress. But today only the front rows did it… pair each back-row Grade 1 child with a Grade 2 reader."* It picked up the earlier mentor's action, noticed an older action was already done, and fitted the advice to a multi-grade class.
 
-## Slide 4: Built for how Maharashtra works today
+## Slide 4: Built for how states work today (Maharashtra as the example)
 
 | What the state has | How VisitCoach fits |
 |---|---|
 | Kendra Pramukhs visit and observe | Same visit, same talk with the teacher; just no write-up afterwards |
-| KPALP observation checklist | Our checklist is a **reading and maths add-on**, not a replacement: every item shows the KPALP indicator it adds detail to (e.g. *"Children read text themselves" → KPALP 2.1 Student engagement*). The state uploads its **own checklist** as a spreadsheet, with versions, and the app shows which items the visits say need changing |
+| A state observation checklist (Maharashtra: KPALP) | Each state uploads its **own checklist** as a spreadsheet, with versions, and the app shows which items the visits say need changing. Our starter list is a **reading and maths add-on**, not a replacement: every item shows the KPALP indicator it adds detail to (e.g. *"Children read text themselves" → KPALP 2.1 Student engagement*) |
 | Teachers asked for training in **multi-grade** teaching (Pragat Shaikshanik: 1.82 lakh training requests, "mainly for constructivist, multi grade, maths and language") | The mentor records which grades sit together, and the practice is built to work across them |
 | NIPUN Bharat / NIPUN goals (Lakshyas), Pragat Shaikshanik, KPALP | Every piece of advice cites the page it comes from: 31 checked excerpts, 10 of them from Maharashtra documents |
 | Teachers on WhatsApp: **73%** use it; **98%** use EdTech, **83%** have a device in school (BSET 2025, Maharashtra) | The teacher gets the advice **in WhatsApp**. No app, no login |
@@ -60,7 +60,7 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
   3. % of actions done by the next visit
   4. how often mentors edit the AI's draft
   5. how useful teachers find the advice (1–5)
-- **The ask:** a **one-cluster pilot** (about 20 schools) with SCERT Maharashtra / Samagra Shiksha Maharashtra for one term, using the state's KPALP checklist next to ours.
+- **The ask:** a **one-cluster pilot** (about 20 schools) for one term with a state's SCERT or Samagra Shiksha, using that state's own checklist. Maharashtra (SCERT Maharashtra / Samagra Shiksha Maharashtra, KPALP checklist) is the natural first state, because our research is there.
 - **Something back for the state from day one:** a printable summary, whenever the state asks for it, of what the visits say about the checklist: items almost always met, items mentors skip, and new items suggested from recurring problems in the notes (e.g. drinking water, attendance at harvest time). No school, teacher or child is named.
 - **Phase 2:** a WhatsApp bot, so mentors can also send voice notes with no app at all. It reuses the same speech-to-text, AI coaching and history.
 
@@ -70,6 +70,6 @@ Slide content for the state pitch (MENTOR.md #14). Every number has a source in 
 
 - Lead with the story (slide 3), not the tech. The judges and the state care that **Sunita's coaching doesn't restart every time the mentor changes**.
 - If asked "isn't this surveillance?": the teacher sees everything recorded about them; the block sees counts only, groups under 5 schools are merged, and nothing is scored.
-- If asked about other states: Hindi and Tamil already work (checklist, packets, teacher page). Maharashtra is the first state, not the only one.
+- If asked about other states: VisitCoach is built for India. A state uploads its own checklist, and Hindi and Tamil already work (checklist, packets, teacher page). Maharashtra is our research state, not a limit.
 - **Don't** quote the UP "2-hour visit" split: we couldn't find a written source for it.
 - Still to confirm with the mentor (MENTOR.md section 4): schools per Kendra Pramukh, typical Grade 1–2 class size, and who in the state decides on a pilot.

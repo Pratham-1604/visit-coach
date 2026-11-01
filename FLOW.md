@@ -5,7 +5,7 @@ This doc explains the whole app in plain words, using one example visit from sta
 - coaching history across mentors
 - the advice inside the WhatsApp message
 - multi-grade classes
-- Maharashtra first
+- Maharashtra as the research and demo state (the app is built for any Indian state)
 
 It also covers what came after v2:
 - login
@@ -20,7 +20,7 @@ It also covers what came after v2:
 
 | Who / what | In plain words |
 |---|---|
-| **Mentor** | The government person who visits schools to help teachers teach better. In Maharashtra this is the **Kendra Pramukh** (cluster head); elsewhere often called a CRP. **Our main user.** Example: **Sachin**, who took over the cluster from **Vandana** this month. |
+| **Mentor** | The government person who visits schools to help teachers teach better. Many states call this mentor a CRP; in Maharashtra, our research and demo state, it's the **Kendra Pramukh** (cluster head). **Our main user.** Example: **Sachin**, who took over the cluster from **Vandana** this month. |
 | **Teacher** | The Grade 1–3 teacher being observed. Example: **Sunita**, Grade 1, ZP School Wagholi (Pune). Sunita doesn't install anything, just gets a WhatsApp message. |
 | **Block officer** | Plans training for the block. Sees which support schools need ("Support planning"), never individual teachers. |
 | **State admin** | Someone at the state level (e.g. SCERT) who looks after the state's observation checklist: uploads new versions and sees what the visits say about it. Never sees individual visits. |

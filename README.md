@@ -1,6 +1,6 @@
 # VisitCoach
 
-VisitCoach gives Maharashtra's mentors (Kendra Pramukhs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off.
+VisitCoach gives India's cluster mentors (CRPs, Kendra Pramukhs, ARPs) more time to mentor: every classroom visit ends with one clear, NIPUN-aligned action for the teacher, sent on WhatsApp, and the next mentor picks up where the last one left off. Our research and demo use Maharashtra as the example state. Any state can upload its own checklist; the teacher gets advice in Hindi, Marathi or Tamil.
 Team Semicolon · FLN Hackathon, Challenge 05 (System Capacity).
 
 - What we're building now, after the mentor review: [PLAN_V2.md](PLAN_V2.md) (v1 record: [PLAN.md](PLAN.md))
@@ -54,7 +54,7 @@ uv run python -m app.services.packet --twice    # usage on stderr; 2nd call shou
 
 ## Demo data
 
-On first start the server creates 22 made-up Maharashtra schools with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
+On first start the server creates 22 made-up schools in Maharashtra (our research and demo state) with a few weeks of visit history, so the support planning page (`/block`), the next-visit check and the coaching history have something to show. The demo teacher is **Sunita Pawar** (ZP Primary School Wagholi), with 3 earlier visits by mentors Kiran Bhagat and Vandana Joshi. For the demo, log in as the new mentor **Sachin Gore**.
 
 | Username | Password | Who |
 |---|---|---|

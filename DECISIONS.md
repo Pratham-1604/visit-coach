@@ -39,6 +39,7 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
 | 29 | Notes beside the checklist, and a "Did I miss anything?" check before ending a visit |
 | 30 | Claude writes the visit report; the mentor checks it and sends it themselves |
 | 31 | Suggestions for the next checklist version come from the visits themselves |
+| 32 | Built for India; researched in Maharashtra |
 
 ---
 
@@ -285,3 +286,15 @@ For how the app works end to end, see [FLOW.md](FLOW.md).
   - Nothing changes the checklist by itself.
 - **Privacy:** only totals and themes come out. Claude is told never to name a school, teacher or child.
 - **Demo data:** the made-up history has realistic ratings and recurring notes, so the section has something to show. Print-rich classrooms and home language come out as "almost always met", and "children explain their thinking" as "often skipped".
+
+### 32. Built for India; researched in Maharashtra
+- **We chose:** to present VisitCoach as a product for any Indian state. Maharashtra is the state our research, demo data and examples are based on, not a limit.
+- **Instead of:** "for Maharashtra only", which is how we first read the mentor's advice to "take one state as the example" (MENTOR.md #2).
+- **Why:** nothing in the product is tied to one state:
+  - each state uploads its own checklist (#28)
+  - mentor roles differ only in name (CRP, Kendra Pramukh, ARP)
+  - packets and the teacher's page already work in Hindi, Marathi and Tamil
+
+  Maharashtra gave us real policy, a real checklist (KPALP) and survey numbers to design against.
+- **What it means for us:** the pitch, deck and README say "built for India, researched in Maharashtra". Demo data stays in Maharashtra. A pilot would start in one state, Maharashtra first.
+- **Change it when:** a second state joins. Then add it to `STATES` in `controllers/checklists.py` and upload its checklist.

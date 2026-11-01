@@ -108,7 +108,7 @@ Do this once locally and once on the deployed site (section 4). Note anything br
 ## 6. Demo video (about 2 h including retakes)
 
 Target **3–4 minutes**, recorded on a phone screen or DevTools phone view. Follow PITCH.md slide 3:
-- [ ] **0:00–0:30 Problem:** mentors change, feedback restarts every time, and the write-up eats mentoring time. Quote Maharashtra's own words: "support, counselling, facilitation and mentoring".
+- [ ] **0:00–0:30 Problem:** mentors change, feedback restarts every time, and the write-up eats mentoring time. Quote a state's own words, from our research state Maharashtra: "support, counselling, facilitation and mentoring". Say once: **built for India, researched in Maharashtra**.
 - [ ] **0:30–1:00 Before:** Sachin opens Sunita's coaching history (2 earlier mentors) and checks the last action.
 - [ ] **1:00–1:45 In class:** offline, the KPALP add-on checklist, 32 children with Grades 1+2, a Marathi voice note.
 - [ ] **1:45–2:30 Packet:** builds on Vandana's action, fits multi-grade, cites sources; edit, then approve.
@@ -140,7 +140,7 @@ Target **3–4 minutes**, recorded on a phone screen or DevTools phone view. Fol
 - The teacher message is sent from the mentor's own WhatsApp (DECISIONS.md #24). No automatic messages yet.
 - Free hosting: it sleeps when idle, and data resets on redeploy.
 - Not yet confirmed with the mentor: schools per Kendra Pramukh, typical Grade 1–2 class size, and where the state wants visit reports submitted (today the mentor sends them on WhatsApp or as a PDF).
-- One state only (Maharashtra). The state comes from the user's login, not the phone's location.
+- Built for any Indian state, but only Maharashtra (our research state) is set up so far; adding a state is data, not code. The state comes from the user's login, not the phone's location.
 
 ## 9. Freeze
 

@@ -4,7 +4,7 @@
 
 1. **The teacher's coaching continues when the mentor changes.** This is feedback #6, and it's our strongest story.
 2. **WhatsApp is where the teacher already is.** The advice is in the message itself, and teachers never install anything (#11, #12).
-3. **The app supports teachers, it doesn't inspect them, and it's built for Maharashtra.** We use the state's own words, mentor role (Kendra Pramukh) and NIPUN goals (#1–4, #14).
+3. **The app supports teachers, it doesn't inspect them, and it's built from Maharashtra's example.** (Later framing, 1 Nov: built for India, researched in Maharashtra, DECISIONS.md #32.) We use the state's own words, mentor role (Kendra Pramukh) and NIPUN goals (#1–4, #14).
 
 **Status (1 Nov):**
 - Steps 1–5 are built ✅ and merged into v2.
