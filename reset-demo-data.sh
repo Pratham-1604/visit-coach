@@ -25,7 +25,8 @@ if [ "${1:-}" = "--local" ]; then
   exit 0
 fi
 
-URL="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format 'value(status.url)')"
+# The service's readable URL (the one in the deck). gcloud's status.url gives the older hashed one; both work.
+URL="${URL:-https://visitcoach-514819575049.asia-south1.run.app}"
 REVISION="$(gcloud run services describe "$SERVICE" --project "$PROJECT" --region "$REGION" --format 'value(status.latestReadyRevisionName)')"
 
 echo "This will wipe all live data on $URL (now $REVISION) and reseed the demo data."
